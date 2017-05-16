@@ -1,38 +1,37 @@
 package fink.data
 
-case class User(id: Long, name: String, password: String)
+case class User(
+  id: Long,
+  name: String,
+  password: String
+)
 
-case class Tag(id: Long, name: String)
-
-case class Category(id: Long, name: String)
+case class Tag(
+  id: Long,
+  value: String
+)
 
 case class Post(
   id: Long,
-  catId: Long = 0L,
-  date: Long,
+  date: UnixTime,
   title: String,
-  author: String,
+  authorId: Long,
   shortlink: String,
-  text: String) {
-
-  var tags = List[Tag]()
-  var category : Option[Category] = None
-}
+  text: String
+)
 
 case class Page(
   id: Long,
-  date: Long,
+  date: UnixTime,
   title: String,
   author: String,
   shortlink: String,
   text: String
-) {
-  var tags = List[Tag]()
-}
+)
 
 case class Image(
   id: Long,
-  date: Long,
+  date: UnixTime,
   title: String,
   author: String,
   hash: String,
@@ -43,23 +42,47 @@ case class Image(
 case class Gallery(
   id: Long,
   coverId: Long,
-  date: Long,
+  date: UnixTime,
   title: String,
   author: String,
   shortlink: String,
   text: String
-) {
-
-  var images = List[Image]()
-  var tags = List[Tag]()
-  var cover: Option[Image] = None
-}
+)
 
 case class Settings(
   title: String,
   description: String,
   keywords: List[String],
   frontend: String,
-  categories: List[String],
   uploadDirectory: String
+)
+
+
+
+// views
+
+case class UserIdName(
+  id: Long,
+  name: String
+)
+
+
+
+// aggregates, documents
+
+case class GalleryDocument(
+  gallery: Gallery,
+  images: List[Image],
+  tags: List[Tag],
+  cover: Option[Image]
+)
+
+case class PageDocument(
+  page: Page,
+  tags: List[Tag]
+)
+
+case class PostDocument(
+  post: Post,
+  tags: List[Tag]
 )

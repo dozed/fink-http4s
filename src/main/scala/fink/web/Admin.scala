@@ -1,30 +1,32 @@
-package fink.web
-
-import fink.data._
-
-import org.scalatra.scalate.ScalateSupport
-import org.scalatra.ScalatraServlet
-
-class Admin extends ScalatraServlet with ScalateSupport with RepositorySupport with MediaSupport with AuthenticationRoutes with ResourceRoutes {
-
-  override implicit protected val jsonFormats = JsonFormats()
-
-  before("""/api/.+""".r) {
-    contentType = formats("json")
-  }
-
-  get("/") {
-    if (request.getPathInfo == null) {
-      response.redirect(url("/") + "/")
-      halt()
-    }
-    contentType = formats("html")
-    jade("/admin/index.jade", "layout" -> "/admin/layouts/default.jade")
-  }
-
-  notFound {
-    contentType = null
-    serveStaticResource() getOrElse halt(404, "Not found.")
-  }
-
-}
+//package fink.web
+//
+//import fink.data._
+//import org.scalatra.json.JacksonJsonSupport
+//import org.scalatra.scalate.ScalateSupport
+//import org.scalatra.{Found, NotFound, ScalatraServlet}
+//
+//class Admin extends ScalatraServlet with ScalateSupport with JacksonJsonSupport {
+//
+//  override val jsonFormats = JsonFormats()
+//
+//  override val isScalateErrorPageEnabled = false
+//
+//  before("""/api/.+""".r) {
+//    contentType = formats("json")
+//  }
+//
+//  get("/") {
+//    if (request.getPathInfo == null) {
+//      Found(url("/") + "/")
+//    } else {
+//      contentType = formats("html")
+//      Views.admin.toString
+//    }
+//  }
+//
+//  notFound {
+//    contentType = null
+//    serveStaticResource() getOrElse NotFound()
+//  }
+//
+//}
