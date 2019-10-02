@@ -2,8 +2,11 @@ package fink.db
 
 import fink.data._
 
-import doobie.imports._
 import cats.implicits._
+import doobie._
+import doobie.implicits._
+import cats.effect.IO
+import scala.concurrent.ExecutionContext
 
 
 object DbSetup extends App {
@@ -35,21 +38,25 @@ object DbSetup extends App {
     for {
       _ <- drop
       _ <- create
-      _ <- defaultTags.map(t => DAO.createTag(t.id, t.value)).sequence
-      _ <- defaultUsers.map(u => DAO.createUser(u.id, u.name, u.password)).sequence
-      _ <- defaultPosts.map(p => DAO.createPost(p.id, p.date, p.title, p.authorId, p.shortlink, p.text)).sequence
+//      _ <- defaultTags.map(t => DAO.createTag(t.id, t.value)).sequence
+//      _ <- defaultUsers.map(u => DAO.createUser(u.id, u.name, u.password)).sequence
+//      _ <- defaultPosts.map(p => DAO.createPost(p.id, p.date, p.title, p.authorId, p.shortlink, p.text)).sequence
     } yield {
       ()
     }
   }
 
 
+  println(mkPassword("bar"))
 
 
-  val xa = DriverManagerTransactor[IOLite](
-    "org.postgresql.Driver", "jdbc:postgresql:fink", "postgres", ""
+  implicit val cs = IO.contextShift(ExecutionContext.global)
+
+  val xa = Transactor.fromDriverManager[IO](
+    "org.postgresql.Driver", "jdbc:postgresql:fink", "fink", "fink"
   )
 
-  setupDb.transact(xa).unsafePerformIO
+
+  setupDb.transact(xa).unsafeRunSync
 
 }

@@ -1,10 +1,10 @@
 package fink
 
+import cats.effect.IO
 import fink.data.AppConfig
-
-import doobie.imports._
+import doobie._
 
 case class World(
-  db: Transactor[IOLite],
+  db: Transactor[IO],
   config: AppConfig
 )

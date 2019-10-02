@@ -68,7 +68,7 @@ case class UserIdName(
 
 
 
-// aggregates, documents
+// aggregates, docUpdate0uments
 
 case class GalleryDocument(
   gallery: Gallery,

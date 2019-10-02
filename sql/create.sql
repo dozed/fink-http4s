@@ -1,6 +1,6 @@
 
 CREATE TABLE IF NOT EXISTS users (
-  id bigint PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name text NOT NULL,
   password text NOT NULL
 );
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS pages (
 );
 
 CREATE TABLE IF NOT EXISTS posts (
-  id bigint PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   date bigint,
   title text NOT NULL,
   authorId bigint UNIQUE REFERENCES users(id) ON DELETE CASCADE,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS galleries_tags (
 );
 
 
-
+INSERT INTO users (id, name, password) VALUES (0, 'foo', '$2a$10$sUXJkDdYXnzfBB16Phpytu7y0LGE7lBdd53SKpfIF7bRnAhp1eNoy');
 
 
 
