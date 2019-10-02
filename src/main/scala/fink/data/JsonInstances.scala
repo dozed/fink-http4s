@@ -9,8 +9,9 @@ object JsonInstances {
       for {
         title <- h.downField("title").as[String]
         text <- h.downField("text").as[String]
+        tags <- h.downField("tags").as[List[String]]
       } yield {
-        Operation.CreatePost(title, text)
+        Operation.CreatePost(title, text, tags)
       }
     }
 
@@ -20,16 +21,17 @@ object JsonInstances {
       Json.obj(
         "type" -> Json.fromString("CreatedPost"),
         "post" -> Json.obj(
-          "id" -> Json.fromLong(msg.post.id),
-          "title" -> Json.fromString(msg.post.title),
-          "text" -> Json.fromString(msg.post.text),
-          "date" -> Json.fromLong(msg.post.date),
-          "shortlink" -> Json.fromString(msg.post.shortlink),
+          "id" -> Json.fromLong(msg.postInfo.post.id),
+          "title" -> Json.fromString(msg.postInfo.post.title),
+          "text" -> Json.fromString(msg.postInfo.post.text),
+          "date" -> Json.fromLong(msg.postInfo.post.date),
+          "shortlink" -> Json.fromString(msg.postInfo.post.shortlink),
         ),
         "author" -> Json.obj(
-          "id" -> Json.fromLong(msg.author.id),
-          "name" -> Json.fromString(msg.author.name)
+          "id" -> Json.fromLong(msg.postInfo.author.id),
+          "name" -> Json.fromString(msg.postInfo.author.name)
         ),
+        "tags" -> Json.arr(msg.postInfo.tags.map(t => Json.fromString(t.value)):_*),
       )
 
     }

@@ -6,7 +6,8 @@ object Operation {
 
   case class CreatePost(
     title: String,
-    text: String
+    text: String,
+    tags: List[String]
   )
 
 }

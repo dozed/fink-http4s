@@ -1,78 +1,80 @@
-// package fink
+package fink
+
+import org.specs2.mutable._
+import doobie.implicits._
+import org.mindrot.jbcrypt.BCrypt
+
+import fink.data._
+import fink.db.{DbSetup, PostDAO, TagDAO, UserDAO, xa}
+
+class DataTest extends Specification {
+
+  sequential
+
+
+  DbSetup.setupDb.transact(xa).unsafeRunSync
+
+  // load users for testing
+  val author = UserDAO.findById(1).transact(xa).unsafeRunSync().get
+
+
+  "should create tag" in {
+    TagDAO.create("foo").transact(xa).unsafeRunSync
+    TagDAO.create("bar").transact(xa).unsafeRunSync
+    TagDAO.create("baz").transact(xa).unsafeRunSync
+
+    TagDAO.findAll.transact(xa).unsafeRunSync must have size (3)
+    TagDAO.findById(1).transact(xa).unsafeRunSync must beSome.which(_.value.equals("foo"))
+    TagDAO.findById(2).transact(xa).unsafeRunSync must beSome.which(_.id == 2)
+    TagDAO.findById(4).transact(xa).unsafeRunSync must beNone
+  }
+
+  "should create user" in {
+
+    UserDAO.findAll
+
+    val user = UserDAO.create("name", "password").transact(xa).unsafeRunSync
+
+    user.name should_== "name"
+    BCrypt.checkpw("password", user.password) should beTrue
+
+    UserDAO.findAll.transact(xa).unsafeRunSync must have size (2)
+    val user1 = UserDAO.findById(2).transact(xa).unsafeRunSync
+    user1 should beSome
+    user1.get should_== user
+
+  }
+
+  "should create post" in {
+
+    val post = PostDAO.create(mkTime, "title", author.id, "title", "value").transact(xa).unsafeRunSync()
+
+    PostDAO.addTag(post.id, "foox").transact(xa).unsafeRunSync()
+
+    val xs = PostDAO.findTags(post.id).transact(xa).unsafeRunSync
+    xs.size should_== 1
+    xs.head.value should_== "foox"
+
+    val post1 = PostDAO.findById(post.id).transact(xa).unsafeRunSync().get
+    post1 should_== post
+
+    val xs1 = PostDAO.findAll.transact(xa).unsafeRunSync()
+    xs1.size should_== 1
+
+    val post2 = PostDAO.findPostInfoById(post.id).transact(xa).unsafeRunSync().get
+    post2.post should_== post
+    post2.tags should_== xs
+
+  }
+
+//  "should create images" in {
+//    imageRepository.create(0, "foo", "author", "hash")
+//    imageRepository.create(0, "foo", "author", "hash")
 //
-// import org.specs2.mutable._
-//
-// import fink.data._
-//
-// import org.scalaquery.session._
-// import org.scalaquery.session.Database.threadLocalSession
-// import org.scalaquery.ql._
-// import org.scalaquery.ql.TypeMapper._
-// import org.scalaquery.ql.extended.H2Driver.Implicit._
-// import org.scalaquery.ql.extended.{ExtendedTable => Table}
-//
-// class DataTest extends Specification with RepositorySupport {
-//
-//   sequential
-//
-//   "should create tag" in {
-//     tagRepository.create("foo")
-//     tagRepository.create("bar")
-//     tagRepository.create("baz")
-//
-//     tagRepository.findAll must have size(3)
-//     tagRepository.byId(1) must beSome.which(_.name.equals("foo"))
-//     tagRepository.byId(2) must beSome.which(_.id == 2)
-//     tagRepository.byId(4) must beNone
-//   }
-//
-//   "should create categories" in {
-//     categoryRepository.create("foo")
-//     categoryRepository.create("bar")
-//     categoryRepository.create("baz")
-//
-//     categoryRepository.findAll must have size(3)
-//     categoryRepository.byId(1) must beSome.which(_.name.equals("foo"))
-//     categoryRepository.byId(2) must beSome.which(_.id == 2)
-//     categoryRepository.byId(4) must beNone
-//   }
-//
-//   "should create post" in {
-//     def dummyPost = {
-//       val p = Post(0, 0, 0, "title", "author", "text")
-//       p.category = Some(Category(0, "foo"))
-//       p.tags = List(Tag(0, "x"), Tag(0, "y"), tagRepository.findAll(2))
-//       p
-//     }
-//
-//     val a = dummyPost
-//     val id = postRepository.create(a)
-//     val p1 = postRepository.byId(id)
-//
-//     p1 must beSome.which(p => p.tags.map(_.name) must containAllOf(a.tags.map(_.name)))
-//
-//     val p2 = postRepository.findAll(0)
-//
-//     p1 must beSome.which(p => p.id == 1 && (p.category must beSome) && (p.tags must have size(3)))
-//     p1 must beSome.which(p => p == p2 && p.category == p2.category && (p.tags -- p2.tags).size == 0)
-//     tagRepository.findAll must have size(5)
-//
-//     postRepository.create(Post(0, 0, 0, "title", "author", "text"))
-//     postRepository.create(Post(0, 0, 0, "title", "author", "text"))
-//
-//     postRepository.byId(2) must beSome.which(_.id == 2)
-//     postRepository.byId(4) must beNone
-//   }
-//
-//
-//   "should create images" in {
-//     imageRepository.create(0, "foo", "author", "hash")
-//     imageRepository.create(0, "foo", "author", "hash")
-//
-//     imageRepository.findAll must have size(2)
-//     imageRepository.byId(1) must beSome.which(_.hash.equals("hash"))
-//     imageRepository.byId(2) must beSome.which(_.id == 2)
-//     imageRepository.byId(4) must beNone
-//   }
-//
-// }
+//    imageRepository.findAll must have size (2)
+//    imageRepository.byId(1) must beSome.which(_.hash.equals("hash"))
+//    imageRepository.byId(2) must beSome.which(_.id == 2)
+//    imageRepository.byId(4) must beNone
+//  }
+
+}

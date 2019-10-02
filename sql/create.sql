@@ -6,10 +6,10 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS pages (
-  id bigint PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   date bigint,
   title text NOT NULL,
-  authorId bigint UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  authorId bigint REFERENCES users(id) ON DELETE CASCADE,
   shortlink text NOT NULL,
   value text NOT NULL
 );
@@ -18,58 +18,58 @@ CREATE TABLE IF NOT EXISTS posts (
   id SERIAL PRIMARY KEY,
   date bigint,
   title text NOT NULL,
-  authorId bigint UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  authorId bigint REFERENCES users(id) ON DELETE CASCADE,
   shortlink text NOT NULL,
   value text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS images (
-  id bigint PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   date bigint,
   title text NOT NULL,
-  authorId bigint UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  authorId bigint REFERENCES users(id) ON DELETE CASCADE,
   hash text NOT NULL,
   contentType text NOT NULL,
   fileName text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS galleries (
-  id bigint PRIMARY KEY,
-  coverId bigint UNIQUE REFERENCES images(id) ON DELETE CASCADE,
+  id SERIAL PRIMARY KEY,
+  coverId bigint REFERENCES images(id) ON DELETE CASCADE,
   date bigint,
   title text NOT NULL,
-  authorId bigint UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  authorId bigint REFERENCES users(id) ON DELETE CASCADE,
   shortlink text NOT NULL,
   description text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tags (
-  id bigint PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   value text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS pages_tags (
-  pageId bigint UNIQUE REFERENCES pages(id) ON DELETE CASCADE,
-  tagId bigint UNIQUE REFERENCES tags(id) ON DELETE CASCADE
+  pageId bigint REFERENCES pages(id) ON DELETE CASCADE,
+  tagId bigint REFERENCES tags(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS posts_tags (
-  postId bigint UNIQUE REFERENCES posts(id) ON DELETE CASCADE,
-  tagId bigint UNIQUE REFERENCES tags(id) ON DELETE CASCADE
+  postId bigint REFERENCES posts(id) ON DELETE CASCADE,
+  tagId bigint REFERENCES tags(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS galleries_images (
-  galleryId bigint UNIQUE REFERENCES galleries(id) ON DELETE CASCADE,
-  imageId bigint UNIQUE REFERENCES images(id) ON DELETE CASCADE
+  galleryId bigint REFERENCES galleries(id) ON DELETE CASCADE,
+  imageId bigint REFERENCES images(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS galleries_tags (
-  galleryId bigint UNIQUE REFERENCES galleries(id) ON DELETE CASCADE,
-  tagId bigint UNIQUE REFERENCES tags(id) ON DELETE CASCADE
+  galleryId bigint REFERENCES galleries(id) ON DELETE CASCADE,
+  tagId bigint REFERENCES tags(id) ON DELETE CASCADE
 );
 
 
-INSERT INTO users (id, name, password) VALUES (0, 'foo', '$2a$10$sUXJkDdYXnzfBB16Phpytu7y0LGE7lBdd53SKpfIF7bRnAhp1eNoy');
+
 
 
 

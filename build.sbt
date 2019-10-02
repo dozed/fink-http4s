@@ -16,6 +16,7 @@ val http4sVersion = "0.20.10"
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 scalacOptions ++= Seq("-Ypartial-unification")
+scalacOptions in Test ++= Seq("-Yrangepos")
 
 libraryDependencies ++= Seq(
 //  "org.scalatra" %% "scalatra" % ScalatraVersion,
@@ -42,7 +43,8 @@ libraryDependencies ++= Seq(
   "org.mindrot" % "jbcrypt" % "0.3m",
   "joda-time" % "joda-time" % "2.4",
 
-  "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime"
+  "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime",
+  "org.specs2" %% "specs2-core" % "4.6.0" % "test"
 //  "org.eclipse.jetty" % "jetty-webapp" % "9.2.10.v20150310",
 //  "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided;test"
 )

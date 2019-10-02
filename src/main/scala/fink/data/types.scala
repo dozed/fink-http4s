@@ -59,30 +59,24 @@ case class Settings(
 
 
 
-// views
-
-case class UserIdName(
-  id: Long,
-  name: String
-)
 
 
+// aggregates
 
-// aggregates, docUpdate0uments
-
-case class GalleryDocument(
+case class GalleryInfo(
   gallery: Gallery,
   images: List[Image],
   tags: List[Tag],
   cover: Option[Image]
 )
 
-case class PageDocument(
+case class PageInfo(
   page: Page,
   tags: List[Tag]
 )
 
-case class PostDocument(
+case class PostInfo(
   post: Post,
-  tags: List[Tag]
+  tags: List[Tag],
+  author: User
 )

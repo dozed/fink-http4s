@@ -8,9 +8,7 @@ import doobie.implicits._
 import cats.effect.IO
 import scala.concurrent.ExecutionContext
 
-
-object DbSetup extends App {
-
+object DbSetup {
 
   val defaultTags: List[Tag] =
     List(
@@ -34,21 +32,42 @@ object DbSetup extends App {
 
   val create: ConnectionIO[Int] = Update0(scala.io.Source.fromFile("./sql/create.sql").mkString, None).run
 
-  val setupDb: ConnectionIO[Unit] = {
+  val data: ConnectionIO[Int] = Update0(scala.io.Source.fromFile("./sql/data.sql").mkString, None).run
+
+  val setupDbWithoutData: ConnectionIO[Unit] = {
     for {
       _ <- drop
       _ <- create
-//      _ <- defaultTags.map(t => DAO.createTag(t.id, t.value)).sequence
-//      _ <- defaultUsers.map(u => DAO.createUser(u.id, u.name, u.password)).sequence
-//      _ <- defaultPosts.map(p => DAO.createPost(p.id, p.date, p.title, p.authorId, p.shortlink, p.text)).sequence
+      //_ <- UserDAO.create("foo", "bar")
+      //      _ <- defaultTags.map(t => DAO.createTag(t.id, t.value)).sequence
+      //      _ <- defaultUsers.map(u => DAO.createUser(u.id, u.name, u.password)).sequence
+      //      _ <- defaultPosts.map(p => DAO.createPost(p.id, p.date, p.title, p.authorId, p.shortlink, p.text)).sequence
     } yield {
       ()
     }
   }
 
+  val setupDb: ConnectionIO[Unit] = {
+    for {
+      _ <- drop
+      _ <- create
+      _ <- data
+      //_ <- UserDAO.create("foo", "bar")
+      //      _ <- defaultTags.map(t => DAO.createTag(t.id, t.value)).sequence
+      //      _ <- defaultUsers.map(u => DAO.createUser(u.id, u.name, u.password)).sequence
+      //      _ <- defaultPosts.map(p => DAO.createPost(p.id, p.date, p.title, p.authorId, p.shortlink, p.text)).sequence
+    } yield {
+      ()
+    }
+  }
+
+}
+
+object DbSetupApp extends App {
 
   println(mkPassword("bar"))
 
+  import DbSetup._
 
   implicit val cs = IO.contextShift(ExecutionContext.global)
 
@@ -56,6 +75,7 @@ object DbSetup extends App {
     "org.postgresql.Driver", "jdbc:postgresql:fink", "fink", "fink"
   )
 
+  print(defaultUsers)
 
   setupDb.transact(xa).unsafeRunSync
 
