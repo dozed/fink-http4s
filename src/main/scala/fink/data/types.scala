@@ -6,6 +6,19 @@ case class User(
   password: String
 )
 
+//object User {
+//
+//  val publicUser = User(0, "public", null, UserType.Public)
+//
+//}
+
+trait UserType
+
+object UserType {
+  object Registered extends UserType
+  object Public extends UserType
+}
+
 case class Tag(
   id: Long,
   value: String
@@ -24,7 +37,7 @@ case class Page(
   id: Long,
   date: UnixTime,
   title: String,
-  author: String,
+  authorId: Long,
   shortlink: String,
   text: String
 )
@@ -72,7 +85,8 @@ case class GalleryInfo(
 
 case class PageInfo(
   page: Page,
-  tags: List[Tag]
+  tags: List[Tag],
+  author: User
 )
 
 case class PostInfo(

@@ -24,12 +24,20 @@ object PostDAO {
     sql"SELECT * FROM posts WHERE id = $postId".query[Post].option
   }
 
-  def update(postId: Long, title: String, shortlink: String, value: String): ConnectionIO[Int] = {
-    sql"UPDATE posts SET title=$title, shortlink=$shortlink, value=$value WHERE id = $postId".update.run
+  def update(postId: Long, title: String, shortlink: String, text: String): ConnectionIO[Int] = {
+    sql"UPDATE posts SET title=$title, shortlink=$shortlink, value=$text WHERE id = $postId".update.run
+  }
+
+  def delete(postId: Long): ConnectionIO[Int] = {
+    sql"DELETE posts WHERE id = $postId".update.run
   }
 
   def addTag(postId: Long, tagId: Long): ConnectionIO[Int] = {
     sql"INSERT INTO posts_tags (postId, tagId) VALUES ($postId, $tagId)".update.run
+  }
+
+  def removeTag(postId: Long, tagId: Long): ConnectionIO[Int] = {
+    sql"DELETE FROM posts_tags WHERE postId=$postId AND tagId=$tagId".update.run
   }
 
   def findTags(postId: Long): ConnectionIO[List[Tag]] = {
@@ -47,6 +55,15 @@ object PostDAO {
     }
   }
 
+  def removeTag(postId: Long, tagValue: String): ConnectionIO[Unit] = {
+    for {
+      tagMaybe <- TagDAO.findByValue(tagValue)
+      _ <- tagMaybe.fold[ConnectionIO[Unit]](Free.pure(()))(tag => PostDAO.removeTag(postId, tag.id).void)
+    } yield {
+      ()
+    }
+  }
+
   def create(title: String, text: String, author: User, tags: List[String]): ConnectionIO[PostInfo] = {
     val shortlink = title.toLowerCase.replaceAllLiterally(" ", "-")
 
@@ -57,6 +74,25 @@ object PostDAO {
       }
     } yield {
       PostInfo(post, tags, author)
+    }
+  }
+
+  def update(postId: Long, title: String, text: String, shortlink: String, tags: List[String]): ConnectionIO[PostInfo] = {
+    for {
+      postOpt <- PostDAO.findById(postId)
+      post = postOpt.get
+      authorOpt <- UserDAO.findById(post.authorId)
+      author = authorOpt.get
+      _ <- PostDAO.update(postId, title, shortlink, text)
+      currentTags <- PostDAO.findTags(postId)
+      tagsToDelete = currentTags.filter(t => !tags.contains(t))
+      tagsToAdd = tags.filter(t => !currentTags.contains(t))
+      _ <- tagsToDelete.map(t => PostDAO.removeTag(post.id, t.id)).sequence
+      _ <- tagsToAdd.map(t => PostDAO.addTag(post.id, t)).sequence
+      tags <- PostDAO.findTags(postId)
+    } yield {
+      val post1 = post.copy(title = title, shortlink = shortlink, text = text)
+      PostInfo(post1, tags, author)
     }
   }
 

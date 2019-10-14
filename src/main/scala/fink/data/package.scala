@@ -6,6 +6,7 @@ package object data {
 
 
   type UnixTime = Long
+  type UserId = Long
 
   def mkTime: UnixTime = System.currentTimeMillis()
 
