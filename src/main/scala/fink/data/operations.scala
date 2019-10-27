@@ -42,4 +42,23 @@ object Operation {
     id: Long,
   )
 
+  case class CreateGallery(
+    title: String,
+    text: String,
+    shortlink: String,
+    tags: List[String]
+  )
+
+  case class UpdateGallery(
+    id: Long,
+    title: String,
+    text: String,
+    shortlink: String,
+    tags: List[String]
+  )
+
+  case class DeleteGallery(
+    id: Long,
+  )
+
 }

@@ -6,17 +6,17 @@ import org.http4s.circe._
 import org.http4s.server.blaze._
 import org.http4s.implicits._
 import org.http4s.server.Router
+
 import scala.concurrent.ExecutionContext
 import cats.implicits._
 import cats.effect._
 import doobie.implicits._
 import doobie._
 import pdi.jwt.{JwtAlgorithm, JwtCirce}
-
 import fink.data._
 import fink.data.JsonInstances._
 import fink.data.Operation
-import fink.db.{PostDAO, PageDAO, UserDAO, TagDAO, xa}
+import fink.db.{GalleryDAO, PageDAO, PostDAO, TagDAO, UserDAO, xa}
 
 object Http4sLauncher extends App {
 
@@ -36,6 +36,14 @@ object Http4sLauncher extends App {
   implicit val updatedPageEntityEncoder: EntityEncoder[IO, Notification.UpdatedPage] = jsonEncoderOf[IO, Notification.UpdatedPage]
   implicit val pageInfoEntityEncoder: EntityEncoder[IO, PageInfo] = jsonEncoderOf[IO, PageInfo]
   implicit val pagesEntityEncoder: EntityEncoder[IO, List[Page]] = jsonEncoderOf[IO, List[Page]]
+
+  implicit val createGalleryEntityDecoder: EntityDecoder[IO, Operation.CreateGallery] = jsonOf[IO, Operation.CreateGallery]
+  implicit val updateGalleryEntityDecoder: EntityDecoder[IO, Operation.UpdateGallery] = jsonOf[IO, Operation.UpdateGallery]
+  implicit val deleteGalleryEntityDecoder: EntityDecoder[IO, Operation.DeleteGallery] = jsonOf[IO, Operation.DeleteGallery]
+  implicit val createdGalleryEntityEncoder: EntityEncoder[IO, Notification.CreatedGallery] = jsonEncoderOf[IO, Notification.CreatedGallery]
+  implicit val updatedGalleryEntityEncoder: EntityEncoder[IO, Notification.UpdatedGallery] = jsonEncoderOf[IO, Notification.UpdatedGallery]
+  implicit val galleryInfoEntityEncoder: EntityEncoder[IO, GalleryInfo] = jsonEncoderOf[IO, GalleryInfo]
+  implicit val galleryEntityEncoder: EntityEncoder[IO, List[Gallery]] = jsonEncoderOf[IO, List[Gallery]]
 
   implicit val tagsEntityEncoder: EntityEncoder[IO, List[Tag]] = jsonEncoderOf[IO, List[Tag]]
 
@@ -166,7 +174,7 @@ object Http4sLauncher extends App {
     case req@POST -> Root / "pages" =>
 
       for {
-        op <- req.as[Operation.UpdatePage]
+        op <- req.as[Operation.CreatePage]
         user <- fetchUser(req).rethrow
         postInfo <- PageDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
@@ -238,6 +246,154 @@ object Http4sLauncher extends App {
       }
 
   }
+
+  val galleryApiService = HttpRoutes.of[IO] {
+    case GET -> Root / "galleries" =>
+
+      GalleryDAO.findAll.transact(xa).flatMap { xs =>
+        Ok(xs)
+      }
+
+    case req@POST -> Root / "galleries" =>
+
+      for {
+        op <- req.as[Operation.CreateGallery]
+        user <- fetchUser(req).rethrow
+        galleryInfo <- GalleryDAO.create(op.title, op.text, user, op.tags).transact(xa)
+        res <- {
+          val msg = Notification.CreatedGallery(galleryInfo)
+          Ok(msg)
+        }
+      } yield {
+        res
+      }
+
+    case GET -> Root / "galleries" / LongVar(pageId)  =>
+
+      GalleryDAO.findGalleryInfoById(pageId).transact(xa).flatMap { infoMaybe =>
+        infoMaybe.fold(NotFound())(info => Ok(info))
+      }
+
+    case req@PUT -> Root / "galleries" / LongVar(postId) =>
+
+      for {
+        op <- req.as[Operation.UpdateGallery]
+        user <- fetchUser(req).rethrow
+        galleryInfo <- GalleryDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
+        res <- {
+          val msg = Notification.UpdatedGallery(galleryInfo)
+          Ok(msg)
+        }
+      } yield {
+        res
+      }
+
+    case req@DELETE -> Root / "galleries" / LongVar(galleryId) =>
+
+      for {
+        op <- req.as[Operation.DeleteGallery]
+        user <- fetchUser(req).rethrow
+        _ <- GalleryDAO.delete(op.id).transact(xa)
+        res <- Ok()
+      } yield {
+        res
+      }
+
+    case req@PUT -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
+
+      for {
+        user <- fetchUser(req).rethrow
+        _ <- GalleryDAO.addTag(galleryId, tagName).transact(xa)
+        res <- Ok()
+      } yield {
+        res
+      }
+
+    case req@DELETE -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
+
+      for {
+        user <- fetchUser(req).rethrow
+        _ <- GalleryDAO.removeTag(galleryId, tagName).transact(xa)
+        res <- Ok()
+      } yield {
+        res
+      }
+
+  }
+
+//  val imageApiService = HttpRoutes.of[IO] {
+//    case GET -> Root / "images" =>
+//
+//      ImageDAO.findAll.transact(xa).flatMap { xs =>
+//        Ok(xs)
+//      }
+//
+//    case req@POST -> Root / "galleries" =>
+//
+//      for {
+//        op <- req.as[Operation.CreateGallery]
+//        user <- fetchUser(req).rethrow
+//        galleryInfo <- GalleryDAO.create(op.title, op.text, user, op.tags).transact(xa)
+//        res <- {
+//          val msg = Notification.CreatedGallery(galleryInfo)
+//          Ok(msg)
+//        }
+//      } yield {
+//        res
+//      }
+//
+//    case GET -> Root / "galleries" / LongVar(pageId)  =>
+//
+//      GalleryDAO.findGalleryInfoById(pageId).transact(xa).flatMap { infoMaybe =>
+//        infoMaybe.fold(NotFound())(info => Ok(info))
+//      }
+//
+//    case req@PUT -> Root / "galleries" / LongVar(postId) =>
+//
+//      for {
+//        op <- req.as[Operation.UpdateGallery]
+//        user <- fetchUser(req).rethrow
+//        galleryInfo <- GalleryDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
+//        res <- {
+//          val msg = Notification.UpdatedGallery(galleryInfo)
+//          Ok(msg)
+//        }
+//      } yield {
+//        res
+//      }
+//
+//    case req@DELETE -> Root / "galleries" / LongVar(galleryId) =>
+//
+//      for {
+//        op <- req.as[Operation.DeleteGallery]
+//        user <- fetchUser(req).rethrow
+//        _ <- GalleryDAO.delete(op.id).transact(xa)
+//        res <- Ok()
+//      } yield {
+//        res
+//      }
+//
+//    case req@PUT -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
+//
+//      for {
+//        user <- fetchUser(req).rethrow
+//        _ <- GalleryDAO.addTag(galleryId, tagName).transact(xa)
+//        res <- Ok()
+//      } yield {
+//        res
+//      }
+//
+//    case req@DELETE -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
+//
+//      for {
+//        user <- fetchUser(req).rethrow
+//        _ <- GalleryDAO.removeTag(galleryId, tagName).transact(xa)
+//        res <- Ok()
+//      } yield {
+//        res
+//      }
+//
+//  }
 
 
   val httpApp = Router("/" -> adminService, "/api" -> postApiService).orNotFound

@@ -2,6 +2,8 @@ package fink.data
 
 import io.circe._
 
+import scala.reflect.ClassTag
+
 object JsonInstances {
 
   implicit def createPostOperationDecoder: Decoder[Operation.CreatePost] =
@@ -197,9 +199,101 @@ object JsonInstances {
     }
 
 
-  implicit def createPageOperationEncoder: Encoder[Tag] =
-    Decoder.forProduct2[Tag, Long, String]("id", "value")(
-      (id, value) => Tag(id, value)
+//  implicit def createPageOperationEncoder: Encoder[Tag] =
+//    Encoder.forProduct2[Tag, Long, String]("id", "value")((id, value) => Tag(id, value))
+
+  implicit def tagEncoder: Encoder[Tag] =
+    Encoder.forProduct2[Tag, Long, String]("id", "value")(tag => (tag.id, tag.value))
+
+
+  implicit def createGalleryOperationDecoder: Decoder[Operation.CreateGallery] =
+    Decoder.forProduct4[Operation.CreateGallery, String, String, List[String], String]("title", "text", "tags", "shortlink")(
+      (title, text, tags, shortlink) => Operation.CreateGallery(title, text, shortlink, tags)
     )
+
+  implicit def updateGalleryOperationDecoder: Decoder[Operation.UpdateGallery] =
+    Decoder.forProduct5[Operation.UpdateGallery, Long, String, String, List[String], String]("id", "title", "text", "tags", "shortlink")(
+      (id, title, text, tags, shortlink) => Operation.UpdateGallery(id, title, text, shortlink, tags)
+    )
+
+  implicit def deleteGalleryOperationDecoder: Decoder[Operation.DeleteGallery] =
+    Decoder.forProduct1[Operation.DeleteGallery, Long]("id")(id => Operation.DeleteGallery(id))
+
+  implicit def createdGalleryNotificationEncoder: Encoder[Notification.CreatedGallery] =
+    Encoder.instance[Notification.CreatedGallery] { msg =>
+
+      Json.obj(
+        "type" -> Json.fromString("CreatedGallery"),
+        "page" -> Json.obj(
+          "id" -> Json.fromLong(msg.galleryInfo.gallery.id),
+          "title" -> Json.fromString(msg.galleryInfo.gallery.title),
+          "text" -> Json.fromString(msg.galleryInfo.gallery.text),
+          "date" -> Json.fromLong(msg.galleryInfo.gallery.date),
+          "shortlink" -> Json.fromString(msg.galleryInfo.gallery.shortlink),
+        ),
+        "author" -> Json.obj(
+          "id" -> Json.fromLong(msg.galleryInfo.author.id),
+          "name" -> Json.fromString(msg.galleryInfo.author.name)
+        ),
+        "tags" -> Json.arr(msg.galleryInfo.tags.map(t => Json.fromString(t.value)):_*),
+      )
+
+    }
+
+  implicit def updatedGalleryNotificationEncoder: Encoder[Notification.UpdatedGallery] =
+    Encoder.instance[Notification.UpdatedGallery] { msg =>
+
+      Json.obj(
+        "type" -> Json.fromString("UpdatedGallery"),
+        "page" -> Json.obj(
+          "id" -> Json.fromLong(msg.galleryInfo.gallery.id),
+          "title" -> Json.fromString(msg.galleryInfo.gallery.title),
+          "text" -> Json.fromString(msg.galleryInfo.gallery.text),
+          "date" -> Json.fromLong(msg.galleryInfo.gallery.date),
+          "shortlink" -> Json.fromString(msg.galleryInfo.gallery.shortlink),
+        ),
+        "author" -> Json.obj(
+          "id" -> Json.fromLong(msg.galleryInfo.author.id),
+          "name" -> Json.fromString(msg.galleryInfo.author.name)
+        ),
+        "tags" -> Json.arr(msg.galleryInfo.tags.map(t => Json.fromString(t.value)):_*),
+      )
+
+    }
+
+  implicit def galleryInfoEncoder: Encoder[GalleryInfo] =
+    Encoder.instance[GalleryInfo] { info =>
+
+      Json.obj(
+        "page" -> Json.obj(
+          "id" -> Json.fromLong(info.gallery.id),
+          "title" -> Json.fromString(info.gallery.title),
+          "text" -> Json.fromString(info.gallery.text),
+          "date" -> Json.fromLong(info.gallery.date),
+          "shortlink" -> Json.fromString(info.gallery.shortlink),
+        ),
+        "author" -> Json.obj(
+          "id" -> Json.fromLong(info.author.id),
+          "name" -> Json.fromString(info.author.name)
+        ),
+        "tags" -> Json.arr(info.tags.map(t => Json.fromString(t.value)):_*),
+      )
+
+    }
+
+  implicit def galleryEncoder: Encoder[Gallery] =
+    Encoder.instance[Gallery] { gallery =>
+
+      Json.obj(
+        "id" -> Json.fromLong(gallery.id),
+        "title" -> Json.fromString(gallery.title),
+        "text" -> Json.fromString(gallery.text),
+        "date" -> Json.fromLong(gallery.date),
+        "shortlink" -> Json.fromString(gallery.shortlink),
+      )
+
+    }
+
+
 
 }

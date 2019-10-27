@@ -46,7 +46,7 @@ case class Image(
   id: Long,
   date: UnixTime,
   title: String,
-  author: String,
+  authorId: Long,
   hash: String,
   contentType: String,
   filename: String
@@ -57,7 +57,7 @@ case class Gallery(
   coverId: Long,
   date: UnixTime,
   title: String,
-  author: String,
+  authorId: Long,
   shortlink: String,
   text: String
 )
@@ -78,19 +78,25 @@ case class Settings(
 
 case class GalleryInfo(
   gallery: Gallery,
-  images: List[Image],
   tags: List[Tag],
-  cover: Option[Image]
+  author: User,
+  images: List[Image],
+  cover: Option[Image],
 )
 
-case class PageInfo(
-  page: Page,
-  tags: List[Tag],
+case class ImageInfo(
+  image: Image,
   author: User
 )
 
 case class PostInfo(
   post: Post,
+  tags: List[Tag],
+  author: User
+)
+
+case class PageInfo(
+  page: Page,
   tags: List[Tag],
   author: User
 )
