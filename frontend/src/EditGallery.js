@@ -18,34 +18,31 @@ import {
 } from "react-router-dom";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
-const UploadPictureButton = ({onChange}) => (
-  <label className="upload-label btn btn-space btn-default">
-    <input type="file" onChange={onChange}/>
-    <span>Change picture</span>
-  </label>
-);
-
 class UploadImage extends Component {
   state = {
-    title: null,
+    title: "",
     imageData: null,
     uploading: false
   };
 
   render() {
     return (
-      <div>
+      <Form>
+        <h2>Upload New Image</h2>
+        <Form.Group controlId="formImageTitle">
+          <Form.Label>Title</Form.Label>
+          <Form.Control type="text" placeholder="Enter title" onChange={(e) => this.onChangeTitle(e)} value={this.state.title} />
+        </Form.Group>
         <div>
-          Title:
-          <input type="text" onChange={this.onChangeTitle.bind(this)}/>
-        </div>
-        <div>
-          <UploadPictureButton onChange={this.onChangePicture.bind(this)}/>
+          <label className="upload-label btn btn-space btn-default">
+            <input type="file" onChange={(e) => this.onChangePicture(e)}/>
+            {/*<span>Change picture</span>*/}
+          </label>
         </div>
         <div>
           <Button onClick={this.uploadImage.bind(this)}>Add</Button>
         </div>
-      </div>
+      </Form>
     );
   }
 
@@ -99,6 +96,7 @@ export default class Galleries extends Component {
     // const { username } = this.state;
     return (
       <div className="gallery-edit">
+        <h2>Edit Gallery Infos</h2>
         <Form>
           <Form.Group controlId="formTitle">
             <Form.Label>Title</Form.Label>
@@ -111,7 +109,7 @@ export default class Galleries extends Component {
           </Form.Group>
 
           <ButtonToolbar>
-            <Button variant="secondary" onClick={() => this.hideCreateGallery()}>Cancel</Button>
+            <Button variant="secondary" onClick={() => this.props.history.goBack()}>Cancel</Button>
             <Button variant="primary" onClick={() => this.updateGallery()}>Submit</Button>
           </ButtonToolbar>
         </Form>
@@ -122,6 +120,7 @@ export default class Galleries extends Component {
 
         <hr/>
 
+        <h2>Images</h2>
         <div className="images">
           {this.state.images.map(i => <img key={`img-${i.id}`} src={"/" + i.fileName} alt=""/>)}
         </div>

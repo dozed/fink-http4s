@@ -7,6 +7,10 @@ body {
   margin: auto;
 }
 
+.btn-toolbar>*+* {
+  margin-left: .5em;
+}
+
 .gallery-edit {
   .images {
     img {

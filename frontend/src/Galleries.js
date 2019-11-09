@@ -60,9 +60,11 @@ export default class Galleries extends Component {
         <div>
           <Table>
             <thead>
-              <th>Title</th>
-              <th>Date Created</th>
-              <th>Actions</th>
+              <tr>
+                <th>Title</th>
+                <th>Date Created</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
             {this.state.galleries.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.editGallery(g)}/>)}

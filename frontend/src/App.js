@@ -3,10 +3,10 @@ import Home from "./Home";
 import EditGallery from "./EditGallery";
 
 import React, {Component} from 'react';
-import {uploadImage} from "./api";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 import {LinkContainer} from 'react-router-bootstrap'
 import {
   BrowserRouter as Router,
@@ -53,13 +53,13 @@ export default class App extends Component {
               </Nav>
             </Navbar.Collapse>
           </Navbar>
-          <div>
+          <Container fluid={true}>
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/galleries" exact component={Galleries} />
               <Route path="/galleries/:galleryId" component={EditGallery} />
             </Switch>
-          </div>
+          </Container>
         </Router>
       </div>
     );
