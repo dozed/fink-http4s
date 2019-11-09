@@ -20,9 +20,9 @@ object ImageDAO {
   //  )
 
   def create(date: Long, title: String, authorId: Long, hash: String, contentType: String, fileName: String): ConnectionIO[Image] = {
-    sql"INSERT INTO images (date, title, authorid, hash, contentType, fileName) VALUES ($date, $title, $authorId, $hash, $contentType, $fileName)"
+    sql"INSERT INTO images (date, title, authorid, hash, contenttype, filename) VALUES ($date, $title, $authorId, $hash, $contentType, $fileName)"
       .update
-      .withUniqueGeneratedKeys("id", "date", "title", "authorid", "hash", "contentType", "fileName")
+      .withUniqueGeneratedKeys("id", "date", "title", "authorid", "hash", "contenttype", "filename")
   }
 
   def findAll: ConnectionIO[List[Image]] = {

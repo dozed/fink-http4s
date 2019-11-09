@@ -10,6 +10,7 @@ object Notification {
   case class UpdatedPage(pageInfo: PageInfo) extends Notification
   case class CreatedGallery(galleryInfo: GalleryInfo) extends Notification
   case class UpdatedGallery(galleryInfo: GalleryInfo) extends Notification
-  case class CreatedImage(id: Long) extends Notification
+  case class CreatedImage(imageInfo: ImageInfo) extends Notification
+  case class UpdatedImage(imageInfo: ImageInfo) extends Notification
 
 }

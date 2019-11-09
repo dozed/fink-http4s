@@ -294,6 +294,95 @@ object JsonInstances {
 
     }
 
+  implicit def createImageOperationDecoder: Decoder[Operation.CreateImage] =
+    Decoder.forProduct2[Operation.CreateImage, String, String]("title", "imageData")(
+      (title, imageData) => Operation.CreateImage(title, imageData)
+    )
+
+  implicit def updateImageOperationDecoder: Decoder[Operation.UpdateImage] =
+    Decoder.forProduct2[Operation.UpdateImage, Long, String]("id", "title")(
+      (id, title) => Operation.UpdateImage(id, title)
+    )
+
+  implicit def deleteImageOperationDecoder: Decoder[Operation.DeleteImage] =
+    Decoder.forProduct1[Operation.DeleteImage, Long]("id")(id => Operation.DeleteImage(id))
+
+  implicit def createdImageNotificationEncoder: Encoder[Notification.CreatedImage] =
+    Encoder.instance[Notification.CreatedImage] { msg =>
+
+      Json.obj(
+        "type" -> Json.fromString("CreatedImage"),
+        "image" -> Json.obj(
+          "id" -> Json.fromLong(msg.imageInfo.image.id),
+          "title" -> Json.fromString(msg.imageInfo.image.title),
+          "hash" -> Json.fromString(msg.imageInfo.image.hash),
+          "contentType" -> Json.fromString(msg.imageInfo.image.contentType),
+          "fileName" -> Json.fromString(msg.imageInfo.image.filename),
+          "date" -> Json.fromLong(msg.imageInfo.image.date),
+        ),
+        "author" -> Json.obj(
+          "id" -> Json.fromLong(msg.imageInfo.author.id),
+          "name" -> Json.fromString(msg.imageInfo.author.name)
+        ),
+      )
+
+    }
+
+  implicit def updatedImageNotificationEncoder: Encoder[Notification.UpdatedImage] =
+    Encoder.instance[Notification.UpdatedImage] { msg =>
+
+      Json.obj(
+        "type" -> Json.fromString("UpdatedImage"),
+        "page" -> Json.obj(
+          "id" -> Json.fromLong(msg.imageInfo.image.id),
+          "title" -> Json.fromString(msg.imageInfo.image.title),
+          "hash" -> Json.fromString(msg.imageInfo.image.hash),
+          "contentType" -> Json.fromString(msg.imageInfo.image.contentType),
+          "fileName" -> Json.fromString(msg.imageInfo.image.filename),
+          "date" -> Json.fromLong(msg.imageInfo.image.date),
+        ),
+        "author" -> Json.obj(
+          "id" -> Json.fromLong(msg.imageInfo.author.id),
+          "name" -> Json.fromString(msg.imageInfo.author.name)
+        ),
+      )
+
+    }
+
+  implicit def imageInfoEncoder: Encoder[ImageInfo] =
+    Encoder.instance[ImageInfo] { info =>
+
+      Json.obj(
+        "image" -> Json.obj(
+          "id" -> Json.fromLong(info.image.id),
+          "title" -> Json.fromString(info.image.title),
+          "hash" -> Json.fromString(info.image.hash),
+          "contentType" -> Json.fromString(info.image.contentType),
+          "fileName" -> Json.fromString(info.image.filename),
+          "date" -> Json.fromLong(info.image.date),
+        ),
+        "author" -> Json.obj(
+          "id" -> Json.fromLong(info.author.id),
+          "name" -> Json.fromString(info.author.name)
+        ),
+      )
+
+    }
+
+  implicit def imageEncoder: Encoder[Image] =
+    Encoder.instance[Image] { image =>
+
+      Json.obj(
+        "id" -> Json.fromLong(image.id),
+        "title" -> Json.fromString(image.title),
+        "hash" -> Json.fromString(image.hash),
+        "contentType" -> Json.fromString(image.contentType),
+        "fileName" -> Json.fromString(image.filename),
+        "date" -> Json.fromLong(image.date),
+      )
+
+    }
+
 
 
 }

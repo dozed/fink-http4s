@@ -1,11 +1,19 @@
 package fink
 
+import java.io.File
+
 import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.circe._
 import org.http4s.server.blaze._
 import org.http4s.implicits._
 import org.http4s.server.Router
+import org.http4s.server.staticcontent._
+import org.http4s.multipart.Multipart
+import org.http4s.EntityDecoder.multipart
+import fs2._
+import fs2.text._
+import _root_.io.circe.Json
 
 import scala.concurrent.ExecutionContext
 import cats.implicits._
@@ -16,7 +24,8 @@ import pdi.jwt.{JwtAlgorithm, JwtCirce}
 import fink.data._
 import fink.data.JsonInstances._
 import fink.data.Operation
-import fink.db.{GalleryDAO, PageDAO, PostDAO, TagDAO, UserDAO, xa}
+import fink.db.{GalleryDAO, ImageDAO, PageDAO, PostDAO, TagDAO, UserDAO, xa}
+import fink.media.{Hashes, Uploads, UrlData}
 
 object Http4sLauncher extends App {
 
@@ -45,11 +54,21 @@ object Http4sLauncher extends App {
   implicit val galleryInfoEntityEncoder: EntityEncoder[IO, GalleryInfo] = jsonEncoderOf[IO, GalleryInfo]
   implicit val galleryEntityEncoder: EntityEncoder[IO, List[Gallery]] = jsonEncoderOf[IO, List[Gallery]]
 
+  implicit val createImageEntityDecoder: EntityDecoder[IO, Operation.CreateImage] = jsonOf[IO, Operation.CreateImage]
+  implicit val updateImageEntityDecoder: EntityDecoder[IO, Operation.UpdateImage] = jsonOf[IO, Operation.UpdateImage]
+  implicit val deleteImageEntityDecoder: EntityDecoder[IO, Operation.DeleteImage] = jsonOf[IO, Operation.DeleteImage]
+  implicit val createdImageEntityEncoder: EntityEncoder[IO, Notification.CreatedImage] = jsonEncoderOf[IO, Notification.CreatedImage]
+  implicit val updatedImageEntityEncoder: EntityEncoder[IO, Notification.UpdatedImage] = jsonEncoderOf[IO, Notification.UpdatedImage]
+  implicit val imageInfoEntityEncoder: EntityEncoder[IO, ImageInfo] = jsonEncoderOf[IO, ImageInfo]
+  implicit val imageEntityEncoder: EntityEncoder[IO, List[Image]] = jsonEncoderOf[IO, List[Image]]
+
   implicit val tagsEntityEncoder: EntityEncoder[IO, List[Tag]] = jsonEncoderOf[IO, List[Tag]]
 
   implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
   implicit val timer: Timer[IO] = IO.timer(ExecutionContext.global)
 
+
+  val config = AppConfig.load()
 
   // val author = User(1, "foo", "bar")
   // val publicUser = User(-1, "foo", "bar")
@@ -82,6 +101,17 @@ object Http4sLauncher extends App {
 
 
   val adminService = HttpRoutes.of[IO] {
+
+    case req @ GET -> Root / "index.html" =>
+      StaticFile.fromFile(new File("index.html"), ExecutionContext.global, Some(req))
+        .getOrElseF(NotFound())
+
+    case GET -> Root / "login" =>
+
+      val jwt = JwtCirce.encode(Json.obj("authUserId" -> Json.fromLong(1)), key, JwtAlgorithm.HS256)
+
+      Ok().map(_.addCookie("ui", jwt))
+
     case GET -> Root / "admin" / "index" =>
       Ok(s"Hello, name.")
 
@@ -274,7 +304,7 @@ object Http4sLauncher extends App {
         infoMaybe.fold(NotFound())(info => Ok(info))
       }
 
-    case req@PUT -> Root / "galleries" / LongVar(postId) =>
+    case req@PUT -> Root / "galleries" / LongVar(imageId) =>
 
       for {
         op <- req.as[Operation.UpdateGallery]
@@ -321,82 +351,72 @@ object Http4sLauncher extends App {
 
   }
 
-//  val imageApiService = HttpRoutes.of[IO] {
-//    case GET -> Root / "images" =>
-//
-//      ImageDAO.findAll.transact(xa).flatMap { xs =>
-//        Ok(xs)
-//      }
-//
-//    case req@POST -> Root / "galleries" =>
+  val imageApiService = HttpRoutes.of[IO] {
+    case GET -> Root / "images" =>
+
+      ImageDAO.findAll.transact(xa).flatMap { xs =>
+        Ok(xs)
+      }
+
+    case req@POST -> Root / "images" =>
+
+      for {
+        op <- req.as[Operation.CreateImage]
+        user <- fetchUser(req).rethrow
+
+        image <- UrlData.decodeFile(op.imageData)
+        hash = Hashes.md5(s"${System.currentTimeMillis()}-${Thread.currentThread().getId}")
+        uploadFile <- Uploads.store(config, image, hash)
+        imageInfo <- ImageDAO.create(op.title, hash, image.contentType.show, uploadFile.getPath, user).transact(xa)
+
+        res <- Ok(imageInfo)
+
+      } yield {
+        res
+      }
+
+    case GET -> Root / "images" / LongVar(imageId)  =>
+
+      ImageDAO.findImageInfoById(imageId).transact(xa).flatMap { infoMaybe =>
+        infoMaybe.fold(NotFound())(info => Ok(info))
+      }
+
+//    case req@PUT -> Root / "images" / LongVar(imageId) =>
 //
 //      for {
-//        op <- req.as[Operation.CreateGallery]
+//        op <- req.as[Operation.UpdateImage]
 //        user <- fetchUser(req).rethrow
-//        galleryInfo <- GalleryDAO.create(op.title, op.text, user, op.tags).transact(xa)
+//        imageInfo <- ImageDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
 //        res <- {
-//          val msg = Notification.CreatedGallery(galleryInfo)
+//          val msg = Notification.UpdatedImage(imageInfo)
 //          Ok(msg)
 //        }
 //      } yield {
 //        res
 //      }
-//
-//    case GET -> Root / "galleries" / LongVar(pageId)  =>
-//
-//      GalleryDAO.findGalleryInfoById(pageId).transact(xa).flatMap { infoMaybe =>
-//        infoMaybe.fold(NotFound())(info => Ok(info))
-//      }
-//
-//    case req@PUT -> Root / "galleries" / LongVar(postId) =>
-//
-//      for {
-//        op <- req.as[Operation.UpdateGallery]
-//        user <- fetchUser(req).rethrow
-//        galleryInfo <- GalleryDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
-//        res <- {
-//          val msg = Notification.UpdatedGallery(galleryInfo)
-//          Ok(msg)
-//        }
-//      } yield {
-//        res
-//      }
-//
-//    case req@DELETE -> Root / "galleries" / LongVar(galleryId) =>
-//
-//      for {
-//        op <- req.as[Operation.DeleteGallery]
-//        user <- fetchUser(req).rethrow
-//        _ <- GalleryDAO.delete(op.id).transact(xa)
-//        res <- Ok()
-//      } yield {
-//        res
-//      }
-//
-//    case req@PUT -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
-//
-//      for {
-//        user <- fetchUser(req).rethrow
-//        _ <- GalleryDAO.addTag(galleryId, tagName).transact(xa)
-//        res <- Ok()
-//      } yield {
-//        res
-//      }
-//
-//    case req@DELETE -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
-//
-//      for {
-//        user <- fetchUser(req).rethrow
-//        _ <- GalleryDAO.removeTag(galleryId, tagName).transact(xa)
-//        res <- Ok()
-//      } yield {
-//        res
-//      }
-//
-//  }
+
+    case req@DELETE -> Root / "images" / LongVar(imageId) =>
+
+      for {
+        op <- req.as[Operation.DeleteImage]
+        user <- fetchUser(req).rethrow
+        _ <- ImageDAO.delete(op.id).transact(xa)
+        res <- Ok()
+      } yield {
+        res
+      }
+
+  }
 
 
-  val httpApp = Router("/" -> adminService, "/api" -> postApiService).orNotFound
+  val httpApp = Router(
+    "/" -> adminService,
+    "/api" -> postApiService,
+    "/api" -> pageApiService,
+    "/api" -> galleryApiService,
+    "/api" -> imageApiService,
+    "/assets" -> fileService[IO](FileService.Config("./assets")),
+  ).orNotFound
 
   val serverBuilder = BlazeServerBuilder[IO].bindHttp(8080, "localhost").withHttpApp(httpApp)
 

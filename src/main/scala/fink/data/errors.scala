@@ -16,4 +16,6 @@ object ErrorCode {
   case class NotFound(msg: String) extends ErrorCodeMsg
   case class ParseError(msg: String) extends ErrorCodeMsg
 
+  case object InvalidRequest extends ErrorCode
+
 }

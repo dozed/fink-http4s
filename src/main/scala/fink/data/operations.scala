@@ -61,4 +61,18 @@ object Operation {
     id: Long,
   )
 
+  case class CreateImage(
+    title: String,
+    imageData: String,
+  )
+
+  case class UpdateImage(
+    id: Long,
+    title: String,
+  )
+
+  case class DeleteImage(
+    id: Long,
+  )
+
 }

@@ -31,6 +31,7 @@ libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.0.1",
   "com.typesafe" % "config" % "1.3.1",
   "org.mindrot" % "jbcrypt" % "0.3m",
+  "org.apache.tika" % "tika-core" % "1.12",
   "joda-time" % "joda-time" % "2.4",
 
   "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime",

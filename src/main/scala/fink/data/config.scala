@@ -5,12 +5,21 @@ import com.typesafe.config.ConfigFactory
 case class AppConfig(
   port: Int,
   webBase: String,
-  assetsDirectory: String,
+  dataDirectory: String,
   env: AppEnvironment,
-  mailConfig: MailConfig) {
+  mailConfig: MailConfig,
+) {
 
   def isProduction = env == AppEnvironment.Production
   def isDevelopment = env == AppEnvironment.Development
+
+  val uploadDirectory: String = s"$dataDirectory/uploads"
+
+  val resourceDirectory: String = s"$dataDirectory/resources"
+
+  val publicDirectory: String = s"$dataDirectory/public"
+
+
 }
 
 case class MailConfig(
@@ -49,10 +58,10 @@ object AppEnvironment {
 }
 
 object AppConfig {
-  def load: AppConfig = {
+  def load(): AppConfig = {
     val cfg = ConfigFactory.load
 
-    val assetsDirectory = cfg.getString("assetsDirectory")
+    val dataDirectory = cfg.getString("dataDirectory")
     val webBase = cfg.getString("webBase")
     val port = cfg.getInt("port")
     val env = AppEnvironment.fromString(cfg.getString("environment"))
@@ -62,6 +71,6 @@ object AppConfig {
       cfg.getString("email.host"),
       cfg.getString("email.sender"))
 
-    AppConfig(port, webBase, assetsDirectory, env, mailConfig)
+    AppConfig(port, webBase, dataDirectory, env, mailConfig)
   }
 }
