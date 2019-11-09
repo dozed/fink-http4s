@@ -296,6 +296,16 @@ object JsonInstances {
 
     }
 
+  implicit def uploadImageToGalleryOperationDecoder: Decoder[Operation.UploadImageToGallery] =
+    Decoder.forProduct3[Operation.UploadImageToGallery, Long, String, String]("galleryId", "title", "imageData")(
+      (galleryId, title, imageData) => Operation.UploadImageToGallery(galleryId, title, imageData)
+    )
+
+  implicit def removeImageFromGalleryOperationDecoder: Decoder[Operation.RemoveImageFromGallery] =
+    Decoder.forProduct2[Operation.RemoveImageFromGallery, Long, Long]("galleryId", "imageId")(
+      (galleryId, imageId) => Operation.RemoveImageFromGallery(galleryId, imageId)
+    )
+
   implicit def createImageOperationDecoder: Decoder[Operation.CreateImage] =
     Decoder.forProduct2[Operation.CreateImage, String, String]("title", "imageData")(
       (title, imageData) => Operation.CreateImage(title, imageData)

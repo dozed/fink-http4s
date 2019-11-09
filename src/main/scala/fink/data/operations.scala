@@ -61,6 +61,17 @@ object Operation {
     id: Long,
   )
 
+  case class UploadImageToGallery(
+    galleryId: Long,
+    title: String,
+    imageData: String
+  )
+
+  case class RemoveImageFromGallery(
+    galleryId: Long,
+    imageId: Long,
+  )
+
   case class CreateImage(
     title: String,
     imageData: String,

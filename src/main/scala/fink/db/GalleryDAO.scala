@@ -33,6 +33,18 @@ object GalleryDAO {
     sql"DELETE galleries WHERE id = $galleryId".update.run
   }
 
+  def findImagesByGalleryId(galleryId: Long): ConnectionIO[List[Image]] = {
+    sql"SELECT * FROM images i, galleries_images gi WHERE gi.imageId = i.id AND gi.galleryId = $galleryId".query[Image].to[List]
+  }
+
+  def addImage(galleryId: Long, imageId: Long): ConnectionIO[Int] = {
+    sql"INSERT INTO galleries_images (galleryId, imageId) VALUES ($galleryId, $imageId)".update.run
+  }
+
+  def removeImage(galleryId: Long, imageId: Long): ConnectionIO[Int] = {
+    sql"DELETE FROM galleries_images WHERE galleryId = $galleryId AND imageId = $imageId".update.run
+  }
+
   def addTag(galleryId: Long, tagId: Long): ConnectionIO[Int] = {
     sql"INSERT INTO galleries_tags (galleryId, tagId) VALUES ($galleryId, $tagId)".update.run
   }
@@ -108,8 +120,11 @@ object GalleryDAO {
           g => UserDAO.findById(g.authorId)
         )
       }
+      images <- {
+        GalleryDAO.findImagesByGalleryId(galleryId)
+      }
     } yield {
-      (galleryMaybe, authorMaybe).mapN((page, author) => GalleryInfo(page, tags, author, List(), None))
+      (galleryMaybe, authorMaybe).mapN((page, author) => GalleryInfo(page, tags, author, images, None))
     }
   }
 

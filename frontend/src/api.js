@@ -18,6 +18,26 @@ export const uploadImage = (title, imageData) => {
 
 };
 
+export const uploadImageToGallery = (galleryId, title, imageData) => {
+
+  const data = {
+    galleryId: galleryId,
+    title: title,
+    imageData: imageData
+  };
+
+  return fetch(`/api/galleries/${galleryId}/images`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(
+    response => response.json()
+  );
+
+};
+
 export const getGalleries = () => {
 
   return fetch("/api/galleries").then(

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './app.css';
 import ReactImage from './react.png';
-import {getGalleries, getGallery, updateGallery, uploadImage} from "./api";
+import {getGalleries, getGallery, updateGallery, uploadImage, uploadImageToGallery} from "./api";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -19,25 +18,87 @@ import {
 } from "react-router-dom";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
-export default class Galleries extends Component {
+const UploadPictureButton = ({onChange}) => (
+  <label className="upload-label btn btn-space btn-default">
+    <input type="file" onChange={onChange}/>
+    <span>Change picture</span>
+  </label>
+);
+
+class UploadImage extends Component {
   state = {
-    title: "",
-    text: "",
+    title: null,
     imageData: null,
     uploading: false
   };
 
+  render() {
+    return (
+      <div>
+        <div>
+          Title:
+          <input type="text" onChange={this.onChangeTitle.bind(this)}/>
+        </div>
+        <div>
+          <UploadPictureButton onChange={this.onChangePicture.bind(this)}/>
+        </div>
+        <div>
+          <Button onClick={this.uploadImage.bind(this)}>Add</Button>
+        </div>
+      </div>
+    );
+  }
+
+  uploadImage() {
+    uploadImageToGallery(this.props.galleryId, this.state.title, this.state.imageData)
+      .then(() => this.props.onUploadedImageToGallery());
+  }
+
+  onChangeTitle(e) {
+    this.setState({
+      title: e.target.value
+    });
+  }
+
+  onChangePicture(e) {
+
+    const file = e.currentTarget.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      this.setState({
+        imageData: e.target.result
+      });
+
+      // uploadImage(e.target.result);
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+export default class Galleries extends Component {
+  state = {
+    title: "",
+    text: "",
+    images: [],
+  };
+
   componentDidMount() {
 
-    getGallery(this.props.match.params.galleryId)
-      .then(g => this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text }));
+    this.loadGallery(this.props.match.params.galleryId);
 
+  }
+
+  loadGallery(galleryId) {
+    getGallery(this.props.match.params.galleryId)
+      .then(g => this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images }));
   }
 
   render() {
     // const { username } = this.state;
     return (
-      <div>
+      <div className="gallery-edit">
         <Form>
           <Form.Group controlId="formTitle">
             <Form.Label>Title</Form.Label>
@@ -54,6 +115,16 @@ export default class Galleries extends Component {
             <Button variant="primary" onClick={() => this.updateGallery()}>Submit</Button>
           </ButtonToolbar>
         </Form>
+
+        <hr/>
+
+        <UploadImage galleryId={this.state.galleryId} onUploadedImageToGallery={() => this.onUploadedImageToGallery()}/>
+
+        <hr/>
+
+        <div className="images">
+          {this.state.images.map(i => <img key={`img-${i.id}`} src={"/" + i.fileName} alt=""/>)}
+        </div>
       </div>
     );
   }
@@ -73,9 +144,18 @@ export default class Galleries extends Component {
   updateGallery() {
     updateGallery(this.state.galleryId, this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
-        this.hideCreateGallery();
-        getGalleries().then(xs => this.setState({ galleries: xs }));
+        this.loadGallery(this.props.match.params.galleryId);
       });
+  }
+
+  onUploadedImageToGallery() {
+
+    getGallery(this.props.match.params.galleryId)
+      .then(g => {
+        this.loadGallery(this.props.match.params.galleryId);
+        // this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text })
+      });
+
   }
 
 

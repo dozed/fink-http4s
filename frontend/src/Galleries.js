@@ -7,8 +7,6 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
-import './app.css';
-
 const GalleryLine = ({info, onEdit}) => (
   <tr>
     <td>{info.title}</td>

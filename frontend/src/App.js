@@ -17,66 +17,7 @@ import {
   useParams
 } from "react-router-dom";
 
-import './app.css';
-
-const UploadPictureButton = ({onChange}) => (
-  <label className="upload-label btn btn-space btn-default">
-    <input type="file" onChange={onChange}/>
-    <span>Change picture</span>
-  </label>
-);
-
-class UploadImage extends Component {
-  state = {
-    title: null,
-    imageData: null,
-    uploading: false
-  };
-
-  render() {
-    return (
-      <div>
-        <h1>fink</h1>
-        <div>
-          Title:
-          <input type="text" onChange={this.onChangeTitle.bind(this)}/>
-        </div>
-        <div>
-          <UploadPictureButton onChange={this.onChangePicture.bind(this)}/>
-        </div>
-        <div>
-          <Button onClick={this.uploadImage.bind(this)}/>
-        </div>
-      </div>
-    );
-  }
-
-  uploadImage() {
-    uploadImage(this.state.title, this.state.imageData);
-  }
-
-  onChangeTitle(e) {
-    this.setState({
-      title: e.target.value
-    });
-  }
-
-  onChangePicture(e) {
-
-    const file = e.currentTarget.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      this.setState({
-        imageData: e.target.result
-      });
-
-      // uploadImage(e.target.result);
-    };
-
-    reader.readAsDataURL(file);
-  }
-}
+import './app.scss';
 
 export default class App extends Component {
   state = {

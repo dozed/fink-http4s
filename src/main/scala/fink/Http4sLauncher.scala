@@ -51,6 +51,8 @@ object Http4sLauncher extends App {
   implicit val deleteGalleryEntityDecoder: EntityDecoder[IO, Operation.DeleteGallery] = jsonOf[IO, Operation.DeleteGallery]
   implicit val createdGalleryEntityEncoder: EntityEncoder[IO, Notification.CreatedGallery] = jsonEncoderOf[IO, Notification.CreatedGallery]
   implicit val updatedGalleryEntityEncoder: EntityEncoder[IO, Notification.UpdatedGallery] = jsonEncoderOf[IO, Notification.UpdatedGallery]
+  implicit val uploadImageToGalleryEntityDecoder: EntityDecoder[IO, Operation.UploadImageToGallery] = jsonOf[IO, Operation.UploadImageToGallery]
+  implicit val removeImageFromGalleryEntityDecoder: EntityDecoder[IO, Operation.RemoveImageFromGallery] = jsonOf[IO, Operation.RemoveImageFromGallery]
   implicit val galleryInfoEntityEncoder: EntityEncoder[IO, GalleryInfo] = jsonEncoderOf[IO, GalleryInfo]
   implicit val galleryEntityEncoder: EntityEncoder[IO, List[Gallery]] = jsonEncoderOf[IO, List[Gallery]]
 
@@ -329,7 +331,28 @@ object Http4sLauncher extends App {
         res
       }
 
-    case req@PUT -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
+    case req@POST -> Root / "galleries" / LongVar(galleryId) / "images" =>
+
+      for {
+        op <- req.as[Operation.UploadImageToGallery]
+        user <- fetchUser(req).rethrow
+
+        image <- UrlData.decodeFile(op.imageData)
+        hash = Hashes.md5(s"${System.currentTimeMillis()}-${Thread.currentThread().getId}")
+        uploadFile <- Uploads.store(config, image, hash)
+        imageInfo <- {
+          ImageDAO.create(op.title, hash, image.contentType.show, uploadFile.getPath, user)
+            .flatMap(imageInfo => GalleryDAO.addImage(op.galleryId, imageInfo.image.id).map(_ => imageInfo))
+            .transact(xa)
+        }
+
+        res <- Ok(imageInfo)
+
+      } yield {
+        res
+      }
+
+    case req@POST -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
 
       for {
         user <- fetchUser(req).rethrow
