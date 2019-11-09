@@ -6,7 +6,7 @@ export const uploadImage = (title, imageData) => {
     imageData: imageData
   };
 
-  fetch("/api/images", {
+  return fetch("/api/images", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -14,9 +14,66 @@ export const uploadImage = (title, imageData) => {
     body: JSON.stringify(data)
   }).then(
     response => response.json()
-  ).then(
-    success => console.log(success)
-  ).catch(
-    error => console.log(error)
   );
+
 };
+
+export const getGalleries = () => {
+
+  return fetch("/api/galleries").then(
+    response => response.json()
+  );
+
+};
+
+export const getGallery = (id) => {
+
+  return fetch(`/api/galleries/${id}`).then(
+    response => response.json()
+  );
+
+};
+
+export const createGallery = (title, text, tags, shortlink) => {
+
+  const data = {
+    title: title,
+    text: text,
+    tags: tags,
+    shortlink: shortlink
+  };
+
+  return fetch("/api/galleries", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(
+    response => response.json()
+  );
+
+};
+
+export const updateGallery = (id, title, text, tags, shortlink) => {
+
+  const data = {
+    id: id,
+    title: title,
+    text: text,
+    tags: tags,
+    shortlink: shortlink
+  };
+
+  return fetch(`/api/galleries/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(
+    response => response.json()
+  );
+
+};
+

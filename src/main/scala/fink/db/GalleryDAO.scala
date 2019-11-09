@@ -11,9 +11,9 @@ object GalleryDAO {
 
 
   def create(coverId: Long, date: Long, title: String, authorId: Long, shortlink: String, description: String): ConnectionIO[Gallery] = {
-    sql"INSERT INTO galleries (coverId, date, title, authorid, shortlink, description) VALUES ($coverId, $date, $title, $authorId, $shortlink, $description)"
+    sql"INSERT INTO galleries (coverId, date, title, authorid, shortlink, description) VALUES (null, $date, $title, $authorId, $shortlink, $description)"
       .update
-      .withUniqueGeneratedKeys("id", "coverId", "date", "title", "authorid", "shortlink", "description")
+      .withUniqueGeneratedKeys("id", "coverid", "date", "title", "authorid", "shortlink", "description")
   }
 
   def findAll: ConnectionIO[List[Gallery]] = {
@@ -25,7 +25,8 @@ object GalleryDAO {
   }
 
   def update(galleryId: Long, coverId: Long, title: String, shortlink: String, description: String): ConnectionIO[Int] = {
-    sql"UPDATE pages SET coverId=$coverId, title=$title, shortlink=$shortlink, description=$description WHERE id = $galleryId".update.run
+    sql"UPDATE galleries SET title=$title, shortlink=$shortlink, description=$description WHERE id = $galleryId".update.run
+    // sql"UPDATE galleries SET coverId=$coverId, title=$title, shortlink=$shortlink, description=$description WHERE id = $galleryId".update.run
   }
 
   def delete(galleryId: Long): ConnectionIO[Int] = {

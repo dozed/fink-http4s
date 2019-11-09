@@ -1,4 +1,5 @@
 const path = require('path');
+const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -8,6 +9,7 @@ module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
   output: {
     path: path.join(__dirname, outputDirectory),
+    publicPath: "/",
     filename: 'bundle.js'
   },
   module: {

@@ -1,13 +1,11 @@
 import Galleries from "./Galleries";
 import Home from "./Home";
+import EditGallery from "./EditGallery";
+
 import React, {Component} from 'react';
-import ReactImage from './react.png';
 import {uploadImage} from "./api";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import {LinkContainer} from 'react-router-bootstrap'
 import {
@@ -47,7 +45,7 @@ class UploadImage extends Component {
           <UploadPictureButton onChange={this.onChangePicture.bind(this)}/>
         </div>
         <div>
-          <input type="button" value="Submit" onClick={this.uploadImage.bind(this)}/>
+          <Button onClick={this.uploadImage.bind(this)}/>
         </div>
       </div>
     );
@@ -117,7 +115,8 @@ export default class App extends Component {
           <div>
             <Switch>
               <Route path="/" exact component={Home} />
-              <Route path="/galleries" component={Galleries} />
+              <Route path="/galleries" exact component={Galleries} />
+              <Route path="/galleries/:galleryId" component={EditGallery} />
             </Switch>
           </div>
         </Router>

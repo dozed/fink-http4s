@@ -1,6 +1,7 @@
 package fink.data
 
 import io.circe._
+import io.circe.syntax._
 
 import scala.reflect.ClassTag
 
@@ -224,7 +225,7 @@ object JsonInstances {
 
       Json.obj(
         "type" -> Json.fromString("CreatedGallery"),
-        "page" -> Json.obj(
+        "gallery" -> Json.obj(
           "id" -> Json.fromLong(msg.galleryInfo.gallery.id),
           "title" -> Json.fromString(msg.galleryInfo.gallery.title),
           "text" -> Json.fromString(msg.galleryInfo.gallery.text),
@@ -245,7 +246,7 @@ object JsonInstances {
 
       Json.obj(
         "type" -> Json.fromString("UpdatedGallery"),
-        "page" -> Json.obj(
+        "gallery" -> Json.obj(
           "id" -> Json.fromLong(msg.galleryInfo.gallery.id),
           "title" -> Json.fromString(msg.galleryInfo.gallery.title),
           "text" -> Json.fromString(msg.galleryInfo.gallery.text),
@@ -265,7 +266,7 @@ object JsonInstances {
     Encoder.instance[GalleryInfo] { info =>
 
       Json.obj(
-        "page" -> Json.obj(
+        "gallery" -> Json.obj(
           "id" -> Json.fromLong(info.gallery.id),
           "title" -> Json.fromString(info.gallery.title),
           "text" -> Json.fromString(info.gallery.text),
@@ -277,6 +278,7 @@ object JsonInstances {
           "name" -> Json.fromString(info.author.name)
         ),
         "tags" -> Json.arr(info.tags.map(t => Json.fromString(t.value)):_*),
+        "images" -> Json.arr(info.images.map(t => t.asJson):_*),
       )
 
     }

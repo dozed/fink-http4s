@@ -304,7 +304,7 @@ object Http4sLauncher extends App {
         infoMaybe.fold(NotFound())(info => Ok(info))
       }
 
-    case req@PUT -> Root / "galleries" / LongVar(imageId) =>
+    case req@POST -> Root / "galleries" / LongVar(imageId) =>
 
       for {
         op <- req.as[Operation.UpdateGallery]

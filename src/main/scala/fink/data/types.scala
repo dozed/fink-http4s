@@ -54,7 +54,7 @@ case class Image(
 
 case class Gallery(
   id: Long,
-  coverId: Long,
+  coverId: Option[Long],
   date: UnixTime,
   title: String,
   authorId: Long,
