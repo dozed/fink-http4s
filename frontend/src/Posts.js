@@ -1,13 +1,13 @@
-import {createGallery, getGalleries, uploadImage} from "api";
+import {createGallery, createPost, getGalleries, getPosts, uploadImage} from "api";
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
-const GalleryLine = ({info, onEdit}) => (
+const PostLine = ({info, onEdit}) => (
   <tr>
     <td>{info.title}</td>
     <td>{moment(info.date).format("MMM Do YY")}</td>
@@ -17,27 +17,27 @@ const GalleryLine = ({info, onEdit}) => (
   </tr>
 );
 
-export default class Galleries extends Component {
+export default class Posts extends Component {
   state = {
-    galleries: [],
-    createGallery: false,
+    posts: [],
+    createPost: false,
     title: null,
     text: null,
   };
 
   componentDidMount() {
-    getGalleries().then(xs => this.setState({ galleries: xs }));
+    getPosts().then(xs => this.setState({ posts: xs }));
   }
 
   render() {
     // const { username } = this.state;
     return (
       <div>
-        {!this.state.createGallery && <div>
-          <Button onClick={() => this.showCreateGallery()}>Create Gallery</Button>
+        {!this.state.createPost && <div>
+          <Button onClick={() => this.showCreatePost()}>Create Gallery</Button>
         </div>
         }
-        {this.state.createGallery &&
+        {this.state.createPost &&
           <div>
             <Form>
               <Form.Group controlId="formTitle">
@@ -51,7 +51,7 @@ export default class Galleries extends Component {
               </Form.Group>
 
               <ButtonToolbar>
-                <Button variant="secondary" onClick={() => this.hideCreateGallery()}>Cancel</Button>
+                <Button variant="secondary" onClick={() => this.hideCreatePost()}>Cancel</Button>
                 <Button variant="primary" onClick={() => this.createGallery()}>Submit</Button>
               </ButtonToolbar>
             </Form>
@@ -67,7 +67,7 @@ export default class Galleries extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.galleries.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.editGallery(g)}/>)}
+            {this.state.posts.map(x => <PostLine key={`post-${x.id}`} info={x} onEdit={(g) => this.editPost(g)}/>)}
             </tbody>
           </Table>
         </div>
@@ -75,16 +75,16 @@ export default class Galleries extends Component {
     );
   }
 
-  editGallery(g) {
-    this.props.history.push(`/galleries/${g.id}`);
+  editPost(x) {
+    this.props.history.push(`/posts/${x.id}`);
   }
 
-  showCreateGallery() {
-    this.setState({ createGallery: true });
+  showCreatePost() {
+    this.setState({ createPost: true });
   }
 
-  hideCreateGallery() {
-    this.setState({ createGallery: false });
+  hideCreatePost() {
+    this.setState({ createPost: false });
   }
 
   onChangeTitle(e) {
@@ -99,11 +99,11 @@ export default class Galleries extends Component {
     });
   }
 
-  createGallery() {
-    createGallery(this.state.title, this.state.text, [], this.state.title)
+  createPost() {
+    createPost(this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
-        this.hideCreateGallery();
-        getGalleries().then(xs => this.setState({ galleries: xs }));
+        this.hideCreatePost();
+        getPosts().then(xs => this.setState({ posts: xs }));
       });
   }
 

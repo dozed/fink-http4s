@@ -1,13 +1,13 @@
 import {createGallery, getGalleries, uploadImage} from "api";
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
-const PostLine = ({info, onEdit}) => (
+const GalleryLine = ({info, onEdit}) => (
   <tr>
     <td>{info.title}</td>
     <td>{moment(info.date).format("MMM Do YY")}</td>
@@ -17,27 +17,27 @@ const PostLine = ({info, onEdit}) => (
   </tr>
 );
 
-export default class Posts extends Component {
+export default class Galleries extends Component {
   state = {
-    posts: [],
-    createPost: false,
+    galleries: [],
+    createGallery: false,
     title: null,
     text: null,
   };
 
   componentDidMount() {
-    getPosts().then(xs => this.setState({ posts: xs }));
+    getGalleries().then(xs => this.setState({ galleries: xs }));
   }
 
   render() {
     // const { username } = this.state;
     return (
       <div>
-        {!this.state.createPost && <div>
+        {!this.state.createGallery && <div>
           <Button onClick={() => this.showCreateGallery()}>Create Gallery</Button>
         </div>
         }
-        {this.state.createPost &&
+        {this.state.createGallery &&
           <div>
             <Form>
               <Form.Group controlId="formTitle">
@@ -67,7 +67,7 @@ export default class Posts extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.posts.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.editGallery(g)}/>)}
+            {this.state.galleries.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.editGallery(g)}/>)}
             </tbody>
           </Table>
         </div>
@@ -76,7 +76,7 @@ export default class Posts extends Component {
   }
 
   editGallery(g) {
-    this.props.history.push(`/posts/${g.id}`);
+    this.props.history.push(`/galleries/${g.id}`);
   }
 
   showCreateGallery() {
@@ -99,11 +99,11 @@ export default class Posts extends Component {
     });
   }
 
-  createPost() {
-    createPost(this.state.title, this.state.text, [], this.state.title)
+  createGallery() {
+    createGallery(this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
         this.hideCreateGallery();
-        getPosts().then(xs => this.setState({ posts: xs }));
+        getGalleries().then(xs => this.setState({ galleries: xs }));
       });
   }
 
