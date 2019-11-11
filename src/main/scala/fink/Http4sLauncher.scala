@@ -73,7 +73,7 @@ object Http4sLauncher extends App {
   val config = AppConfig.load()
 
   fink.db.xa = Transactor.fromDriverManager[IO](
-    "org.postgresql.Driver", "jdbc:postgresql:fink", "fink", "fink"
+    config.dbConfig.driver, config.dbConfig.db, config.dbConfig.user, config.dbConfig.password
   )
 
   val key = "secretK3y"
@@ -442,7 +442,7 @@ object Http4sLauncher extends App {
     "/api" -> pageApiService,
     "/api" -> galleryApiService,
     "/api" -> imageApiService,
-    "/assets" -> fileService[IO](FileService.Config("./assets")),
+    // "/assets" -> fileService[IO](FileService.Config("./assets")),
   ).orNotFound
 
   val serverBuilder = BlazeServerBuilder[IO].bindHttp(8080, "localhost").withHttpApp(httpApp)

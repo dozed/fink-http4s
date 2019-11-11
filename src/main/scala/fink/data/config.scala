@@ -8,6 +8,7 @@ case class AppConfig(
   dataDirectory: String,
   env: AppEnvironment,
   mailConfig: MailConfig,
+  dbConfig: DatabaseConfig,
 ) {
 
   def isProduction = env == AppEnvironment.Production
@@ -27,6 +28,13 @@ case class MailConfig(
   password: String,
   host: String,
   sender: String
+)
+
+case class DatabaseConfig(
+  driver: String,
+  db: String,
+  user: String,
+  password: String,
 )
 
 sealed trait AppEnvironment
@@ -71,6 +79,12 @@ object AppConfig {
       cfg.getString("email.host"),
       cfg.getString("email.sender"))
 
-    AppConfig(port, webBase, dataDirectory, env, mailConfig)
+    val dbConfig = DatabaseConfig(
+      cfg.getString("database.driver"),
+      cfg.getString("database.db"),
+      cfg.getString("database.user"),
+      cfg.getString("database.password"))
+
+    AppConfig(port, webBase, dataDirectory, env, mailConfig, dbConfig)
   }
 }
