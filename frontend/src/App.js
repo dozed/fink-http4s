@@ -1,11 +1,6 @@
-import Galleries from "./Galleries";
-import Home from "./Home";
-import EditGallery from "./EditGallery";
+import AdminApp from "admin/App";
 
 import React, {Component} from 'react';
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import {LinkContainer} from 'react-router-bootstrap'
 import {
@@ -17,7 +12,7 @@ import {
   useParams
 } from "react-router-dom";
 
-import './app.scss';
+import "app.scss";
 
 export default class App extends Component {
   state = {
@@ -35,33 +30,13 @@ export default class App extends Component {
   render() {
     const {username} = this.state;
     return (
-      <div>
-        <Router>
-          <Navbar bg="light" expand="lg">
-            <LinkContainer to="/">
-              <Navbar.Brand>fink</Navbar.Brand>
-            </LinkContainer>
-            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <LinkContainer to="/">
-                  <Nav.Link>Home</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/galleries">
-                  <Nav.Link>Galleries</Nav.Link>
-                </LinkContainer>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-          <Container fluid={true}>
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/galleries" exact component={Galleries} />
-              <Route path="/galleries/:galleryId" component={EditGallery} />
-            </Switch>
-          </Container>
-        </Router>
-      </div>
+      <Router>
+        <Switch>
+          {/*<Route path="/galleries" exact component={AdminGalleries} />*/}
+          {/*<Route path="/galleries/:galleryId" component={AdminEditGallery} />*/}
+          <Route path="/admin" component={AdminApp} />
+        </Switch>
+      </Router>
     );
   }
 

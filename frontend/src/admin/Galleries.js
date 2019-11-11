@@ -1,4 +1,4 @@
-import {createGallery, getGalleries, uploadImage} from "./api";
+import {createGallery, getGalleries, uploadImage} from "api";
 
 import React, { Component } from 'react';
 import Button from "react-bootstrap/Button";
