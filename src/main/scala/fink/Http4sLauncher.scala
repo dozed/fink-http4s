@@ -132,7 +132,7 @@ object Http4sLauncher extends App {
     case req@POST -> Root / "posts" =>
 
       for {
-        op <- req.as[Operation.UpdatePost]
+        op <- req.as[Operation.CreatePost]
         user <- fetchUser(req).rethrow
         postInfo <- PostDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
@@ -149,7 +149,7 @@ object Http4sLauncher extends App {
         infoMaybe.fold(NotFound())(info => Ok(info))
       }
 
-    case req@PUT -> Root / "posts" / LongVar(postId) =>
+    case req@POST -> Root / "posts" / LongVar(postId) =>
 
       for {
         op <- req.as[Operation.UpdatePost]
@@ -174,7 +174,7 @@ object Http4sLauncher extends App {
         res
       }
 
-    case req@PUT -> Root / "posts" / LongVar(postId) / "tags" / tagName =>
+    case req@POST -> Root / "posts" / LongVar(postId) / "tags" / tagName =>
 
       for {
         user <- fetchUser(req).rethrow
@@ -223,7 +223,7 @@ object Http4sLauncher extends App {
         infoMaybe.fold(NotFound())(info => Ok(info))
       }
 
-    case req@PUT -> Root / "pages" / LongVar(postId) =>
+    case req@POST -> Root / "pages" / LongVar(postId) =>
 
       for {
         op <- req.as[Operation.UpdatePage]
@@ -248,7 +248,7 @@ object Http4sLauncher extends App {
         res
       }
 
-    case req@PUT -> Root / "pages" / LongVar(pageId) / "tags" / tagName =>
+    case req@POST -> Root / "pages" / LongVar(pageId) / "tags" / tagName =>
 
       for {
         user <- fetchUser(req).rethrow
@@ -404,7 +404,7 @@ object Http4sLauncher extends App {
         infoMaybe.fold(NotFound())(info => Ok(info))
       }
 
-//    case req@PUT -> Root / "images" / LongVar(imageId) =>
+//    case req@POST -> Root / "images" / LongVar(imageId) =>
 //
 //      for {
 //        op <- req.as[Operation.UpdateImage]

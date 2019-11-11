@@ -7,14 +7,11 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
-export default class CreatePost extends Component {
+export default class CreateGallery extends Component {
   state = {
-    posts: [],
+    title: "",
+    text: ""
   };
-
-  componentDidMount() {
-    getPosts().then(xs => this.setState({ posts: xs }));
-  }
 
   render() {
     return (
@@ -31,14 +28,13 @@ export default class CreatePost extends Component {
 
         <ButtonToolbar>
           <Button variant="secondary" onClick={() => this.cancel()}>Cancel</Button>
-          <Button variant="primary" onClick={() => this.createPost()}>Submit</Button>
+          <Button variant="primary" onClick={() => this.createGallery()}>Submit</Button>
         </ButtonToolbar>
       </Form>
     );
   }
 
   cancel() {
-    // this.props.history.push(`/posts`);
     this.props.history.goBack();
   }
 
@@ -54,8 +50,8 @@ export default class CreatePost extends Component {
     });
   }
 
-  createPost() {
-    createPost(this.state.title, this.state.text, [], this.state.title)
+  createGallery() {
+    createGallery(this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
         this.props.history.goBack();
       });

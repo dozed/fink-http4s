@@ -20,6 +20,8 @@ import {
 } from "react-router-dom";
 
 import "app.scss";
+import EditPost from "./EditPost";
+import CreateGallery from "./CreateGallery";
 
 export default class App extends Component {
   state = {
@@ -55,9 +57,11 @@ export default class App extends Component {
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/galleries" exact component={Galleries} />
+              <Route path="/galleries/create" exact component={CreateGallery} />
               <Route path="/galleries/:galleryId" component={EditGallery} />
-              <Route path="/posts" component={Posts} />
+              <Route path="/posts" exact component={Posts} />
               <Route path="/posts/create" component={CreatePost} />
+              <Route path="/posts/:postId" component={EditPost} />
             </Switch>
           </Container>
         </Router>

@@ -90,13 +90,4 @@ export default class Posts extends Component {
     });
   }
 
-  createPost() {
-    createPost(this.state.title, this.state.text, [], this.state.title)
-      .then((res) => {
-        this.hideCreatePost();
-        getPosts().then(xs => this.setState({ posts: xs }));
-      });
-  }
-
-
 }

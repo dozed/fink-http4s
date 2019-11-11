@@ -70,7 +70,7 @@ class UploadImage extends Component {
   }
 }
 
-export default class Galleries extends Component {
+export default class EditGallery extends Component {
   state = {
     title: "",
     text: "",
