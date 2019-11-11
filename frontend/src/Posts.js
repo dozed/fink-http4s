@@ -28,10 +28,10 @@ export default class Posts extends Component {
 
   render() {
     return (
-      <div>
-        <div>
+      <div className="items-list">
+        <ButtonToolbar>
           <Button onClick={() => this.createPost()}>Create Post</Button>
-        </div>
+        </ButtonToolbar>
         <div>
           <Table>
             <thead>

@@ -4,6 +4,7 @@ import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 const GalleryLine = ({info, onEdit}) => (
   <tr>
@@ -27,10 +28,10 @@ export default class Galleries extends Component {
   render() {
     // const { username } = this.state;
     return (
-      <div>
-        <div>
+      <div className="galleries-list items-list">
+        <ButtonToolbar>
           <Button onClick={() => this.createGallery()}>Create Gallery</Button>
-        </div>
+        </ButtonToolbar>
         <div>
           <Table>
             <thead>

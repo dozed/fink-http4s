@@ -4,6 +4,7 @@ import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 const PageLine = ({info, onEdit}) => (
   <tr>
@@ -26,10 +27,10 @@ export default class Pages extends Component {
 
   render() {
     return (
-      <div>
-        <div>
+      <div className="items-list">
+        <ButtonToolbar>
           <Button onClick={() => this.createPage()}>Create Page</Button>
-        </div>
+        </ButtonToolbar>
         <div>
           <Table>
             <thead>
