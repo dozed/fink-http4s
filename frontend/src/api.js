@@ -97,3 +97,62 @@ export const updateGallery = (id, title, text, tags, shortlink) => {
 
 };
 
+export const getPosts = () => {
+
+  return fetch("/api/posts").then(
+    response => response.json()
+  );
+
+};
+
+export const getPost = (id) => {
+
+  return fetch(`/api/posts/${id}`).then(
+    response => response.json()
+  );
+
+};
+
+export const createPost = (title, text, tags, shortlink) => {
+
+  const data = {
+    title: title,
+    text: text,
+    tags: tags,
+    shortlink: shortlink
+  };
+
+  return fetch("/api/posts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(
+    response => response.json()
+  );
+
+};
+
+export const updatePost = (id, title, text, tags, shortlink) => {
+
+  const data = {
+    id: id,
+    title: title,
+    text: text,
+    tags: tags,
+    shortlink: shortlink
+  };
+
+  return fetch(`/api/posts/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(
+    response => response.json()
+  );
+
+};
+
