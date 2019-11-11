@@ -20,9 +20,6 @@ const PostLine = ({info, onEdit}) => (
 export default class Posts extends Component {
   state = {
     posts: [],
-    createPost: false,
-    title: null,
-    text: null,
   };
 
   componentDidMount() {
@@ -32,10 +29,9 @@ export default class Posts extends Component {
   render() {
     return (
       <div>
-        {!this.state.createPost && <div>
-          <Button onClick={() => this.showCreatePost()}>Create Gallery</Button>
+        <div>
+          <Button onClick={() => this.createPost()}>Create Post</Button>
         </div>
-        }
         {this.state.createPost &&
           <div>
             <Form>
@@ -78,12 +74,8 @@ export default class Posts extends Component {
     this.props.history.push(`/posts/${x.id}`);
   }
 
-  showCreatePost() {
-    this.setState({ createPost: true });
-  }
-
-  hideCreatePost() {
-    this.setState({ createPost: false });
+  createPost(x) {
+    this.props.history.push(`/posts/create`);
   }
 
   onChangeTitle(e) {

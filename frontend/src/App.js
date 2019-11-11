@@ -1,6 +1,8 @@
-import Galleries from "Galleries";
 import Home from "Home";
+import Galleries from "Galleries";
 import EditGallery from "EditGallery";
+import Posts from "Posts";
+import CreatePost from "CreatePost";
 
 import React, {Component} from "react";
 import Navbar from "react-bootstrap/Navbar";
@@ -27,7 +29,6 @@ export default class App extends Component {
   };
 
   render() {
-    const {username} = this.state;
     return (
       <div>
         <Router>
@@ -38,13 +39,13 @@ export default class App extends Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
-                <LinkContainer to="/admin/posts">
+                <LinkContainer to="/posts">
                   <Nav.Link>Posts</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/admin/pages">
+                <LinkContainer to="/pages">
                   <Nav.Link>Pages</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/admin/galleries">
+                <LinkContainer to="/galleries">
                   <Nav.Link>Galleries</Nav.Link>
                 </LinkContainer>
               </Nav>
@@ -52,9 +53,11 @@ export default class App extends Component {
           </Navbar>
           <Container fluid={true}>
             <Switch>
-              <Route path="/admin" exact component={Home} />
-              <Route path="/admin/galleries" exact component={Galleries} />
-              <Route path="/admin/galleries/:galleryId" component={EditGallery} />
+              <Route path="/" exact component={Home} />
+              <Route path="/galleries" exact component={Galleries} />
+              <Route path="/galleries/:galleryId" component={EditGallery} />
+              <Route path="/posts" component={Posts} />
+              <Route path="/posts/create" component={CreatePost} />
             </Switch>
           </Container>
         </Router>
