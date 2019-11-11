@@ -44,11 +44,6 @@ object DbSetupApp extends App {
 
   implicit val cs = IO.contextShift(ExecutionContext.global)
 
-  val xa = Transactor.fromDriverManager[IO](
-    "org.postgresql.Driver", "jdbc:postgresql:fink", "fink", "fink"
-  )
-
-
   setupDb.transact(xa).unsafeRunSync
 
 }
