@@ -16,3 +16,7 @@ URLs
 - frontend-admin: admin.fink/admin
 - assets: admin.fink/data/uploads
 - frontend: frontend.fink
+
+https://react-bootstrap.github.io
+https://github.com/react-dropzone/react-dropzone
+https://react-dropzone-uploader.js.org/

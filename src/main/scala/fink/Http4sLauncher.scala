@@ -72,11 +72,15 @@ object Http4sLauncher extends App {
 
   val config = AppConfig.load()
 
-  // val author = User(1, "foo", "bar")
-  // val publicUser = User(-1, "foo", "bar")
+  fink.db.xa = Transactor.fromDriverManager[IO](
+    "org.postgresql.Driver", "jdbc:postgresql:fink", "fink", "fink"
+  )
 
   val key = "secretK3y"
   val algo = JwtAlgorithm.HS256
+
+  // val author = User(1, "foo", "bar")
+  // val publicUser = User(-1, "foo", "bar")
 
   def readUserId(req: Request[IO]): Either[ErrorCode, UserId] = {
     for {
