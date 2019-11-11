@@ -17,7 +17,7 @@ import {
   useParams
 } from "react-router-dom";
 
-import "admin.scss";
+import "app.scss";
 
 export default class App extends Component {
   state = {
@@ -25,12 +25,6 @@ export default class App extends Component {
     imageData: null,
     uploading: false
   };
-
-  componentDidMount() {
-    // fetch("/api/getUsername")
-    //   .then(res => res.json())
-    //   .then(user => this.setState({ username: user.username }));
-  }
 
   render() {
     const {username} = this.state;

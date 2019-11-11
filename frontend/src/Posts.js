@@ -30,7 +30,6 @@ export default class Posts extends Component {
   }
 
   render() {
-    // const { username } = this.state;
     return (
       <div>
         {!this.state.createPost && <div>
