@@ -22,6 +22,9 @@ import {
 import "app.scss";
 import EditPost from "./EditPost";
 import CreateGallery from "./CreateGallery";
+import Pages from "./Pages";
+import CreatePage from "./CreatePage";
+import EditPage from "./EditPage";
 
 export default class App extends Component {
   state = {
@@ -60,8 +63,11 @@ export default class App extends Component {
               <Route path="/galleries/create" exact component={CreateGallery} />
               <Route path="/galleries/:galleryId" component={EditGallery} />
               <Route path="/posts" exact component={Posts} />
-              <Route path="/posts/create" component={CreatePost} />
+              <Route path="/posts/create" exact component={CreatePost} />
               <Route path="/posts/:postId" component={EditPost} />
+              <Route path="/pages" exact component={Pages} />
+              <Route path="/pages/create" exact component={CreatePage} />
+              <Route path="/pages/:pageId" component={EditPage} />
             </Switch>
           </Container>
         </Router>

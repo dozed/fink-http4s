@@ -156,3 +156,62 @@ export const updatePost = (id, title, text, tags, shortlink) => {
 
 };
 
+export const getPages = () => {
+
+  return fetch("/api/pages").then(
+    response => response.json()
+  );
+
+};
+
+export const getPage = (id) => {
+
+  return fetch(`/api/pages/${id}`).then(
+    response => response.json()
+  );
+
+};
+
+export const createPage = (title, text, tags, shortlink) => {
+
+  const data = {
+    title: title,
+    text: text,
+    tags: tags,
+    shortlink: shortlink
+  };
+
+  return fetch("/api/pages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(
+    response => response.json()
+  );
+
+};
+
+export const updatePage = (id, title, text, tags, shortlink) => {
+
+  const data = {
+    id: id,
+    title: title,
+    text: text,
+    tags: tags,
+    shortlink: shortlink
+  };
+
+  return fetch(`/api/pages/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(
+    response => response.json()
+  );
+
+};
+

@@ -1,13 +1,11 @@
-import {createGallery, createPost, getGalleries, getPosts, uploadImage} from "api";
+import {getPages} from "api";
 
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
-const PostLine = ({info, onEdit}) => (
+const PageLine = ({info, onEdit}) => (
   <tr>
     <td>{info.title}</td>
     <td>{moment(info.date).format("MMM Do YY")}</td>
@@ -17,20 +15,20 @@ const PostLine = ({info, onEdit}) => (
   </tr>
 );
 
-export default class Posts extends Component {
+export default class Pages extends Component {
   state = {
-    posts: [],
+    pages: [],
   };
 
   componentDidMount() {
-    getPosts().then(xs => this.setState({ posts: xs }));
+    getPages().then(xs => this.setState({ pages: xs }));
   }
 
   render() {
     return (
       <div>
         <div>
-          <Button onClick={() => this.createPost()}>Create Post</Button>
+          <Button onClick={() => this.createPage()}>Create Page</Button>
         </div>
         <div>
           <Table>
@@ -42,7 +40,7 @@ export default class Posts extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.posts.map(x => <PostLine key={`post-${x.id}`} info={x} onEdit={(g) => this.editPost(g)}/>)}
+            {this.state.pages.map(x => <PageLine key={`page-${x.id}`} info={x} onEdit={(x) => this.editPage(x)}/>)}
             </tbody>
           </Table>
         </div>
@@ -50,12 +48,12 @@ export default class Posts extends Component {
     );
   }
 
-  editPost(x) {
-    this.props.history.push(`/posts/${x.id}`);
+  editPage(x) {
+    this.props.history.push(`/pages/${x.id}`);
   }
 
-  createPost(x) {
-    this.props.history.push(`/posts/create`);
+  createPage() {
+    this.props.history.push(`/pages/create`);
   }
 
   onChangeTitle(e) {
