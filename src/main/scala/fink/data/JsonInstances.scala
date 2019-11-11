@@ -3,8 +3,6 @@ package fink.data
 import io.circe._
 import io.circe.syntax._
 
-import scala.reflect.ClassTag
-
 object JsonInstances {
 
   implicit def createPostOperationDecoder: Decoder[Operation.CreatePost] =

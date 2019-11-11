@@ -1,7 +1,6 @@
-package fink.support
+package fink.media
 
 import fink.data._
-
 import org.joda.time.format._
 
 object TemplateHelper {
