@@ -5,7 +5,8 @@ import doobie.implicits._
 import org.mindrot.jbcrypt.BCrypt
 
 import fink.data._
-import fink.db.{DbSetup, PostDAO, TagDAO, UserDAO, xa}
+import fink.db.{DbSetup, PostDAO, TagDAO, UserDAO}
+import fink.World.xa
 
 class DataTest extends Specification {
 

@@ -6,7 +6,7 @@ import cats.implicits._
 import cats.effect.IO
 import scala.concurrent.ExecutionContext
 
-import fink.data._
+import fink.World.xa
 
 object DbSetup {
 
