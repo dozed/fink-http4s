@@ -1,5 +1,8 @@
 package fink.web
 
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+
 import cats.effect._
 import fink.World._
 import io.circe.Json
@@ -15,7 +18,18 @@ object AuthApi {
 
         val jwt = JwtCirce.encode(Json.obj("authUserId" -> Json.fromLong(1)), key, JwtAlgorithm.HS256)
 
-        Ok().map(_.addCookie("ui", jwt))
+        val twoWeeks = Instant.now.plus(14, ChronoUnit.DAYS)
+        val twoWeeksHttpDate = HttpDate.unsafeFromInstant(twoWeeks)
+
+        val cookie = ResponseCookie(
+          "ui",
+          jwt,
+          path = Some("/"),
+          expires = Some(twoWeeksHttpDate),
+          httpOnly = true
+        )
+
+        Ok().map(_.addCookie(cookie))
 
     }
 

@@ -1,34 +1,11 @@
 package fink
 
-import java.io.File
-
-import org.http4s._
-import org.http4s.dsl.io._
-import org.http4s.circe._
-import org.http4s.server.blaze._
-import org.http4s.implicits._
-import org.http4s.server.Router
-import org.http4s.server.staticcontent._
-import org.http4s.multipart.Multipart
-import org.http4s.EntityDecoder.multipart
-import fs2._
-import fs2.text._
-import _root_.io.circe.Json
-
-import scala.concurrent.ExecutionContext
-import cats.implicits._
 import cats.effect._
-import doobie.implicits._
-import doobie._
-import pdi.jwt.{JwtAlgorithm, JwtCirce}
-import fink.data._
-import fink.data.JsonInstances._
-import fink.data.Operation
-import fink.db.{GalleryDAO, ImageDAO, PageDAO, PostDAO, TagDAO, UserDAO}
-import fink.media.{Hashes, Uploads, UrlData}
 import fink.World._
-import fink.modules.UserModule._
-import fink.web.{GalleryApi, ImageApi, PageApi, PostApi, AuthApi}
+import fink.data.JsonInstances._
+import fink.data.{Operation, _}
+import org.http4s._
+import org.http4s.circe._
 
 object EntityEncoders {
 
