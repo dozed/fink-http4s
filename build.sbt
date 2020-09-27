@@ -2,16 +2,15 @@
 organization := "fink"
 name := "fink"
 version := "0.1.0-SNAPSHOT"
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.3"
 
-val catsVersion = "0.9.0"
-val doobieVersion = "0.7.0"
+val catsVersion = "2.1.1"
+val doobieVersion = "0.9.2"
 val metricsVersion = "3.0.2"
-val circeVersion = "0.11.1"
+val circeVersion = "0.13.0"
 
-val http4sVersion = "0.20.10"
+val http4sVersion = "0.21.7"
 
-scalacOptions ++= Seq("-Ypartial-unification")
 scalacOptions in Test ++= Seq("-Yrangepos")
 
 libraryDependencies ++= Seq(
