@@ -1,6 +1,5 @@
 package fink.db
 
-import cats.free.Free
 import doobie._
 import doobie.implicits._
 import fink.data._
