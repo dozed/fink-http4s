@@ -14,7 +14,7 @@ import org.http4s.dsl.io._
 
 object GalleryApi {
 
-  val routes = HttpRoutes.of[IO] {
+  val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "galleries" =>
 
       GalleryDAO.findAll.transact(xa).flatMap { xs =>

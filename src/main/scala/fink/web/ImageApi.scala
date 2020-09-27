@@ -14,7 +14,7 @@ import org.http4s.dsl.io._
 
 object ImageApi {
 
-  val routes = HttpRoutes.of[IO] {
+  val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "images" =>
 
       ImageDAO.findAll.transact(xa).flatMap { xs =>

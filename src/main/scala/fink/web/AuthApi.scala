@@ -11,7 +11,7 @@ import org.http4s.dsl.io._
 
 object AuthApi {
 
-  val routes = HttpRoutes.of[IO] {
+  val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
 
     case GET -> Root / "login" =>
       AuthModule.login(1)

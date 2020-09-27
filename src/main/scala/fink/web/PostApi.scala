@@ -13,7 +13,7 @@ import org.http4s.dsl.io._
 
 object PostApi {
 
-  val routes = HttpRoutes.of[IO] {
+  val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "posts" =>
 
       PostDAO.findAll.transact(xa).flatMap { xs =>

@@ -1,7 +1,6 @@
 package fink
 
 import cats.effect._
-import cats.implicits._
 import doobie._
 import fink.World._
 import fink.data._
@@ -23,9 +22,13 @@ object Http4sLauncher extends App {
     "/api" -> PageApi.routes,
     "/api" -> GalleryApi.routes,
     "/api" -> ImageApi.routes,
+    "/api" -> TagApi.routes,
     "/api/auth" -> AuthApi.routes,
     // "/assets" -> fileService[IO](FileService.Config("./assets")),
   ).orNotFound
+//    .handleError {
+//      case ErrorCode.P
+//    }
 
   val serverBuilder = BlazeServerBuilder[IO]
     .bindHttp(8080, "localhost")

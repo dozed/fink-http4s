@@ -13,7 +13,7 @@ import org.http4s.dsl.io._
 
 object PageApi {
 
-  val routes = HttpRoutes.of[IO] {
+  val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "pages" =>
 
       PageDAO.findAll.transact(xa).flatMap { xs =>
@@ -83,15 +83,6 @@ object PageApi {
         res <- Ok()
       } yield {
         res
-      }
-
-  }
-
-  val tagApiService = HttpRoutes.of[IO] {
-    case GET -> Root / "tags" =>
-
-      TagDAO.findAll.transact(xa).flatMap { xs =>
-        Ok(xs)
       }
 
   }
