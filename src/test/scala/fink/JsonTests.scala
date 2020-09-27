@@ -1,34 +1,20 @@
-//package fink
-//
-//import scala.collection.JavaConversions._
-//
-//import fink.data._
-//
-//import org.specs2.mutable._
-//
-//import org.json4s._
-//import org.json4s.jackson._
-//import org.json4s.jackson.Serialization.{read => jsread, write => jswrite}
-//
-// class JsonTests extends Specification {
-//
-// 	implicit val formats = Serialization.formats(ShortTypeHints(List(classOf[Page], classOf[Post], classOf[Tag]))) + FieldSerializer[Post]()
-//
-// 	"should de/serialize posts" in {
-// 		val post = Post(1,2,3,"title","author","shortlink", "text")
-// 		post.tags = List(Tag(0, "foo"), Tag(1, "bar"))
-//
-// 		val json = jswrite[Post](post)
-// 		val post2 = jsread[Post](json)
-//
-// 		post2 must beEqualTo(post)
-// 		post2.tags must containAllOf(post.tags)
-// 	}
-//
-// 	"should handle missing options" in {
-// 		val json = """{"tags":[],"id":1,"catId":0,"date":0,"title":"title","author":"author","shortlink":"shortlink","text":"text"}"""
-// 		val post = jsread[Post](json)
-// 		post.tags must have size(0)
-// 	}
-//
-// }
+package fink
+
+import fink.data._
+import fink.data.JsonInstances._
+
+import io.circe.syntax._
+import org.specs2.mutable._
+
+ class JsonTests extends Specification {
+
+ 	"Should write/read posts" in {
+ 		val post = Post(1, 2L, "title", 42, "shortlink", "text")
+
+ 		val json = post.asJson
+ 		val post2 = json.as[Post]
+
+ 		post2 should_== Right(post)
+ 	}
+
+ }

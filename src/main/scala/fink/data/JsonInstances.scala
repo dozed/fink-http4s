@@ -100,13 +100,19 @@ object JsonInstances {
 
       Json.obj(
         "id" -> Json.fromLong(post.id),
-        "title" -> Json.fromString(post.title),
-        "text" -> Json.fromString(post.text),
         "date" -> Json.fromLong(post.date),
+        "title" -> Json.fromString(post.title),
+        "authorId" -> Json.fromLong(post.authorId),
         "shortlink" -> Json.fromString(post.shortlink),
+        "text" -> Json.fromString(post.text),
       )
 
     }
+
+  implicit def postDecoder: Decoder[Post] =
+    Decoder.forProduct6[Post, Long, Long, String, Long, String, String](
+      "id", "date", "title", "authorId", "shortlink", "text"
+    )(Post.apply)
 
 
   implicit def createPageOperationDecoder: Decoder[Operation.CreatePage] =
