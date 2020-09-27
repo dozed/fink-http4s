@@ -9,16 +9,6 @@ import fink.data._
 
 object ImageDAO {
 
-  //  CREATE TABLE IF NOT EXISTS images (
-  //    id SERIAL PRIMARY KEY,
-  //    date bigint,
-  //    title text NOT NULL,
-  //    authorId bigint REFERENCES users(id) ON DELETE CASCADE,
-  //    hash text NOT NULL,
-  //    contentType text NOT NULL,
-  //    fileName text NOT NULL
-  //  )
-
   def create(date: Long, title: String, authorId: Long, hash: String, contentType: String, fileName: String): ConnectionIO[Image] = {
     sql"INSERT INTO images (date, title, authorid, hash, contenttype, filename) VALUES ($date, $title, $authorId, $hash, $contentType, $fileName)"
       .update
