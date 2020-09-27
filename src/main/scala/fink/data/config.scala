@@ -11,8 +11,8 @@ case class AppConfig(
   dbConfig: DatabaseConfig,
 ) {
 
-  def isProduction = env == AppEnvironment.Production
-  def isDevelopment = env == AppEnvironment.Development
+  def isProduction: Boolean = env == AppEnvironment.Production
+  def isDevelopment: Boolean = env == AppEnvironment.Development
 
   val uploadDirectory: String = s"$dataDirectory/uploads"
 
