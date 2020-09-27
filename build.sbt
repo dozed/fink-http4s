@@ -8,10 +8,7 @@ val catsVersion = "2.1.1"
 val doobieVersion = "0.9.2"
 val metricsVersion = "3.0.2"
 val circeVersion = "0.13.0"
-
 val http4sVersion = "0.21.7"
-
-scalacOptions in Test ++= Seq("-Yrangepos")
 
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
@@ -25,7 +22,6 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-blaze-client" % http4sVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
-  // "com.lihaoyi" %% "scalatags" % "0.6.5",
 
   "commons-io" % "commons-io" % "2.0.1",
   "com.typesafe" % "config" % "1.3.1",
