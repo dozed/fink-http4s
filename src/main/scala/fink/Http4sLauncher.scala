@@ -9,6 +9,8 @@ import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.blaze._
 
+import scala.concurrent.ExecutionContext
+
 object Http4sLauncher extends App {
 
   World.config = AppConfig.load()
@@ -30,7 +32,7 @@ object Http4sLauncher extends App {
 //      case ErrorCode.P
 //    }
 
-  val serverBuilder = BlazeServerBuilder[IO]
+  val serverBuilder = BlazeServerBuilder.apply[IO](ExecutionContext.global)
     .bindHttp(8080, "localhost")
     .withHttpApp(httpApp)
 
