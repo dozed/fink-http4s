@@ -1,37 +1,39 @@
 package fink.web
 
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-
 import cats.effect._
+import cats.implicits._
 import fink.World._
+import fink.modules.AuthModule
 import io.circe.Json
 import org.http4s._
+import org.http4s.circe._
 import org.http4s.dsl.io._
-import pdi.jwt.{JwtAlgorithm, JwtCirce}
 
 object AuthApi {
 
-    val routes = HttpRoutes.of[IO] {
+  val routes = HttpRoutes.of[IO] {
 
-      case GET -> Root / "login" =>
+    case GET -> Root / "login" =>
+      AuthModule.login(1)
 
-        val jwt = JwtCirce.encode(Json.obj("authUserId" -> Json.fromLong(1)), key, JwtAlgorithm.HS256)
+    case GET -> Root / "logout" =>
+      AuthModule.logout()
 
-        val twoWeeks = Instant.now.plus(14, ChronoUnit.DAYS)
-        val twoWeeksHttpDate = HttpDate.unsafeFromInstant(twoWeeks)
+    case req@GET -> Root / "me" =>
 
-        val cookie = ResponseCookie(
-          "ui",
-          jwt,
-          path = Some("/"),
-          expires = Some(twoWeeksHttpDate),
-          httpOnly = true
-        )
-
-        Ok().map(_.addCookie(cookie))
-
-    }
+      for {
+        user <- AuthModule.fetchUser(req).rethrow
+        userJson = {
+          Json.obj(
+            "id" -> Json.fromLong(user.id),
+            "name" -> Json.fromString(user.name)
+          )
+        }
+        res <- Ok(userJson)
+      } yield {
+        res
+      }
+  }
 
 
 }

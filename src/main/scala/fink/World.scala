@@ -22,10 +22,4 @@ object World {
 
   var config: AppConfig = null
 
-  val key = "secretK3y"
-
-  val algo = JwtAlgorithm.HS256
-
-
-
 }

@@ -7,7 +7,7 @@ import fink.EntityEncoders._
 import fink.World._
 import fink.data.{Operation, _}
 import fink.db.{PageDAO, TagDAO}
-import fink.modules.UserModule._
+import fink.modules.AuthModule._
 import org.http4s._
 import org.http4s.dsl.io._
 

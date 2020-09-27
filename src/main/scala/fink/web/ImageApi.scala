@@ -8,7 +8,7 @@ import fink.World._
 import fink.data.Operation
 import fink.db.ImageDAO
 import fink.media.{Hashes, Uploads, UrlData}
-import fink.modules.UserModule._
+import fink.modules.AuthModule._
 import org.http4s._
 import org.http4s.dsl.io._
 

@@ -1,6 +1,8 @@
 package fink.data
 
 import com.typesafe.config.ConfigFactory
+import pdi.jwt.JwtAlgorithm
+import pdi.jwt.algorithms.JwtHmacAlgorithm
 
 case class AppConfig(
   port: Int,
@@ -9,6 +11,7 @@ case class AppConfig(
   env: AppEnvironment,
   mailConfig: MailConfig,
   dbConfig: DatabaseConfig,
+  authConfig: AuthConfig,
 ) {
 
   def isProduction: Boolean = env == AppEnvironment.Production
@@ -35,6 +38,12 @@ case class DatabaseConfig(
   db: String,
   user: String,
   password: String,
+)
+
+case class AuthConfig(
+  key: String,
+  algo: JwtHmacAlgorithm,
+  cookieName: String,
 )
 
 sealed trait AppEnvironment
@@ -85,6 +94,12 @@ object AppConfig {
       cfg.getString("database.user"),
       cfg.getString("database.password"))
 
-    AppConfig(port, webBase, dataDirectory, env, mailConfig, dbConfig)
+    val authConfig = AuthConfig(
+      cfg.getString("auth.key"),
+      JwtAlgorithm.fromString(cfg.getString("auth.algo")).asInstanceOf[JwtHmacAlgorithm],
+      cfg.getString("auth.cookieName")
+    )
+
+    AppConfig(port, webBase, dataDirectory, env, mailConfig, dbConfig, authConfig)
   }
 }
