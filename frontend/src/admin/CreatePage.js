@@ -20,8 +20,8 @@ export default class CreatePage extends Component {
         </Form.Group>
 
         <Form.Group controlId="formText">
-          <Form.Label>Description</Form.Label>
-          <Form.Control as="textarea" rows="3" placeholder="Enter description" onChange={(e) => this.onChangeText(e)} />
+          <Form.Label>Text</Form.Label>
+          <Form.Control as="textarea" rows="3" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} />
         </Form.Group>
 
         <ButtonToolbar>

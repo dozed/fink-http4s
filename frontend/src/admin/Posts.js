@@ -1,9 +1,8 @@
-import {createGallery, createPost, getGalleries, getPosts, uploadImage} from "api";
+import {getPosts} from "api";
 
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 

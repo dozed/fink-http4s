@@ -1,17 +1,7 @@
-import React, { Component } from "react";
-import {getGalleries, getGallery, updateGallery, uploadImage, uploadImageToGallery} from "api";
+import React, {Component} from "react";
+import {getGallery, updateGallery, uploadImageToGallery} from "api";
 import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
-import { LinkContainer } from "react-router-bootstrap"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams
-} from "react-router-dom";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 class UploadImage extends Component {
@@ -100,8 +90,8 @@ export default class EditGallery extends Component {
           </Form.Group>
 
           <Form.Group controlId="formText">
-            <Form.Label>Description</Form.Label>
-            <Form.Control as="textarea" rows="3" placeholder="Enter description" onChange={(e) => this.onChangeText(e)} value={this.state.text} />
+            <Form.Label>Text</Form.Label>
+            <Form.Control as="textarea" rows="3" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} value={this.state.text} />
           </Form.Group>
 
           <ButtonToolbar>

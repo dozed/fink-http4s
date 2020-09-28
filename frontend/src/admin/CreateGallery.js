@@ -1,11 +1,9 @@
-import {createGallery, createPost, getGalleries, getPosts, uploadImage} from "api";
+import {createGallery} from "api";
 
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
-import Table from "react-bootstrap/Table";
-import moment from "moment";
 
 export default class CreateGallery extends Component {
   state = {
@@ -22,8 +20,8 @@ export default class CreateGallery extends Component {
         </Form.Group>
 
         <Form.Group controlId="formText">
-          <Form.Label>Description</Form.Label>
-          <Form.Control as="textarea" rows="3" placeholder="Enter description" onChange={(e) => this.onChangeText(e)} />
+          <Form.Label>Text</Form.Label>
+          <Form.Control as="textarea" rows="3" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} />
         </Form.Group>
 
         <ButtonToolbar>
