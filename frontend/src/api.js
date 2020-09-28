@@ -215,3 +215,28 @@ export const updatePage = (id, title, text, tags, shortlink) => {
 
 };
 
+export const login = (username, password) => {
+
+  const data = {
+    username,
+    password
+  };
+
+  return fetch(`/api/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+};
+
+export const logout = () => {
+
+  return fetch(`/api/auth/logout`, {
+    method: "POST",
+  });
+
+};
+

@@ -1,4 +1,4 @@
-import {getPages} from "api";
+import {getGalleries} from "api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
@@ -6,7 +6,7 @@ import Table from "react-bootstrap/Table";
 import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
-const PageLine = ({info, onEdit}) => (
+const GalleryLine = ({info, onEdit}) => (
   <tr>
     <td>{info.title}</td>
     <td>{moment(info.date).format("MMM Do YY")}</td>
@@ -16,20 +16,21 @@ const PageLine = ({info, onEdit}) => (
   </tr>
 );
 
-export default class Pages extends Component {
+export default class Galleries extends Component {
   state = {
-    pages: [],
+    galleries: [],
   };
 
   componentDidMount() {
-    getPages().then(xs => this.setState({ pages: xs }));
+    getGalleries().then(xs => this.setState({ galleries: xs }));
   }
 
   render() {
+    // const { username } = this.state;
     return (
-      <div className="items-list">
+      <div className="galleries-list items-list">
         <ButtonToolbar>
-          <Button onClick={() => this.createPage()}>Create Page</Button>
+          <Button onClick={() => this.createGallery()}>Create Gallery</Button>
         </ButtonToolbar>
         <div>
           <Table>
@@ -41,7 +42,7 @@ export default class Pages extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.pages.map(x => <PageLine key={`page-${x.id}`} info={x} onEdit={(x) => this.editPage(x)}/>)}
+            {this.state.galleries.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.editGallery(g)}/>)}
             </tbody>
           </Table>
         </div>
@@ -49,24 +50,12 @@ export default class Pages extends Component {
     );
   }
 
-  editPage(x) {
-    this.props.history.push(`/pages/${x.id}`);
+  editGallery(g) {
+    this.props.history.push(`/admin/galleries/${g.id}`);
   }
 
-  createPage() {
-    this.props.history.push(`/pages/create`);
-  }
-
-  onChangeTitle(e) {
-    this.setState({
-      title: e.target.value
-    });
-  }
-
-  onChangeText(e) {
-    this.setState({
-      text: e.target.value
-    });
+  createGallery() {
+    this.props.history.push(`/admin/galleries/create`);
   }
 
 }
