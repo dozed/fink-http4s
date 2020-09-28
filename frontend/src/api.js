@@ -215,6 +215,16 @@ export const updatePage = (id, title, text, tags, shortlink) => {
 
 };
 
+export const fetchMe = () => {
+
+  return fetch(`/api/auth/me`, {
+    method: "GET",
+  }).then(
+    response => response.json()
+  );
+
+};
+
 export const login = (username, password) => {
 
   const data = {
