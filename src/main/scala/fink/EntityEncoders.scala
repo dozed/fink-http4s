@@ -45,5 +45,6 @@ object EntityEncoders {
 
   implicit val tagsEntityEncoder: EntityEncoder[IO, List[Tag]] = jsonEncoderOf[IO, List[Tag]]
 
+  implicit val loginEntityDecoder: EntityDecoder[IO, Operation.Login] = jsonOf[IO, Operation.Login]
 
 }

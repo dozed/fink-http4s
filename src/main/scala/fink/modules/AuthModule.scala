@@ -52,7 +52,17 @@ object AuthModule {
     }
   }
 
-  def login(userId: Long): IO[Response[IO]] = {
+  def login(username: String, password: String): IO[Response[IO]] = {
+    if (username === "admin" && password === "admin") {
+      val userId = 1
+      val res = mkUserLoginResponse(userId)
+      IO.pure(res)
+    } else {
+      IO.pure(Response(status = Status.Forbidden))
+    }
+  }
+
+  def mkUserLoginResponse(userId: Long): Response[IO] = {
     val jwt = JwtCirce.encode(
       Json.obj("authUserId" -> Json.fromLong(userId)),
       World.config.authConfig.key,
@@ -70,7 +80,7 @@ object AuthModule {
       httpOnly = true
     )
 
-    IO.pure(Response(status = Status.Ok).addCookie(cookie))
+    Response(status = Status.Ok).addCookie(cookie)
   }
 
   def logout(): IO[Response[IO]] = {
