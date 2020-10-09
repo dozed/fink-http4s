@@ -1,4 +1,4 @@
-import {getGalleries} from "api";
+import { getPages } from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
@@ -6,7 +6,7 @@ import Table from "react-bootstrap/Table";
 import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
-const GalleryLine = ({info, onEdit}) => (
+const PageLine = ({info, onEdit}) => (
   <tr>
     <td>{info.title}</td>
     <td>{moment(info.date).format("MMM Do YY")}</td>
@@ -16,21 +16,20 @@ const GalleryLine = ({info, onEdit}) => (
   </tr>
 );
 
-export default class Galleries extends Component {
+export default class Pages extends Component {
   state = {
-    galleries: [],
+    pages: [],
   };
 
   componentDidMount() {
-    getGalleries().then(xs => this.setState({ galleries: xs }));
+    getPages().then(xs => this.setState({ pages: xs }));
   }
 
   render() {
-    // const { username } = this.state;
     return (
-      <div className="galleries-list items-list">
+      <div className="items-list">
         <ButtonToolbar>
-          <Button onClick={() => this.createGallery()}>Create Gallery</Button>
+          <Button onClick={() => this.createPage()}>Create Page</Button>
         </ButtonToolbar>
         <div>
           <Table>
@@ -42,7 +41,7 @@ export default class Galleries extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.galleries.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.viewGallery(g)}/>)}
+            {this.state.pages.map(x => <PageLine key={`page-${x.id}`} info={x} onEdit={(x) => this.editPage(x)}/>)}
             </tbody>
           </Table>
         </div>
@@ -50,8 +49,24 @@ export default class Galleries extends Component {
     );
   }
 
-  viewGallery(g) {
-    this.props.history.push(`/galleries/${g.id}`);
+  editPage(x) {
+    this.props.history.push(`/admin/pages/${x.id}`);
+  }
+
+  createPage() {
+    this.props.history.push(`/admin/pages/create`);
+  }
+
+  onChangeTitle(e) {
+    this.setState({
+      title: e.target.value
+    });
+  }
+
+  onChangeText(e) {
+    this.setState({
+      text: e.target.value
+    });
   }
 
 }

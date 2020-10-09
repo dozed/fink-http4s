@@ -1,5 +1,6 @@
+import {getPage, updatePage} from "../../frontend-shared/api";
+
 import React, {Component} from "react";
-import {getPage, updatePage} from "api";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";

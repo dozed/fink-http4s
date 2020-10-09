@@ -1,10 +1,7 @@
-import {getGalleries} from "api";
+import {getGalleries} from "../../../frontend-shared/api";
 
 import React, {Component} from "react";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
 import moment from "moment";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 const GalleryLine = ({info, onEdit}) => (
   <tr>
@@ -42,7 +39,7 @@ export default class Galleries extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.galleries.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.editGallery(g)}/>)}
+            {this.state.galleries.map(x => <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.viewGallery(g)}/>)}
             </tbody>
           </Table>
         </div>
@@ -50,12 +47,8 @@ export default class Galleries extends Component {
     );
   }
 
-  editGallery(g) {
-    this.props.history.push(`/admin/galleries/${g.id}`);
-  }
-
-  createGallery() {
-    this.props.history.push(`/admin/galleries/create`);
+  viewGallery(g) {
+    this.props.history.push(`/galleries/${g.id}`);
   }
 
 }

@@ -1,14 +1,14 @@
-import {createPage} from "api";
+import { createGallery } from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
 
-export default class CreatePage extends Component {
+export default class CreateGallery extends Component {
   state = {
     title: "",
-    text: "",
+    text: ""
   };
 
   render() {
@@ -26,7 +26,7 @@ export default class CreatePage extends Component {
 
         <ButtonToolbar>
           <Button variant="secondary" onClick={() => this.cancel()}>Cancel</Button>
-          <Button variant="primary" onClick={() => this.createPost()}>Submit</Button>
+          <Button variant="primary" onClick={() => this.createGallery()}>Submit</Button>
         </ButtonToolbar>
       </Form>
     );
@@ -48,8 +48,8 @@ export default class CreatePage extends Component {
     });
   }
 
-  createPost() {
-    createPage(this.state.title, this.state.text, [], this.state.title)
+  createGallery() {
+    createGallery(this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
         this.props.history.goBack();
       });

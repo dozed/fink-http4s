@@ -1,4 +1,4 @@
-import {getPosts} from "api";
+import { getPosts } from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";

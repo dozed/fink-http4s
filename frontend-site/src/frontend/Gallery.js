@@ -1,18 +1,5 @@
 import React, { Component } from "react";
-import {getGalleries, getGallery, updateGallery, uploadImage, uploadImageToGallery} from "api";
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button";
-import { LinkContainer } from "react-router-bootstrap"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams
-} from "react-router-dom";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import {getGalleries, getGallery, updateGallery, uploadImage, uploadImageToGallery} from "../../../frontend-shared/api";
 
 
 export default class Gallery extends Component {

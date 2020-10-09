@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 
-import "app.scss";
-import AdminIndex from "./AdminIndex";
-import {fetchMe, login, logout} from "../api";
+import AdminIndex from "AdminIndex";
+import {fetchMe, login, logout} from "../../frontend-shared/api";
+
+import "admin.scss";
 
 class AdminLogin extends Component {
 

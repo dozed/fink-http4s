@@ -1,5 +1,6 @@
+import { getGallery, updateGallery, uploadImageToGallery } from "../../frontend-shared/api";
+
 import React, {Component} from "react";
-import {getGallery, updateGallery, uploadImageToGallery} from "api";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";

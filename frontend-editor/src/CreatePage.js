@@ -1,11 +1,11 @@
-import {createPost} from "api";
+import { createPage } from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
 
-export default class CreatePost extends Component {
+export default class CreatePage extends Component {
   state = {
     title: "",
     text: "",
@@ -33,7 +33,6 @@ export default class CreatePost extends Component {
   }
 
   cancel() {
-    // this.props.history.push(`/posts`);
     this.props.history.goBack();
   }
 
@@ -50,7 +49,7 @@ export default class CreatePost extends Component {
   }
 
   createPost() {
-    createPost(this.state.title, this.state.text, [], this.state.title)
+    createPage(this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
         this.props.history.goBack();
       });
