@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 
-import Home from "frontend/Home";
-import Galleries from "frontend/Galleries";
-import Gallery from "frontend/Gallery";
+import Home from "Home";
+import Galleries from "Galleries";
+import Gallery from "Gallery";
 
 export default class App extends Component {
   state = {

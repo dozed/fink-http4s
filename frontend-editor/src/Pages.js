@@ -50,11 +50,11 @@ export default class Pages extends Component {
   }
 
   editPage(x) {
-    this.props.history.push(`/admin/pages/${x.id}`);
+    this.props.history.push(`/pages/${x.id}`);
   }
 
   createPage() {
-    this.props.history.push(`/admin/pages/create`);
+    this.props.history.push(`/pages/create`);
   }
 
   onChangeTitle(e) {

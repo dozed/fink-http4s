@@ -1,5 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import AdminApp from "AdminApp";
+import EditorApp from "EditorApp";
 
-ReactDOM.render(<AdminApp />, document.getElementById("root"));
+ReactDOM.render(<EditorApp />, document.getElementById("root"));

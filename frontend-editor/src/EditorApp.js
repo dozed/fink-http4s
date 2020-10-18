@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 
-import AdminIndex from "AdminIndex";
+import EditorIndex from "EditorIndex";
 import {fetchMe, login, logout} from "../../frontend-shared/api";
 
-import "admin.scss";
+import "editor.scss";
 
-class AdminLogin extends Component {
+class EditorLogin extends Component {
 
   constructor(props) {
     super(props);
@@ -43,7 +43,7 @@ class AdminLogin extends Component {
 
 }
 
-export default class AdminApp extends Component {
+export default class EditorApp extends Component {
   state = {
     user: null,
     loading: true
@@ -58,8 +58,8 @@ export default class AdminApp extends Component {
   render() {
     return (
       <div>
-        {!this.state.loading && this.state.user && <AdminIndex onLogout={this.logout} />}
-        {!this.state.loading && !this.state.user && <AdminLogin onLogin={this.login} />}
+        {!this.state.loading && this.state.user && <EditorIndex onLogout={this.logout} />}
+        {!this.state.loading && !this.state.user && <EditorLogin onLogin={this.login} />}
       </div>
     );
   }

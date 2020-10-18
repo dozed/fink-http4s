@@ -1,8 +1,7 @@
 {
-  "name": "fink-site",
+  "name": "fink-frontend-site",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Fink Frontend Site",
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open"
@@ -29,6 +28,7 @@
     "moment": "^2.29.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0"
   }
 }

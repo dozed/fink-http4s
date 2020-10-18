@@ -12,7 +12,7 @@ module.exports = {
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
-    modules: [ "node_modules", "stylesheets", "src" ]
+    modules: [ "node_modules", "stylesheets", "src", "../frontend-shared" ]
   },
   module: {
     rules: [

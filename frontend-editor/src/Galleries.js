@@ -51,11 +51,11 @@ export default class Galleries extends Component {
   }
 
   editGallery(g) {
-    this.props.history.push(`/admin/galleries/${g.id}`);
+    this.props.history.push(`/galleries/${g.id}`);
   }
 
   createGallery() {
-    this.props.history.push(`/admin/galleries/create`);
+    this.props.history.push(`/galleries/create`);
   }
 
 }

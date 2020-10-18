@@ -50,11 +50,11 @@ export default class Posts extends Component {
   }
 
   editPost(x) {
-    this.props.history.push(`/admin/posts/${x.id}`);
+    this.props.history.push(`/posts/${x.id}`);
   }
 
   createPost(x) {
-    this.props.history.push(`/admin/posts/create`);
+    this.props.history.push(`/posts/create`);
   }
 
   onChangeTitle(e) {

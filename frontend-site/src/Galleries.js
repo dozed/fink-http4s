@@ -1,4 +1,4 @@
-import {getGalleries} from "../../../frontend-shared/api";
+import {getGalleries} from "api";
 
 import React, {Component} from "react";
 import moment from "moment";

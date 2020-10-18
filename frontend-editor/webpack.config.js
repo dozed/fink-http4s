@@ -15,7 +15,7 @@ module.exports = {
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
-    modules: [ "node_modules", "stylesheets", "src" ]
+    modules: [ "node_modules", "stylesheets", "src", "../frontend-shared" ]
   },
   devServer: {
     port: 3000,
@@ -38,22 +38,6 @@ module.exports = {
         use: [
           "style-loader",
           "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              plugins: (loader) => [
-                require("postcss-import")({
-                  root: loader.resourcePath
-                }),
-                require("postcss-cssnext")({
-                  browsers: ">0.01%"
-                }),
-                require("cssnano")({
-                  zindex: false
-                })
-              ]
-            }
-          },
           "sass-loader"
         ]
       },

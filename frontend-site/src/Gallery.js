@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import {getGalleries, getGallery, updateGallery, uploadImage, uploadImageToGallery} from "../../../frontend-shared/api";
+import {getGallery, updateGallery} from "api";
 
+import React, { Component } from "react";
 
 export default class Gallery extends Component {
   state = {

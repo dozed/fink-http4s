@@ -5,7 +5,6 @@ import Container from "react-bootstrap/Container";
 import {LinkContainer} from "react-router-bootstrap"
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 
-import Home from "Home";
 import Galleries from "Galleries";
 import EditGallery from "EditGallery";
 import Posts from "Posts";
@@ -16,7 +15,7 @@ import Pages from "Pages";
 import CreatePage from "CreatePage";
 import EditPage from "EditPage";
 
-export default class AdminIndex extends Component {
+export default class EditorIndex extends Component {
   state = {
     user: null
   };
@@ -26,7 +25,7 @@ export default class AdminIndex extends Component {
       <div>
         <Router>
           <Navbar bg="light" expand="lg">
-            <LinkContainer to="/admin">
+            <LinkContainer to="/">
               <Navbar.Brand>fink</Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
@@ -49,7 +48,7 @@ export default class AdminIndex extends Component {
           </Navbar>
           <Container fluid={true}>
             <Switch>
-              <Route path="/" exact component={Home} />
+              {/*<Route path="/" exact component={Home} />*/}
               <Route path="/galleries" exact component={Galleries} />
               <Route path="/galleries/create" exact component={CreateGallery} />
               <Route path="/galleries/:galleryId" component={EditGallery} />

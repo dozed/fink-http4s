@@ -1,5 +1,7 @@
+import {getPosts} from "api";
+import {Post} from "Post";
+
 import React from "react";
-import {getPosts} from "../../../frontend-shared/api";
 
 export default class Home extends React.Component {
   state = {
@@ -36,7 +38,10 @@ export default class Home extends React.Component {
         <div id="main" className="clearfix">
           <div id="primary">
             <div id="content" role="main">
-              Body
+
+              {this.state.posts.map(p => {
+                return (<Post post={p} />)
+              })}
             </div>
           </div>
 
