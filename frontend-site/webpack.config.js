@@ -1,7 +1,19 @@
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
+const outputDirectory = "dist";
+
 module.exports = {
+  output: {
+    path: path.join(__dirname, outputDirectory),
+    publicPath: "/",
+    filename: "bundle.js"
+  },
+  resolve: {
+    extensions: ["*", ".js", ".jsx"],
+    modules: [ "node_modules", "stylesheets", "src", "../frontend-shared" ]
+  },
   devServer: {
     port: 3010,
     open: true,
@@ -9,10 +21,6 @@ module.exports = {
       "/api": "http://localhost:8080"
     },
     historyApiFallback: true
-  },
-  resolve: {
-    extensions: ["*", ".js", ".jsx"],
-    modules: [ "node_modules", "stylesheets", "src", "../frontend-shared" ]
   },
   module: {
     rules: [

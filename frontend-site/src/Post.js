@@ -1,66 +1,99 @@
+import { getPost } from "api";
+
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 import moment from "moment";
+import remarkBreaks from "remark-breaks";
 
-export class Post extends React.Component {
+export default class Post extends React.Component {
+
+  state = {
+    post: null,
+    author: null,
+    tags: []
+  };
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const postId = this.props.match.params.postId;
+
+    if (prevProps.match.params.postId !== postId) {
+      getPost(postId).then((data) => {
+        this.setState(data);
+      });
+    }
+  }
+
+  componentDidMount() {
+    const postId = this.props.match.params.postId;
+    getPost(postId).then((data) => {
+      this.setState(data);
+    });
+  }
+
   render() {
-    const post = this.props.post;
+    const post = this.state.post;
+    const author = this.state.author;
+    const tags = this.state.tags;
+
+    if (!post) {
+      return <div />;
+    }
+
+    const postdate = moment(post.date);
+    const datetime = postdate.format("MMMM DD, YYYY");
+    const month = postdate.format("MMMM");
+    const day = postdate.format("DD");
+    const year = postdate.format("YYYY");
 
     return (
-      <div className={"content-wrap"}>
-        <article className={"post type-post status-publish format-standard hentry"}>
-          <div>
-            <header className={"entry-header"}>
-              <h1 className={"entry-title"}>
-                <a href={`/posts/${post.id}`} rel={"bookmark"}>{post.title}</a>
-              </h1>
-              <div className={"entry-meta"}>
-                <a href={`/posts/${post.id}`}>
-                  <time className={"entry-date"}>{moment(post.date).format("MMMM DD, YYYY")}</time>
-                </a>
-              </div>
-            </header>
+      <div className={"content-wrap clearfix"}>
+        <article id="post" className={"type-post status-publish format-aside hentry category-uncategorized tag-post-formats clearfix"}>
+          <header className={"entry-header"}>
+            <h1 className={"entry-title"}>{post.title}</h1>
+            <div className={"entry-meta"}>
+              <span className={"sep"}>Posted </span>
+              <a href={`/posts/${post.id}`}>
+                <time className={"entry-date"} dateTime={datetime}>{datetime}</time>
+              </a>
+            </div>
+          </header>
 
-            {(post.text.length > 200) &&
-              <div className={"entry-summary"}>
-                <div>
-                  <ReactMarkdown source={post.text.substr(0, 200) + " …"} />
-                </div>
-                <a href={`/posts/${post.id}`}>
-                  Continue reading
-                  <span className={"meta-nav"}>→</span>
-                </a>
-              </div>
-            }
+          <div className={"entry-content"}>
+            <ReactMarkdown source={post.text} plugins={[remarkBreaks]}/>
+          </div>
 
-            {(post.text.length <= 200) &&
-              <div>
-                <div>
-                  <ReactMarkdown source={post.text} />
-                </div>
-              </div>
-            }
+          <footer className={"entry-meta"}>
+            <div className={"post-date"}>
+              <time className={"entry-date"} pubdate={""} dateTime={datetime}>
+                <span className={"month"}>{month} </span>
+                <span className={"day"}>{day}</span>
+                <span className={"sep"}>, </span>
+                <span className={"year"}>{year}</span>
+              </time>
+            </div>
 
-            <footer className={"entry-meta"}>
-              <span className={"entry-utility-prep entry-utility-prep-cat-links"}>
-                {"Posted in "}
-              </span>
-
-              {
-                (post.tags && post.tags.length > 0) &&
-                  post.tags.map(t => {
+            {
+              (tags && tags.length > 0) &&
+                <div className={"tags"}>
+                  <span>Tagged:</span>
+                  {
+                  tags.map(t => {
                     return (
-                      <a href={`/tag/${t.name}`} rel={"tag"} title={`View all posts in ${t.name}`}>{t.name}</a>
+                      <Link to={`/tag/${t.name}`} rel={"tag"} title={`View all posts in ${t.name}`}>{t.name}</Link>
                     );
                   })
-              }
+                }</div>
+            }
 
-              {
-                (!post.tags || post.tags.length === 0) &&
-                  <a href={"/category/uncategorized"}>Uncategorized</a>
-              }
-            </footer>
-          </div>
+            {
+              (!tags || tags.length === 0) &&
+                <div className={"categories"}>
+                  <span>Categorized: </span>
+                  <Link rel="category tag" title={"View all posts in Uncategorized"} to="/category/uncategorized/">Uncategorized</Link>
+                </div>
+            }
+          </footer>
         </article>
       </div>
     );
