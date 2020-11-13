@@ -34,7 +34,7 @@ export default class EditPage extends Component {
 
           <Form.Group controlId="formText">
             <Form.Label>Text</Form.Label>
-            <Form.Control as="textarea" rows="3" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} value={this.state.text} />
+            <Form.Control as="textarea" rows="15" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} value={this.state.text} />
           </Form.Group>
 
           <ButtonToolbar>

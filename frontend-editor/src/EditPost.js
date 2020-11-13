@@ -34,7 +34,7 @@ export default class EditPost extends Component {
 
           <Form.Group controlId="formText">
             <Form.Label>Text</Form.Label>
-            <Form.Control as="textarea" rows="3" placeholder="Enter description" onChange={(e) => this.onChangeText(e)} value={this.state.text} />
+            <Form.Control as="textarea" rows="15" placeholder="Enter description" onChange={(e) => this.onChangeText(e)} value={this.state.text} />
           </Form.Group>
 
           <ButtonToolbar>

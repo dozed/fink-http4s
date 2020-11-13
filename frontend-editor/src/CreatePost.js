@@ -21,7 +21,7 @@ export default class CreatePost extends Component {
 
         <Form.Group controlId="formText">
           <Form.Label>Text</Form.Label>
-          <Form.Control as="textarea" rows="3" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} />
+          <Form.Control as="textarea" rows="15" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} />
         </Form.Group>
 
         <ButtonToolbar>
