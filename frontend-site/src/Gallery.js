@@ -1,26 +1,46 @@
 import {getGallery, updateGallery} from "api";
 
 import React, { Component } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 
 export default class Gallery extends Component {
   state = {
-    title: "",
-    text: "",
+    gallery: null,
     images: [],
   };
 
   componentDidMount() {
 
-    this.loadGallery(this.props.match.params.galleryId);
+    const galleryId = this.props.match.params.galleryId;
 
-  }
+    getGallery(galleryId).then(g => {
+      this.setState({
+        gallery: g.gallery,
+        images: g.images
+      });
+    });
 
-  loadGallery(galleryId) {
-    getGallery(this.props.match.params.galleryId)
-      .then(g => this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images }));
   }
 
   render() {
+    return (
+      this.state.gallery &&
+        <div className="content-wrap clearfix">
+          <article id="post-2" className={`gallery-${this.state.gallery.id} page type-page status-publish hentry`}>
+            <header className="entry-header">
+              <h1 className="entry-title">{this.state.gallery.title}</h1>
+            </header>
+            <div className="entry-content">
+              <ReactMarkdown source={this.state.gallery.text} plugins={[remarkBreaks]}/>
+            </div>
+            <div className="images">
+              {this.state.images.map(i => <img key={`img-${i.id}`} src={"/" + i.fileName} alt=""/>)}
+            </div>
+          </article>
+        </div>
+    );
+
     // const { username } = this.state;
     return (
       <div className="gallery-edit">
