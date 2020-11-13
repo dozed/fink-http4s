@@ -1,8 +1,19 @@
+import {getPages} from "api";
 
 import React from "react";
 import {Link} from "react-router-dom";
 
 export default class Layout extends React.Component {
+
+  state = {
+    pages: []
+  };
+
+  componentDidMount() {
+    getPages().then(res => {
+      this.setState({ pages: res });
+    });
+  }
 
   render() {
     return (
@@ -23,9 +34,13 @@ export default class Layout extends React.Component {
             </div>
             <div className="menu-primary-container">
               <ul id="menu-primary" className="menu">
-                <li className="menu-item menu-item-type-post_type menu-item-object-page" id="menu-item-1">
-                  <Link to="/">Home</Link>
-                </li>
+                {this.state.pages.map(p => {
+                  return (
+                    <li key={`page-${p.id}`} className="menu-item menu-item-type-post_type menu-item-object-page" id="menu-item-1">
+                      <Link to={`/pages/${p.id}`}>{p.title}</Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </nav>
