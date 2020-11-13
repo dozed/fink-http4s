@@ -24,7 +24,7 @@ export default class Layout extends React.Component {
             <div className="menu-primary-container">
               <ul id="menu-primary" className="menu">
                 <li className="menu-item menu-item-type-post_type menu-item-object-page" id="menu-item-1">
-                  <a href="/page/shortlink">page.title</a>
+                  <Link to="/">Home</Link>
                 </li>
               </ul>
             </div>

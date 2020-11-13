@@ -21,11 +21,6 @@ export default class App extends React.Component {
             <Route path="/" exact component={Home} />
             {/*<Route path="/posts" exact component={Posts} />*/}
             <Route path="/posts/:postId" component={Post} />
-            {/*<Route path="/posts/:postId" render={(props) => {*/}
-            {/*  //do your console log or temporary testing stuff here*/}
-            {/*  console.log(123);*/}
-            {/*  return <Post {...props} />*/}
-            {/*}} />*/}
             <Route path="/galleries" exact component={Galleries} />
             <Route path="/galleries/:galleryId" component={Gallery} />
             {/*<Route path="/pages" exact component={Pages} />*/}

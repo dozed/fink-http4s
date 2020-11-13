@@ -12,7 +12,7 @@ export default class Home extends React.Component {
 
   render() {
     return this.state.posts.map(p => {
-      return (<PostItem post={p} />)
+      return <PostItem key={`post-${p.id}`} post={p} />;
     });
   }
 

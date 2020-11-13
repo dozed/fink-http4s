@@ -15,7 +15,7 @@ At the moment the following content elements are supported:
 
 ## Backend
 
-<img src="fink-admin.png" />
+<img src="fink-editor.png" />
 
 # Running the demo
 
