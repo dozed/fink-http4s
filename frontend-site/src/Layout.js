@@ -1,19 +1,7 @@
-import {getPages} from "api";
-
 import React from "react";
 import {Link} from "react-router-dom";
 
 export default class Layout extends React.Component {
-
-  state = {
-    pages: []
-  };
-
-  componentDidMount() {
-    getPages().then(res => {
-      this.setState({ pages: res });
-    });
-  }
 
   render() {
     return (
@@ -34,7 +22,7 @@ export default class Layout extends React.Component {
             </div>
             <div className="menu-primary-container">
               <ul id="menu-primary" className="menu">
-                {this.state.pages.map(p => {
+                {this.props.pages.map(p => {
                   return (
                     <li key={`page-${p.id}`} className="menu-item menu-item-type-post_type menu-item-object-page" id="menu-item-1">
                       <Link to={`/pages/${p.id}`}>{p.title}</Link>
@@ -60,6 +48,17 @@ export default class Layout extends React.Component {
                 {this.props.posts.map(p => {
                   return (<li key={`post-item-${p.id}`}>
                     <Link to={`/posts/${p.id}`}>{p.title}</Link>
+                  </li>)
+                })}
+              </ul>
+            </aside>
+
+            <aside id="archives" className="widget">
+              <h1 className="widget-title">Galleries</h1>
+              <ul>
+                {this.props.galleries.map(g => {
+                  return (<li key={`gallery-item-${g.id}`}>
+                    <Link to={`/galleries/${g.id}`}>{g.title}</Link>
                   </li>)
                 })}
               </ul>
