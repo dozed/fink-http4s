@@ -3,6 +3,7 @@ import Post from "Post";
 import Galleries from "Galleries";
 import Gallery from "Gallery";
 import Layout from "Layout";
+import { Page } from "Page";
 import {getPosts} from "api";
 
 import React from "react";
@@ -23,8 +24,7 @@ export default class App extends React.Component {
             <Route path="/posts/:postId" component={Post} />
             <Route path="/galleries" exact component={Galleries} />
             <Route path="/galleries/:galleryId" component={Gallery} />
-            {/*<Route path="/pages" exact component={Pages} />*/}
-            {/*<Route path="/pages/:pageId" component={Page} />*/}
+            <Route path="/pages/:pageId" component={Page} />
           </Switch>
         </Layout>
       </Router>
