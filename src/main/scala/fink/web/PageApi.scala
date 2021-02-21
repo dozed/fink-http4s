@@ -27,9 +27,9 @@ object PageApi {
       for {
         op <- req.decodeJson[Operation.CreatePage]
         user <- fetchUser(req).rethrow
-        postInfo <- PageDAO.create(op.title, op.text, user, op.tags).transact(xa)
+        pageInfo <- PageDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
-          val msg = Notification.CreatedPage(postInfo)
+          val msg = Notification.CreatedPage(pageInfo)
           Ok(msg)
         }
       } yield {
