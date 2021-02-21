@@ -12,6 +12,8 @@ src/main/webapp/uploads
 
 /.cache
 
+dist
+
 data/uploads/*
 !data/uploads/.gitkeep
 
