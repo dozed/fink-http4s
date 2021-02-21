@@ -6,10 +6,12 @@ import doobie.implicits._
 import fink.EntityEncoders._
 import fink.World._
 import fink.data.{Operation, _}
+import fink.data.JsonInstances._
 import fink.db.PostDAO
 import fink.modules.AuthModule._
 import org.http4s._
 import org.http4s.dsl.io._
+import org.http4s.circe._
 
 object PostApi {
 
@@ -23,7 +25,7 @@ object PostApi {
     case req@POST -> Root / "posts" =>
 
       for {
-        op <- req.as[Operation.CreatePost]
+        op <- req.decodeJson[Operation.CreatePost]
         user <- fetchUser(req).rethrow
         postInfo <- PostDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
@@ -43,7 +45,7 @@ object PostApi {
     case req@POST -> Root / "posts" / LongVar(postId) =>
 
       for {
-        op <- req.as[Operation.UpdatePost]
+        op <- req.decodeJson[Operation.UpdatePost]
         user <- fetchUser(req).rethrow
         postInfo <- PostDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
@@ -57,7 +59,7 @@ object PostApi {
     case req@DELETE -> Root / "posts" / LongVar(postId) =>
 
       for {
-        op <- req.as[Operation.DeletePost]
+        op <- req.decodeJson[Operation.DeletePost]
         user <- fetchUser(req).rethrow
         _ <- PostDAO.delete(op.id).transact(xa)
         res <- Ok()

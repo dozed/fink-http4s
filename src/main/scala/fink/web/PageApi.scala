@@ -5,11 +5,13 @@ import cats.implicits._
 import doobie.implicits._
 import fink.EntityEncoders._
 import fink.World._
-import fink.data.{Operation, _}
+import fink.data._
+import fink.data.JsonInstances._
 import fink.db.{PageDAO, TagDAO}
 import fink.modules.AuthModule._
 import org.http4s._
 import org.http4s.dsl.io._
+import org.http4s.circe._
 
 object PageApi {
 
@@ -23,7 +25,7 @@ object PageApi {
     case req@POST -> Root / "pages" =>
 
       for {
-        op <- req.as[Operation.CreatePage]
+        op <- req.decodeJson[Operation.CreatePage]
         user <- fetchUser(req).rethrow
         postInfo <- PageDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
@@ -43,7 +45,7 @@ object PageApi {
     case req@POST -> Root / "pages" / LongVar(postId) =>
 
       for {
-        op <- req.as[Operation.UpdatePage]
+        op <- req.decodeJson[Operation.UpdatePage]
         user <- fetchUser(req).rethrow
         pageInfo <- PageDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
@@ -57,7 +59,7 @@ object PageApi {
     case req@DELETE -> Root / "pages" / LongVar(pageId) =>
 
       for {
-        op <- req.as[Operation.DeletePage]
+        op <- req.decodeJson[Operation.DeletePage]
         user <- fetchUser(req).rethrow
         _ <- PageDAO.delete(op.id).transact(xa)
         res <- Ok()

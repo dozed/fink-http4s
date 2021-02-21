@@ -5,12 +5,14 @@ import cats.implicits._
 import doobie.implicits._
 import fink.EntityEncoders._
 import fink.World._
-import fink.data.{Operation, _}
+import fink.data._
+import fink.data.JsonInstances._
 import fink.db.{GalleryDAO, ImageDAO}
 import fink.media.{Hashes, Uploads, UrlData}
 import fink.modules.AuthModule._
 import org.http4s._
 import org.http4s.dsl.io._
+import org.http4s.circe._
 
 object GalleryApi {
 
@@ -24,7 +26,7 @@ object GalleryApi {
     case req@POST -> Root / "galleries" =>
 
       for {
-        op <- req.as[Operation.CreateGallery]
+        op <- req.decodeJson[Operation.CreateGallery]
         user <- fetchUser(req).rethrow
         galleryInfo <- GalleryDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
@@ -44,7 +46,7 @@ object GalleryApi {
     case req@POST -> Root / "galleries" / LongVar(imageId) =>
 
       for {
-        op <- req.as[Operation.UpdateGallery]
+        op <- req.decodeJson[Operation.UpdateGallery]
         user <- fetchUser(req).rethrow
         galleryInfo <- GalleryDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
@@ -58,7 +60,7 @@ object GalleryApi {
     case req@DELETE -> Root / "galleries" / LongVar(galleryId) =>
 
       for {
-        op <- req.as[Operation.DeleteGallery]
+        op <- req.decodeJson[Operation.DeleteGallery]
         user <- fetchUser(req).rethrow
         _ <- GalleryDAO.delete(op.id).transact(xa)
         res <- Ok()
@@ -69,7 +71,7 @@ object GalleryApi {
     case req@POST -> Root / "galleries" / LongVar(galleryId) / "images" =>
 
       for {
-        op <- req.as[Operation.UploadImageToGallery]
+        op <- req.decodeJson[Operation.UploadImageToGallery]
         user <- fetchUser(req).rethrow
 
         image <- UrlData.decodeFile(op.imageData)

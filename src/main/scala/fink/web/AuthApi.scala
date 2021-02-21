@@ -4,12 +4,14 @@ import cats.effect._
 import cats.implicits._
 import fink.World._
 import fink.EntityEncoders._
+import fink.data.JsonInstances._
 import fink.data.Operation
 import fink.modules.AuthModule
 import io.circe.Json
 import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.io._
+import org.http4s.circe._
 
 object AuthApi {
 
@@ -17,7 +19,7 @@ object AuthApi {
 
     case req@POST -> Root / "login" =>
       for {
-        op <- req.as[Operation.Login]
+        op <- req.decodeJson[Operation.Login]
         res <- {
           AuthModule.login(op.username, op.password)
         }

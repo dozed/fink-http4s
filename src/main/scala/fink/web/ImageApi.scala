@@ -6,11 +6,13 @@ import doobie.implicits._
 import fink.EntityEncoders._
 import fink.World._
 import fink.data.Operation
+import fink.data.JsonInstances._
 import fink.db.ImageDAO
 import fink.media.{Hashes, Uploads, UrlData}
 import fink.modules.AuthModule._
 import org.http4s._
 import org.http4s.dsl.io._
+import org.http4s.circe._
 
 object ImageApi {
 
@@ -24,7 +26,7 @@ object ImageApi {
     case req@POST -> Root / "images" =>
 
       for {
-        op <- req.as[Operation.CreateImage]
+        op <- req.decodeJson[Operation.CreateImage]
         user <- fetchUser(req).rethrow
 
         image <- UrlData.decodeFile(op.imageData)
@@ -47,7 +49,7 @@ object ImageApi {
     //    case req@POST -> Root / "images" / LongVar(imageId) =>
     //
     //      for {
-    //        op <- req.as[Operation.UpdateImage]
+    //        op <- req.decodeJson[Operation.UpdateImage]
     //        user <- fetchUser(req).rethrow
     //        imageInfo <- ImageDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
     //        res <- {
@@ -61,7 +63,7 @@ object ImageApi {
     case req@DELETE -> Root / "images" / LongVar(imageId) =>
 
       for {
-        op <- req.as[Operation.DeleteImage]
+        op <- req.decodeJson[Operation.DeleteImage]
         user <- fetchUser(req).rethrow
         _ <- ImageDAO.delete(op.id).transact(xa)
         res <- Ok()
