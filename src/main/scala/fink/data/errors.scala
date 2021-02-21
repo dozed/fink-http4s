@@ -2,7 +2,7 @@ package fink.data
 
 
 sealed trait ErrorCode extends Throwable {
-  override def getMessage() = this.getClass.getSimpleName.replaceAllLiterally("$", "")
+  override def getMessage() = this.getClass.getSimpleName.replace("$", "")
 }
 
 object ErrorCode {
@@ -13,7 +13,7 @@ object ErrorCode {
   }
 
   object AlreadyExists extends ErrorCode
-  case class NotFound(msg: String) extends ErrorCodeMsg
+  case class UserNotFound(msg: String) extends ErrorCodeMsg
   case class ParseError(msg: String) extends ErrorCodeMsg
 
   case object InvalidRequest extends ErrorCode

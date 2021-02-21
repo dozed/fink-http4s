@@ -21,7 +21,7 @@ object AuthModule {
       case Left(error) => IO.pure(Left(error))
       case Right(userId) =>
         UserDAO.findById(userId).transact(xa).map {
-          case None => Left(ErrorCode.NotFound("Could not find user"))
+          case None => Left(ErrorCode.UserNotFound("Could not find user"))
           case Some(user) => Right(user)
         }
     }
