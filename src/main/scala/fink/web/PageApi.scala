@@ -24,16 +24,19 @@ object PageApi {
 
     case req@POST -> Root / "pages" =>
 
-      for {
-        op <- req.decodeJson[Operation.CreatePage]
-        user <- fetchUser(req).rethrow
-        pageInfo <- PageDAO.create(op.title, op.text, user, op.tags).transact(xa)
-        res <- {
-          val msg = Notification.CreatedPage(pageInfo)
-          Ok(msg)
+      loadUser(req) { user =>
+
+        for {
+          op <- req.decodeJson[Operation.CreatePage]
+          pageInfo <- PageDAO.create(op.title, op.text, user, op.tags).transact(xa)
+          res <- {
+            val msg = Notification.CreatedPage(pageInfo)
+            Ok(msg)
+          }
+        } yield {
+          res
         }
-      } yield {
-        res
+
       }
 
     case GET -> Root / "pages" / LongVar(pageId)  =>
