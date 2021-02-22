@@ -12,16 +12,24 @@ import fink.data._
 import fink.db.UserDAO
 import io.circe.Json
 import org.http4s._
+import org.http4s.dsl.io._
 import pdi.jwt.JwtCirce
 
 object AuthModule {
 
+  def loadUser(req: Request[IO])(f: User => IO[Response[IO]]): IO[Response[IO]] = {
+    fetchUser(req).flatMap {
+      case Left(e) => Forbidden()
+      case Right(user) => f(user)
+    }
+  }
+
   def fetchUser(req: Request[IO]): IO[Either[ErrorCode, User]] = {
     readUserId(req) match {
-      case Left(error) => IO.pure(Left(error))
+      case Left(error) => IO.pure(Left(ErrorCode.AuthenticationError))
       case Right(userId) =>
         UserDAO.findById(userId).transact(xa).map {
-          case None => Left(ErrorCode.UserNotFound("Could not find user"))
+          case None => Left(ErrorCode.AuthenticationError)
           case Some(user) => Right(user)
         }
     }
