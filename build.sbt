@@ -11,7 +11,7 @@ val http4sVersion = "0.21.19"
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
-  "com.pauldijou" %% "jwt-circe" % "4.1.0",
+  "com.pauldijou" %% "jwt-circe" % "5.0.0",
 
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-postgres" % doobieVersion,
