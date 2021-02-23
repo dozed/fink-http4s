@@ -41,7 +41,7 @@ class AuthTests extends Specification with ThrownMessages {
     World.config = AppConfig.load()
 
     val userId = 42
-    val key = "secretK3y"
+    val key = World.config.authConfig.key
     val algo = JwtAlgorithm.HS256
     val now = Instant.now.getEpochSecond
 
