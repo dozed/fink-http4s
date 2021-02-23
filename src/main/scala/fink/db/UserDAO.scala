@@ -22,7 +22,7 @@ object UserDAO {
     sql"SELECT * FROM users WHERE id = $userId".query[User].option
   }
 
-  def findByName(name: Long): ConnectionIO[Option[User]] = {
+  def findByName(name: String): ConnectionIO[Option[User]] = {
     sql"SELECT * FROM users WHERE name = $name".query[User].option
   }
 
