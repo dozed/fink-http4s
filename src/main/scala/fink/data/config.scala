@@ -3,6 +3,8 @@ package fink.data
 import com.typesafe.config.ConfigFactory
 import pdi.jwt.JwtAlgorithm
 import pdi.jwt.algorithms.JwtHmacAlgorithm
+import cats.Eq
+import cats.syntax.eq._
 
 case class AppConfig(
   port: Int,
@@ -14,8 +16,8 @@ case class AppConfig(
   authConfig: AuthConfig,
 ) {
 
-  def isProduction: Boolean = env == AppEnvironment.Production
-  def isDevelopment: Boolean = env == AppEnvironment.Development
+  def isProduction: Boolean = env === AppEnvironment.Production
+  def isDevelopment: Boolean = env === AppEnvironment.Development
 
   val uploadDirectory: String = s"$dataDirectory/uploads"
 
@@ -72,6 +74,9 @@ object AppEnvironment {
       case AppEnvironment.Production => "production"
     }
   }
+
+  implicit val appEnvironmentEquals: Eq[AppEnvironment] = Eq.fromUniversalEquals[AppEnvironment]
+
 }
 
 object AppConfig {
