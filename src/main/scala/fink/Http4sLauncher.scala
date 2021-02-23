@@ -32,7 +32,6 @@ object Http4sLauncher extends App {
     "/api" -> ImageApi.routes,
     "/api" -> TagApi.routes,
     "/api/auth" -> AuthApi.routes,
-    // "/assets" -> fileService[IO](FileService.Config("./assets")),
   ).orNotFound
 
   val messageFailureLogger = getLogger("org.http4s.server.message-failures")
