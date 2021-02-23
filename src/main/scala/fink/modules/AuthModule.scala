@@ -13,6 +13,7 @@ import fink.db.UserDAO
 import io.circe.Json
 import org.http4s._
 import org.http4s.dsl.io._
+import org.mindrot.jbcrypt.BCrypt
 import pdi.jwt.JwtCirce
 
 object AuthModule {
@@ -37,9 +38,9 @@ object AuthModule {
 
   def readUserId(req: Request[IO]): Either[ErrorCode, UserId] = {
     for {
-      header <- headers.Cookie.from(req.headers).toRight(ErrorCode.ParseError("Cookie parsing error"))
+      cookies <- headers.Cookie.from(req.headers).toRight(ErrorCode.ParseError("Cookie parsing error"))
       cookie <- {
-        header.values.toList
+        cookies.values.toList
           .find(_.name == World.config.authConfig.cookieName)
           .toRight(ErrorCode.ParseError("Couldn't find the authcookie"))
       }
@@ -47,12 +48,11 @@ object AuthModule {
         JwtCirce.decodeJson(
           cookie.content,
           World.config.authConfig.key,
-          Seq(World.config.authConfig.algo)
+          List(World.config.authConfig.algo)
         ).toEither.leftMap(_ => ErrorCode.ParseError("Couldnt read JWT"))
       }
       authUserId <- {
-        token.hcursor
-          .downField("authUserId").as[Long]
+        token.hcursor.get[Long]("authUserId")
           .leftMap(_ => ErrorCode.ParseError("Couldnt read authUserId from JWT"))
       }
     } yield {
@@ -61,13 +61,20 @@ object AuthModule {
   }
 
   def login(username: String, password: String): IO[Response[IO]] = {
-    if (username === "admin" && password === "admin") {
-      val userId = 1
-      val res = mkUserLoginResponse(userId)
-      IO.pure(res)
-    } else {
-      IO.pure(Response(status = Status.Forbidden))
+    UserDAO.findByName(username).transact(xa).flatMap {
+      case Some(user) =>
+        if (BCrypt.checkpw(password, user.password)) {
+          val res = mkUserLoginResponse(user.id)
+          IO.pure(res)
+        } else {
+          Forbidden()
+        }
+      case None => Forbidden()
     }
+  }
+
+  def logout(): IO[Response[IO]] = {
+    IO.pure(mkUserLogoutResponse())
   }
 
   def mkUserLoginResponse(userId: Long): Response[IO] = {
@@ -88,10 +95,10 @@ object AuthModule {
       httpOnly = true
     )
 
-    Response(status = Status.Ok).addCookie(cookie)
+    Response(Status.Ok).addCookie(cookie)
   }
 
-  def logout(): IO[Response[IO]] = {
+  def mkUserLogoutResponse(): Response[IO] = {
     val cookie = ResponseCookie(
       World.config.authConfig.cookieName,
       "",
@@ -99,7 +106,7 @@ object AuthModule {
       httpOnly = true
     )
 
-    IO.pure(Response(status = Status.Ok).removeCookie(cookie))
+    Response(Status.Ok).removeCookie(cookie)
   }
 
 }
