@@ -1,16 +1,17 @@
 package fink.media
 
 import fink.data.{AppConfig, ErrorCode}
-
 import java.io.File
 import java.nio.file.Files
+
 import org.slf4j.LoggerFactory
 import cats.syntax.all._
 import cats.effect._
+import org.log4s.getLogger
 
 object Uploads {
 
-  val logger = LoggerFactory.getLogger("Uploads")
+  val logger = getLogger("Uploads")
 
   def detectExtension(config: AppConfig, item: UrlData.Item): String = {
     ContentTypes.contentTypeExtensions.get(item.contentType).fold(
@@ -33,7 +34,7 @@ object Uploads {
 
     Either.catchNonFatal(Files.write(uploadFile.toPath, item.bytes)).fold(
       err => {
-        logger.error(err.getMessage, err)
+        logger.error(err)(err.getMessage)
         IO.raiseError(ErrorCode.InvalidRequest)
       },
       res => IO.pure(uploadFile)
