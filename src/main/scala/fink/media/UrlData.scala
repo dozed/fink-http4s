@@ -39,7 +39,10 @@ object UrlData {
       (contentType, data) = x
       bytes <- {
         IO.delay(java.util.Base64.getDecoder.decode(data))
-          .handleErrorWith(err => IO.raiseError(ErrorCode.InvalidRequest))
+          .handleErrorWith(err => {
+            logger.error(err)("error decoding url data")
+            IO.raiseError(ErrorCode.InvalidRequest)
+          })
       }
       realContentType = ContentTypes.detectContentType(bytes)
     } yield Item(realContentType, bytes)
