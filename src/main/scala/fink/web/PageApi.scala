@@ -22,6 +22,12 @@ object PageApi {
         Ok(xs)
       }
 
+    case GET -> Root / "pages" / LongVar(pageId)  =>
+
+      PageDAO.findPageInfoById(pageId).transact(xa).flatMap { infoMaybe =>
+        infoMaybe.fold(NotFound())(info => Ok(info))
+      }
+
     case req@POST -> Root / "pages" =>
 
       loadUser(req) { user =>
@@ -37,12 +43,6 @@ object PageApi {
           res
         }
 
-      }
-
-    case GET -> Root / "pages" / LongVar(pageId)  =>
-
-      PageDAO.findPageInfoById(pageId).transact(xa).flatMap { infoMaybe =>
-        infoMaybe.fold(NotFound())(info => Ok(info))
       }
 
     case req@POST -> Root / "pages" / LongVar(postId) =>
