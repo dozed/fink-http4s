@@ -4,11 +4,9 @@ name := "fink"
 version := "2.0.0-SNAPSHOT"
 scalaVersion := "2.13.3"
 
-val catsVersion = "2.1.1"
-val doobieVersion = "0.9.2"
-val metricsVersion = "3.0.2"
+val doobieVersion = "0.10.0"
 val circeVersion = "0.13.0"
-val http4sVersion = "0.21.7"
+val http4sVersion = "0.21.19"
 
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
