@@ -3,7 +3,7 @@ package fink.data
 import com.typesafe.config.ConfigFactory
 import pdi.jwt.JwtAlgorithm
 import pdi.jwt.algorithms.JwtHmacAlgorithm
-import cats.Eq
+import cats.{Eq, Show}
 import cats.syntax.eq._
 
 case class AppConfig(
@@ -57,7 +57,7 @@ object AppEnvironment {
   case object Test extends AppEnvironment
   case object Production extends AppEnvironment
 
-  def fromString(s: String): AppEnvironment = {
+  def unsafeFromString(s: String): AppEnvironment = {
     s match {
       case "development" => AppEnvironment.Development
       case "staging" => AppEnvironment.Staging
@@ -66,16 +66,14 @@ object AppEnvironment {
     }
   }
 
-  def asString(s: AppEnvironment): String = {
-    s match {
-      case AppEnvironment.Development => "development"
-      case AppEnvironment.Staging => "staging"
-      case AppEnvironment.Test => "test"
-      case AppEnvironment.Production => "production"
-    }
-  }
-
   implicit val appEnvironmentEquals: Eq[AppEnvironment] = Eq.fromUniversalEquals[AppEnvironment]
+
+  implicit val appEnvironmentShow: Show[AppEnvironment] = Show.show {
+    case AppEnvironment.Development => "development"
+    case AppEnvironment.Staging => "staging"
+    case AppEnvironment.Test => "test"
+    case AppEnvironment.Production => "production"
+  }
 
 }
 
@@ -86,7 +84,7 @@ object AppConfig {
     val dataDirectory = cfg.getString("dataDirectory")
     val webBase = cfg.getString("webBase")
     val port = cfg.getInt("port")
-    val env = AppEnvironment.fromString(cfg.getString("environment"))
+    val env = AppEnvironment.unsafeFromString(cfg.getString("environment"))
     val mailConfig = MailConfig(
       cfg.getString("email.user"),
       cfg.getString("email.password"),
