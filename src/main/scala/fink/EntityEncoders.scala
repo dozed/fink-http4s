@@ -21,12 +21,12 @@ object EntityEncoders {
   implicit val createdGalleryEntityEncoder: EntityEncoder[IO, Notification.CreatedGallery] = jsonEncoderOf[IO, Notification.CreatedGallery]
   implicit val updatedGalleryEntityEncoder: EntityEncoder[IO, Notification.UpdatedGallery] = jsonEncoderOf[IO, Notification.UpdatedGallery]
   implicit val galleryInfoEntityEncoder: EntityEncoder[IO, GalleryInfo] = jsonEncoderOf[IO, GalleryInfo]
-  implicit val galleryEntityEncoder: EntityEncoder[IO, List[Gallery]] = jsonEncoderOf[IO, List[Gallery]]
+  implicit val galleriesEntityEncoder: EntityEncoder[IO, List[Gallery]] = jsonEncoderOf[IO, List[Gallery]]
 
   implicit val createdImageEntityEncoder: EntityEncoder[IO, Notification.CreatedImage] = jsonEncoderOf[IO, Notification.CreatedImage]
   implicit val updatedImageEntityEncoder: EntityEncoder[IO, Notification.UpdatedImage] = jsonEncoderOf[IO, Notification.UpdatedImage]
   implicit val imageInfoEntityEncoder: EntityEncoder[IO, ImageInfo] = jsonEncoderOf[IO, ImageInfo]
-  implicit val imageEntityEncoder: EntityEncoder[IO, List[Image]] = jsonEncoderOf[IO, List[Image]]
+  implicit val imagesEntityEncoder: EntityEncoder[IO, List[Image]] = jsonEncoderOf[IO, List[Image]]
 
   implicit val tagsEntityEncoder: EntityEncoder[IO, List[Tag]] = jsonEncoderOf[IO, List[Tag]]
 
