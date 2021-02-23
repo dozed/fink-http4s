@@ -40,6 +40,7 @@ object Http4sLauncher extends App {
   val serviceErrorHandler: Request[IO] => PartialFunction[Throwable, IO[Response[IO]]] =
     req => {
       case ErrorCode.AuthenticationError => Forbidden()
+      case ErrorCode.InvalidRequest => BadRequest()
       case mf: MessageFailure =>
         messageFailureLogger.debug(mf)(
           s"""Message failure handling request: ${req.method} ${req.pathInfo} from ${req.remoteAddr
