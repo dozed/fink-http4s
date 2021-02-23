@@ -45,7 +45,7 @@ object PageApi {
 
       }
 
-    case req@POST -> Root / "pages" / LongVar(postId) =>
+    case req@POST -> Root / "pages" / LongVar(pageId) =>
 
       for {
         op <- req.decodeJson[Operation.UpdatePage]
