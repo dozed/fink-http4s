@@ -1,5 +1,7 @@
 package fink.data
 
+import cats.Eq
+
 case class User(
   id: Long,
   name: String,
@@ -41,6 +43,10 @@ case class Page(
   shortlink: String,
   text: String
 )
+
+object Page {
+  implicit val pageEq: Eq[Page] = Eq.fromUniversalEquals
+}
 
 case class Image(
   id: Long,
