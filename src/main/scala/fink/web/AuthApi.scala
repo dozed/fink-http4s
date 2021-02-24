@@ -4,6 +4,7 @@ import cats.effect._
 import cats.implicits._
 import fink.World._
 import fink.EntityEncoders._
+import fink.syntax._
 import fink.data.JsonInstances._
 import fink.data.Operation
 import fink.modules.AuthModule
@@ -33,7 +34,7 @@ object AuthApi {
     case req@GET -> Root / "me" =>
 
       for {
-        user <- AuthModule.fetchUser(req).rethrow
+        user <- req.authenticateUser
         userJson = {
           Json.obj(
             "id" -> Json.fromLong(user.id),

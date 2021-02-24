@@ -18,6 +18,13 @@ import pdi.jwt.JwtCirce
 
 object AuthModule {
 
+  def authenticateUser(req: Request[IO]): IO[User] = {
+    fetchUser(req).flatMap {
+      case Left(e) => IO.raiseError(e)
+      case Right(user) => IO.pure(user)
+    }
+  }
+
   def loadUser(req: Request[IO])(f: User => IO[Response[IO]]): IO[Response[IO]] = {
     fetchUser(req).flatMap {
       case Left(e) => Forbidden()

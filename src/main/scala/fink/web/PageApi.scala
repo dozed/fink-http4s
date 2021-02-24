@@ -9,6 +9,7 @@ import fink.data._
 import fink.data.JsonInstances._
 import fink.db.{PageDAO, TagDAO}
 import fink.modules.AuthModule._
+import fink.syntax._
 import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.circe._
@@ -49,7 +50,7 @@ object PageApi {
 
       for {
         op <- req.decodeJson[Operation.UpdatePage]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         pageInfo <- PageDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
           val msg = Notification.UpdatedPage(pageInfo)
@@ -63,7 +64,7 @@ object PageApi {
 
       for {
         op <- req.decodeJson[Operation.DeletePage]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- PageDAO.delete(op.id).transact(xa)
         res <- Ok()
       } yield {
@@ -73,7 +74,7 @@ object PageApi {
     case req@POST -> Root / "pages" / LongVar(pageId) / "tags" / tagName =>
 
       for {
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- PageDAO.addTag(pageId, tagName).transact(xa)
         res <- Ok()
       } yield {
@@ -83,7 +84,7 @@ object PageApi {
     case req@DELETE -> Root / "pages" / LongVar(pageId) / "tags" / tagName =>
 
       for {
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- PageDAO.removeTag(pageId, tagName).transact(xa)
         res <- Ok()
       } yield {

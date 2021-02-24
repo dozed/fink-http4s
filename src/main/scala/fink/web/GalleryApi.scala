@@ -7,6 +7,7 @@ import fink.EntityEncoders._
 import fink.World._
 import fink.data._
 import fink.data.JsonInstances._
+import fink.syntax._
 import fink.db.{GalleryDAO, ImageDAO}
 import fink.media.{Hashes, Uploads, UrlData}
 import fink.modules.AuthModule._
@@ -27,7 +28,7 @@ object GalleryApi {
 
       for {
         op <- req.decodeJson[Operation.CreateGallery]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         galleryInfo <- GalleryDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
           val msg = Notification.CreatedGallery(galleryInfo)
@@ -47,7 +48,7 @@ object GalleryApi {
 
       for {
         op <- req.decodeJson[Operation.UpdateGallery]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         galleryInfo <- GalleryDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
           val msg = Notification.UpdatedGallery(galleryInfo)
@@ -61,7 +62,7 @@ object GalleryApi {
 
       for {
         op <- req.decodeJson[Operation.DeleteGallery]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- GalleryDAO.delete(op.id).transact(xa)
         res <- Ok()
       } yield {
@@ -72,7 +73,7 @@ object GalleryApi {
 
       for {
         op <- req.decodeJson[Operation.UploadImageToGallery]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
 
         image <- UrlData.decodeFile(op.imageData)
         hash = Hashes.md5(s"${System.currentTimeMillis()}-${Thread.currentThread().getId}")
@@ -92,7 +93,7 @@ object GalleryApi {
     case req@POST -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
 
       for {
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- GalleryDAO.addTag(galleryId, tagName).transact(xa)
         res <- Ok()
       } yield {
@@ -102,7 +103,7 @@ object GalleryApi {
     case req@DELETE -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
 
       for {
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- GalleryDAO.removeTag(galleryId, tagName).transact(xa)
         res <- Ok()
       } yield {

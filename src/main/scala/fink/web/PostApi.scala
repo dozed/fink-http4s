@@ -9,6 +9,7 @@ import fink.data.{Operation, _}
 import fink.data.JsonInstances._
 import fink.db.PostDAO
 import fink.modules.AuthModule._
+import fink.syntax._
 import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.circe._
@@ -26,7 +27,7 @@ object PostApi {
 
       for {
         op <- req.decodeJson[Operation.CreatePost]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         postInfo <- PostDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
           val msg = Notification.CreatedPost(postInfo)
@@ -46,7 +47,7 @@ object PostApi {
 
       for {
         op <- req.decodeJson[Operation.UpdatePost]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         postInfo <- PostDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
           val msg = Notification.UpdatedPost(postInfo)
@@ -60,7 +61,7 @@ object PostApi {
 
       for {
         op <- req.decodeJson[Operation.DeletePost]
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- PostDAO.delete(op.id).transact(xa)
         res <- Ok()
       } yield {
@@ -70,7 +71,7 @@ object PostApi {
     case req@POST -> Root / "posts" / LongVar(postId) / "tags" / tagName =>
 
       for {
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- PostDAO.addTag(postId, tagName).transact(xa)
         res <- Ok()
       } yield {
@@ -80,7 +81,7 @@ object PostApi {
     case req@DELETE -> Root / "posts" / LongVar(postId) / "tags" / tagName =>
 
       for {
-        user <- fetchUser(req).rethrow
+        user <- req.authenticateUser
         _ <- PostDAO.removeTag(postId, tagName).transact(xa)
         res <- Ok()
       } yield {
