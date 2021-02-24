@@ -7,6 +7,7 @@ scalaVersion := "2.13.3"
 val doobieVersion = "0.10.0"
 val circeVersion = "0.13.0"
 val http4sVersion = "0.21.19"
+val specs2Version = "4.10.6"
 
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
@@ -28,7 +29,10 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.4",
 
   "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime",
-  "org.specs2" %% "specs2-core" % "4.6.0" % "test",
+  "org.specs2" %% "specs2-core" % specs2Version % "test",
+  "org.specs2" %% "specs2-scalacheck" % specs2Version % "test",
+  "io.circe" %% "circe-testing" % circeVersion % "test",
+  "org.typelevel" %% "discipline-specs2" % "1.1.4" % "test",
 )
 
 lazy val root = project.in(file("."))
