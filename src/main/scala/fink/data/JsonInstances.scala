@@ -114,6 +114,11 @@ object JsonInstances {
       "id", "date", "title", "authorId", "shortlink", "text"
     )(Post.apply)
 
+  implicit def pageDecoder: Decoder[Page] =
+    Decoder.forProduct6[Page, Long, Long, String, Long, String, String](
+      "id", "date", "title", "authorId", "shortlink", "text"
+    )(Page.apply)
+
 
   implicit def createPageOperationDecoder: Decoder[Operation.CreatePage] =
     Decoder.forProduct4[Operation.CreatePage, String, String, List[String], String]("title", "text", "tags", "shortlink")(
@@ -195,10 +200,11 @@ object JsonInstances {
 
       Json.obj(
         "id" -> Json.fromLong(page.id),
-        "title" -> Json.fromString(page.title),
-        "text" -> Json.fromString(page.text),
         "date" -> Json.fromLong(page.date),
+        "title" -> Json.fromString(page.title),
+        "authorId" -> Json.fromLong(page.authorId),
         "shortlink" -> Json.fromString(page.shortlink),
+        "text" -> Json.fromString(page.text),
       )
 
     }
