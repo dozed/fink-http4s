@@ -7,6 +7,7 @@ import cats.{Eq, Show}
 import cats.syntax.eq._
 
 case class AppConfig(
+  host: String,
   port: Int,
   webBase: String,
   dataDirectory: String,
@@ -83,6 +84,7 @@ object AppConfig {
 
     val dataDirectory = cfg.getString("dataDirectory")
     val webBase = cfg.getString("webBase")
+    val host = cfg.getString("host")
     val port = cfg.getInt("port")
     val env = AppEnvironment.unsafeFromString(cfg.getString("environment"))
     val mailConfig = MailConfig(
@@ -103,6 +105,6 @@ object AppConfig {
       cfg.getString("auth.cookieName")
     )
 
-    AppConfig(port, webBase, dataDirectory, env, mailConfig, dbConfig, authConfig)
+    AppConfig(host, port, webBase, dataDirectory, env, mailConfig, dbConfig, authConfig)
   }
 }

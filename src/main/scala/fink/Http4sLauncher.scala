@@ -42,7 +42,7 @@ object Http4sLauncher extends App {
   }
 
   val serverBuilder = BlazeServerBuilder.apply[IO](ExecutionContext.global)
-    .bindHttp(8080, "localhost")
+    .bindHttp(World.config.port, World.config.host)
     .withHttpApp(ErrorCodeMiddleware(httpApp))
 
   serverBuilder
