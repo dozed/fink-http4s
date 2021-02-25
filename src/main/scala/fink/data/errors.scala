@@ -12,7 +12,7 @@ object ErrorCode {
     override def getMessage: String = msg
   }
 
-  case object AuthenticationError extends ErrorCode
+  case object NotAuthenticated extends ErrorCode
 
   object AlreadyExists extends ErrorCode
   case class UserNotFound(msg: String) extends ErrorCodeMsg

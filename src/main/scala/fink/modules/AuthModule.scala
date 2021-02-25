@@ -34,10 +34,10 @@ object AuthModule {
 
   def fetchUser(req: Request[IO]): IO[Either[ErrorCode, User]] = {
     readUserId(req) match {
-      case Left(error) => IO.pure(Left(ErrorCode.AuthenticationError))
+      case Left(error) => IO.pure(Left(ErrorCode.NotAuthenticated))
       case Right(userId) =>
         UserDAO.findById(userId).transact(xa).map {
-          case None => Left(ErrorCode.AuthenticationError)
+          case None => Left(ErrorCode.NotAuthenticated)
           case Some(user) => Right(user)
         }
     }

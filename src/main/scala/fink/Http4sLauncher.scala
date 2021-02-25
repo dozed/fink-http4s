@@ -34,8 +34,8 @@ object Http4sLauncher extends App {
   object ErrorCodeMiddleware {
     def apply(app: HttpApp[IO]): HttpApp[IO] = Kleisli { req =>
       app(req).handleErrorWith {
-        case ErrorCode.AuthenticationError => Forbidden()
-        case ErrorCode.InvalidRequest => Forbidden()
+        case ErrorCode.NotAuthenticated => Forbidden()
+        case ErrorCode.InvalidRequest => BadRequest()
         case e => IO.raiseError(e)
       }
     }
