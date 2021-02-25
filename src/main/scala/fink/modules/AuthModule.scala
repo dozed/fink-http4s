@@ -13,6 +13,7 @@ import fink.db.UserDAO
 import io.circe.Json
 import org.http4s._
 import org.http4s.dsl.io._
+import org.http4s.headers.Cookie
 import org.mindrot.jbcrypt.BCrypt
 import pdi.jwt.JwtCirce
 
@@ -45,22 +46,20 @@ object AuthModule {
 
   def readUserId(req: Request[IO]): Either[ErrorCode, UserId] = {
     for {
-      cookies <- headers.Cookie.from(req.headers).toRight(ErrorCode.ParseError("Cookie parsing error"))
       cookie <- {
-        cookies.values.toList
-          .find(_.name == World.config.authConfig.cookieName)
-          .toRight(ErrorCode.ParseError("Couldn't find the authcookie"))
+        req.cookies.find(_.name == World.config.authConfig.cookieName)
+          .toRight(ErrorCode.ParseError("Could not find the authcookie"))
       }
       token <- {
         JwtCirce.decodeJson(
           cookie.content,
           World.config.authConfig.key,
           List(World.config.authConfig.algo)
-        ).toEither.leftMap(_ => ErrorCode.ParseError("Couldnt read JWT"))
+        ).toEither.leftMap(_ => ErrorCode.ParseError("Could not read JWT"))
       }
       authUserId <- {
         token.hcursor.get[Long]("authUserId")
-          .leftMap(_ => ErrorCode.ParseError("Couldnt read authUserId from JWT"))
+          .leftMap(_ => ErrorCode.ParseError("Could not read authUserId from JWT"))
       }
     } yield {
       authUserId
