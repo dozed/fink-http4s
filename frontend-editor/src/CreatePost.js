@@ -4,6 +4,8 @@ import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
+import {Controlled as CodeMirror} from "react-codemirror2";
+import "codemirror/mode/markdown/markdown";
 
 export default class CreatePost extends Component {
   state = {
@@ -21,7 +23,19 @@ export default class CreatePost extends Component {
 
         <Form.Group controlId="formText">
           <Form.Label>Text</Form.Label>
-          <Form.Control as="textarea" rows="15" placeholder="Enter text" onChange={(e) => this.onChangeText(e)} />
+          <CodeMirror
+            value={this.state.text}
+            options={{
+              mode: "markdown",
+              theme: "neat",
+              inputStyle: "contenteditable",
+              lineNumbers: true,
+              lineWrapping: true,
+            }}
+            onBeforeChange={(editor, data, value) => {
+              this.onChangeText(value);
+            }}
+          />
         </Form.Group>
 
         <ButtonToolbar>
@@ -43,9 +57,9 @@ export default class CreatePost extends Component {
     });
   }
 
-  onChangeText(e) {
+  onChangeText(value) {
     this.setState({
-      text: e.target.value
+      text: value
     });
   }
 
