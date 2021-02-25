@@ -135,9 +135,9 @@ export default class EditGallery extends Component {
     });
   }
 
-  onChangeText(e) {
+  onChangeText(value) {
     this.setState({
-      text: e.target.value
+      text: value
     });
   }
 
