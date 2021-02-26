@@ -49,7 +49,7 @@ object PageApi {
 
       for {
         op <- req.decodeJson[Operation.UpdatePage]
-        user <- req.authenticateUser
+        userClaims <- req.authenticate
         pageInfo <- PageDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
           val msg = Notification.UpdatedPage(pageInfo)

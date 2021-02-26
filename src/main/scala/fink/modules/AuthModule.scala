@@ -19,6 +19,13 @@ import pdi.jwt.JwtCirce
 
 object AuthModule {
 
+  def authenticate(req: Request[IO]): IO[UserClaims] = {
+    readUserClaims(req) match {
+      case Left(error) => IO.raiseError(ErrorCode.NotAuthenticated)
+      case Right(userClaims) => IO.pure(userClaims)
+    }
+  }
+
   def authenticateUser(req: Request[IO]): IO[User] = {
     fetchUser(req).flatMap {
       case Left(e) => IO.raiseError(e)
