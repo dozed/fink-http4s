@@ -28,7 +28,7 @@ object AuthModule {
 
   def authenticateUser(req: Request[IO]): IO[User] = {
     fetchUser(req).flatMap {
-      case Left(e) => IO.raiseError(e)
+      case Left(e) => IO.raiseError(ErrorCode.NotAuthenticated)
       case Right(user) => IO.pure(user)
     }
   }
