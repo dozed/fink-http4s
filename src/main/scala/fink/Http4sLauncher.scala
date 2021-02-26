@@ -1,12 +1,11 @@
 package fink
 
-import cats.data.Kleisli
 import cats.effect._
 import doobie._
 import fink.World._
 import fink.data._
+import fink.util.ErrorHandling
 import fink.web._
-import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.implicits._
 import org.http4s.server.Router
@@ -31,19 +30,15 @@ object Http4sLauncher extends App {
     "/api/auth" -> AuthApi.routes,
   ).orNotFound
 
-  object ErrorCodeMiddleware {
-    def apply(app: HttpApp[IO]): HttpApp[IO] = Kleisli { req =>
-      app(req).handleErrorWith {
-        case ErrorCode.NotAuthenticated => Forbidden()
-        case ErrorCode.InvalidRequest => BadRequest()
-        case e => IO.raiseError(e)
-      }
-    }
-  }
+  val httpAppWithErrorHandling =
+    ErrorHandling({
+      case ErrorCode.NotAuthenticated => Forbidden()
+      case ErrorCode.InvalidRequest => BadRequest()
+    })(httpApp)
 
   val serverBuilder = BlazeServerBuilder.apply[IO](ExecutionContext.global)
     .bindHttp(World.config.port, World.config.host)
-    .withHttpApp(ErrorCodeMiddleware(httpApp))
+    .withHttpApp(httpAppWithErrorHandling)
 
   serverBuilder
     .serve.compile.drain
