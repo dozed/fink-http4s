@@ -21,6 +21,10 @@ object UserType {
   object Public extends UserType
 }
 
+case class UserClaims(
+  userId: Long
+)
+
 case class Tag(
   id: Long,
   value: String

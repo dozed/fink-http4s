@@ -409,4 +409,11 @@ object JsonInstances {
   implicit val loginDecoder: Decoder[Operation.Login] =
     Decoder.forProduct2[Operation.Login, String, String]("username", "password")(Operation.Login)
 
+  implicit val userClaimsEncoder: Encoder[UserClaims] =
+    Encoder.forProduct1[UserClaims, Long]("userId")(_.userId)
+
+  implicit val userClaimsDecoder: Decoder[UserClaims] =
+    Decoder.forProduct1[UserClaims, Long]("userId")(UserClaims)
+
+
 }

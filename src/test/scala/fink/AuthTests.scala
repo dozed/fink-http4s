@@ -3,8 +3,11 @@ package fink
 import java.time.Instant
 
 import cats.effect.IO
-import fink.data.AppConfig
+import fink.data.JsonInstances._
+import fink.data.{AppConfig, UserClaims}
 import fink.modules.AuthModule
+import io.circe.parser
+import io.circe.syntax._
 import org.http4s._
 import org.specs2.matcher.ThrownMessages
 import org.specs2.mutable.Specification
@@ -12,42 +15,50 @@ import pdi.jwt.{JwtAlgorithm, JwtCirce, JwtClaim}
 
 class AuthTests extends Specification with ThrownMessages {
 
+  "Should encode/decode user claims" in {
+    val value = UserClaims(42)
+    val text = """{"userId":42}"""
+
+    value.asJson.noSpaces should_== text
+    parser.decode[UserClaims](text) should_== Right(value)
+  }
+
   "Should decode JWT" in {
 
-    val userId = 42
+    val claims = UserClaims(42)
     val key = "secretK3y"
     val algo = JwtAlgorithm.HS256
     val now = Instant.now.getEpochSecond
 
     val claim = JwtClaim(
       issuedAt = Some(now),
-      content = f"""{"authUserId":$userId}"""
+      content = claims.asJson.noSpaces
     )
 
     val token = JwtCirce.encode(claim, key, algo)
 
     val tokenJson = JwtCirce.decodeJson(token, key, List(algo)).getOrElse(fail("Error decoding token"))
 
-    val authUserId = tokenJson.hcursor.get[Long]("authUserId").getOrElse(fail("Error reading authUserId from token"))
-    authUserId should_== userId
+    val claimsDecoded = tokenJson.as[UserClaims].getOrElse(fail("Error reading authUserId from token"))
+    claimsDecoded should_== claims
 
     val issuedAt = tokenJson.hcursor.get[Long]("iat").getOrElse(fail("Error reading iat from token"))
     issuedAt should_== now
 
   }
 
-  "Should read userId from Request" in {
+  "Should read user claims from Request" in {
 
     World.config = AppConfig.load()
 
-    val userId = 42
+    val claims = UserClaims(42)
     val key = World.config.authConfig.key
     val algo = JwtAlgorithm.HS256
     val now = Instant.now.getEpochSecond
 
     val claim = JwtClaim(
       issuedAt = Some(now),
-      content = f"""{"authUserId":$userId}"""
+      content = claims.asJson.noSpaces
     )
 
     val token = JwtCirce.encode(claim, key, algo)
@@ -57,9 +68,9 @@ class AuthTests extends Specification with ThrownMessages {
         headers.Cookie(RequestCookie("ui", token))
       )
 
-    val res = AuthModule.readUserId(req)
+    val res = AuthModule.readUserClaims(req)
 
-    res should_== Right(42)
+    res should_== Right(UserClaims(42))
 
   }
 

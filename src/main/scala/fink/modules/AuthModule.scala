@@ -8,12 +8,12 @@ import cats.implicits._
 import doobie.implicits._
 import fink.World
 import fink.World._
+import fink.data.JsonInstances._
 import fink.data._
 import fink.db.UserDAO
-import io.circe.Json
+import io.circe.syntax._
 import org.http4s._
 import org.http4s.dsl.io._
-import org.http4s.headers.Cookie
 import org.mindrot.jbcrypt.BCrypt
 import pdi.jwt.JwtCirce
 
@@ -34,17 +34,17 @@ object AuthModule {
   }
 
   def fetchUser(req: Request[IO]): IO[Either[ErrorCode, User]] = {
-    readUserId(req) match {
+    readUserClaims(req) match {
       case Left(error) => IO.pure(Left(ErrorCode.NotAuthenticated))
-      case Right(userId) =>
-        UserDAO.findById(userId).transact(xa).map {
+      case Right(userClaims) =>
+        UserDAO.findById(userClaims.userId).transact(xa).map {
           case None => Left(ErrorCode.NotAuthenticated)
           case Some(user) => Right(user)
         }
     }
   }
 
-  def readUserId(req: Request[IO]): Either[ErrorCode, UserId] = {
+  def readUserClaims(req: Request[IO]): Either[ErrorCode, UserClaims] = {
     for {
       cookie <- {
         req.cookies.find(_.name == World.config.authConfig.cookieName)
@@ -57,12 +57,12 @@ object AuthModule {
           List(World.config.authConfig.algo)
         ).toEither.leftMap(_ => ErrorCode.ParseError("Could not read JWT"))
       }
-      authUserId <- {
-        token.hcursor.get[Long]("authUserId")
-          .leftMap(_ => ErrorCode.ParseError("Could not read authUserId from JWT"))
+      userClaims <- {
+        token.as[UserClaims]
+          .leftMap(_ => ErrorCode.ParseError("Could not read user claims from JWT"))
       }
     } yield {
-      authUserId
+      userClaims
     }
   }
 
@@ -70,7 +70,7 @@ object AuthModule {
     UserDAO.findByName(username).transact(xa).flatMap {
       case Some(user) =>
         if (BCrypt.checkpw(password, user.password)) {
-          val res = mkUserLoginResponse(user.id)
+          val res = mkUserLoginResponse(user)
           IO.pure(res)
         } else {
           Forbidden()
@@ -83,9 +83,12 @@ object AuthModule {
     IO.pure(mkUserLogoutResponse())
   }
 
-  def mkUserLoginResponse(userId: Long): Response[IO] = {
+  def mkUserLoginResponse(user: User): Response[IO] = {
+    val claims = UserClaims(user.id)
+    val claimsJson = claims.asJson
+
     val jwt = JwtCirce.encode(
-      Json.obj("authUserId" -> Json.fromLong(userId)),
+      claimsJson,
       World.config.authConfig.key,
       World.config.authConfig.algo
     )
