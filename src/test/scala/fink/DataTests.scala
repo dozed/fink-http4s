@@ -40,7 +40,8 @@ class DataTests extends Specification {
 
     UserDAO.findAll
 
-    val user = UserDAO.create("name", "password").transact(xa).unsafeRunSync
+    val user = UserDAO.create("name", "password", Set(UserRole.CanEdit)).transact(xa).unsafeRunSync
+    user.roles should_== Set(UserRole.CanEdit)
 
     user.name should_== "name"
     BCrypt.checkpw("password", user.password) should beTrue

@@ -1,24 +1,56 @@
 package fink.data
 
-import cats.Eq
+import cats.{Eq, Show}
+import cats.syntax.show._
+import doobie.{Get, Read}
+import doobie.util.Put
 
 case class User(
   id: Long,
   name: String,
-  password: String
+  password: String,
+  roles: Set[UserRole]
 )
 
-//object User {
-//
-//  val publicUser = User(0, "public", null, UserType.Public)
-//
-//}
+object User {
+
+  // val publicUser = User(0, "public", null, UserType.Public)
+
+  implicit val userRead: Read[User] =
+    Read[(Long, String, String)].map {
+      case (id, name, pass) => User(id, name, pass, Set.empty)
+    }
+
+}
 
 trait UserType
 
 object UserType {
   object Registered extends UserType
   object Public extends UserType
+}
+
+trait UserRole
+
+object UserRole {
+  object CanEdit extends UserRole
+
+  implicit val userRoleEq: Eq[UserRole] = Eq.fromUniversalEquals
+
+  implicit val userRoleShow: Show[UserRole] =
+    Show.show {
+      case CanEdit => "CanEdit"
+    }
+
+  def unsafeFromString(str: String): UserRole = {
+    str match {
+      case "CanEdit" => CanEdit
+    }
+  }
+
+  implicit val userRolePut: Put[UserRole] = Put[String].tcontramap(_.show)
+  implicit val userRoleGet: Get[UserRole] = Get[String].tmap(UserRole.unsafeFromString)
+
 }
 
 case class UserClaims(

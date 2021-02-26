@@ -1,6 +1,7 @@
 package fink.web
 
 import cats.effect._
+import cats.syntax.show._
 import fink.World._
 import fink.data.JsonInstances._
 import fink.data.Operation
@@ -35,7 +36,8 @@ object AuthApi {
         userJson = {
           Json.obj(
             "id" -> Json.fromLong(user.id),
-            "name" -> Json.fromString(user.name)
+            "name" -> Json.fromString(user.name),
+            "roles" -> Json.fromValues(user.roles.map(r => Json.fromString(r.show)))
           )
         }
         res <- Ok(userJson)

@@ -5,6 +5,11 @@ CREATE TABLE IF NOT EXISTS users (
   password text NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS users_roles (
+  userId bigint REFERENCES users(id) ON DELETE CASCADE,
+  roleName text NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS pages (
   id SERIAL PRIMARY KEY,
   date bigint,
