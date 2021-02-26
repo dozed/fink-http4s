@@ -5,7 +5,7 @@ import cats.syntax.show._
 import fink.World._
 import fink.data.JsonInstances._
 import fink.data.Operation
-import fink.modules.AuthModule
+import fink.modules.Authentication
 import fink.syntax._
 import io.circe.Json
 import org.http4s._
@@ -20,14 +20,14 @@ object AuthApi {
       for {
         op <- req.decodeJson[Operation.Login]
         res <- {
-          AuthModule.login(op.username, op.password)
+          Authentication.login(op.username, op.password)
         }
       } yield {
         res
       }
 
     case POST -> Root / "logout" =>
-      AuthModule.logout()
+      Authentication.logout()
 
     case req@GET -> Root / "me" =>
 

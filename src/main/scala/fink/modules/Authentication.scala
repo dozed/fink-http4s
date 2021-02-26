@@ -17,7 +17,7 @@ import org.http4s.dsl.io._
 import org.mindrot.jbcrypt.BCrypt
 import pdi.jwt.JwtCirce
 
-object AuthModule {
+object Authentication {
 
   def authenticate(req: Request[IO]): IO[UserClaims] = {
     readUserClaims(req) match {

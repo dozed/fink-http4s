@@ -5,7 +5,7 @@ import java.time.Instant
 import cats.effect.IO
 import fink.data.JsonInstances._
 import fink.data.{AppConfig, UserClaims}
-import fink.modules.AuthModule
+import fink.modules.Authentication
 import io.circe.parser
 import io.circe.syntax._
 import org.http4s._
@@ -68,7 +68,7 @@ class AuthTests extends Specification with ThrownMessages {
         headers.Cookie(RequestCookie("ui", token))
       )
 
-    val res = AuthModule.readUserClaims(req)
+    val res = Authentication.readUserClaims(req)
 
     res should_== Right(UserClaims(42))
 

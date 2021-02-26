@@ -7,7 +7,7 @@ import fink.World._
 import fink.data.JsonInstances._
 import fink.data._
 import fink.db.PageDAO
-import fink.modules.AuthModule._
+import fink.modules.Authentication._
 import fink.syntax._
 import org.http4s._
 import org.http4s.circe._
