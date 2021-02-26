@@ -2,7 +2,7 @@ package fink.data
 
 import cats.{Eq, Show}
 import cats.syntax.show._
-import doobie.{Get, Read}
+import doobie.{Get, Meta, Read}
 import doobie.util.Put
 
 case class User(
@@ -48,8 +48,7 @@ object UserRole {
     }
   }
 
-  implicit val userRolePut: Put[UserRole] = Put[String].tcontramap(_.show)
-  implicit val userRoleGet: Get[UserRole] = Get[String].tmap(UserRole.unsafeFromString)
+  implicit val userRoleMeta: Meta[UserRole] = Meta[String].timap(UserRole.unsafeFromString)(_.show)
 
 }
 
