@@ -7,7 +7,7 @@ import fink.World._
 import fink.data.JsonInstances._
 import fink.data.{Operation, _}
 import fink.db.PostDAO
-import fink.modules.Authorization
+import fink.auth.Authorization
 import fink.syntax._
 import org.http4s._
 import org.http4s.circe._

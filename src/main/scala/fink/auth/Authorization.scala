@@ -1,4 +1,4 @@
-package fink.modules
+package fink.auth
 
 import cats.effect.IO
 import fink.data.{ErrorCode, User, UserRole}

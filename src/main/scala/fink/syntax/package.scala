@@ -2,7 +2,7 @@ package fink
 
 import cats.effect.IO
 import fink.data.{User, UserClaims}
-import fink.modules.Authentication
+import fink.auth.Authentication
 import org.http4s.Request
 
 package object syntax {

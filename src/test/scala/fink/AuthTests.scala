@@ -5,7 +5,7 @@ import java.time.Instant
 import cats.effect.IO
 import fink.data.JsonInstances._
 import fink.data.{AppConfig, UserClaims}
-import fink.modules.Authentication
+import fink.auth.Authentication
 import io.circe.parser
 import io.circe.syntax._
 import org.http4s._

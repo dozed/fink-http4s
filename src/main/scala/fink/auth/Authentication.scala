@@ -1,4 +1,4 @@
-package fink.modules
+package fink.auth
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
