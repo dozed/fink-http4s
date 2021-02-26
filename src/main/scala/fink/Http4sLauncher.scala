@@ -33,6 +33,7 @@ object Http4sLauncher extends App {
   val httpAppWithErrorHandling =
     ErrorHandling(httpApp, {
       case ErrorCode.NotAuthenticated => Forbidden()
+      case ErrorCode.NotAuthorized => Forbidden()
       case ErrorCode.InvalidRequest => BadRequest()
     })
 

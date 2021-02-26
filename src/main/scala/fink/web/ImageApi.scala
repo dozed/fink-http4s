@@ -9,6 +9,7 @@ import fink.data.JsonInstances._
 import fink.data.Operation
 import fink.db.ImageDAO
 import fink.media.{Hashes, Uploads, UrlData}
+import fink.modules.Authorization
 import fink.syntax._
 import org.http4s._
 import org.http4s.circe._
@@ -28,6 +29,7 @@ object ImageApi {
       for {
         op <- req.decodeJson[Operation.CreateImage]
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
 
         image <- UrlData.decodeFile(op.imageData)
         hash = Hashes.md5(s"${System.currentTimeMillis()}-${Thread.currentThread().getId}")
@@ -65,6 +67,7 @@ object ImageApi {
       for {
         op <- req.decodeJson[Operation.DeleteImage]
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         _ <- ImageDAO.delete(op.id).transact(xa)
         res <- Ok()
       } yield {

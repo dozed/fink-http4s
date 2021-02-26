@@ -13,6 +13,7 @@ object ErrorCode {
   }
 
   case object NotAuthenticated extends ErrorCode
+  case object NotAuthorized extends ErrorCode
 
   object AlreadyExists extends ErrorCode
   case class UserNotFound(msg: String) extends ErrorCodeMsg

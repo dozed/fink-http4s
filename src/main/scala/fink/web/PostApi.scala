@@ -7,6 +7,7 @@ import fink.World._
 import fink.data.JsonInstances._
 import fink.data.{Operation, _}
 import fink.db.PostDAO
+import fink.modules.Authorization
 import fink.syntax._
 import org.http4s._
 import org.http4s.circe._
@@ -26,6 +27,7 @@ object PostApi {
       for {
         op <- req.decodeJson[Operation.CreatePost]
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         postInfo <- PostDAO.create(op.title, op.text, user, op.tags).transact(xa)
         res <- {
           val msg = Notification.CreatedPost(postInfo)
@@ -46,6 +48,7 @@ object PostApi {
       for {
         op <- req.decodeJson[Operation.UpdatePost]
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         postInfo <- PostDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
           val msg = Notification.UpdatedPost(postInfo)
@@ -60,6 +63,7 @@ object PostApi {
       for {
         op <- req.decodeJson[Operation.DeletePost]
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         _ <- PostDAO.delete(op.id).transact(xa)
         res <- Ok()
       } yield {
@@ -70,6 +74,7 @@ object PostApi {
 
       for {
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         _ <- PostDAO.addTag(postId, tagName).transact(xa)
         res <- Ok()
       } yield {
@@ -80,6 +85,7 @@ object PostApi {
 
       for {
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         _ <- PostDAO.removeTag(postId, tagName).transact(xa)
         res <- Ok()
       } yield {

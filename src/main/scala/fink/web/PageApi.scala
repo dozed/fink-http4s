@@ -1,6 +1,7 @@
 package fink.web
 
 import cats.effect._
+import cats.implicits.{catsSyntaxApplicativeId, catsSyntaxMonadErrorRethrow}
 import doobie.implicits._
 import fink.EntityEncoders._
 import fink.World._
@@ -8,6 +9,7 @@ import fink.data.JsonInstances._
 import fink.data._
 import fink.db.PageDAO
 import fink.modules.Authentication._
+import fink.modules.Authorization
 import fink.syntax._
 import org.http4s._
 import org.http4s.circe._
@@ -34,6 +36,7 @@ object PageApi {
 
         for {
           op <- req.decodeJson[Operation.CreatePage]
+          _ <- Authorization.authorizeEdit(user)
           pageInfo <- PageDAO.create(op.title, op.text, user, op.tags).transact(xa)
           res <- {
             val msg = Notification.CreatedPage(pageInfo)
@@ -49,7 +52,8 @@ object PageApi {
 
       for {
         op <- req.decodeJson[Operation.UpdatePage]
-        userClaims <- req.authenticate
+        user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         pageInfo <- PageDAO.update(op.id, op.title, op.text, op.shortlink, op.tags).transact(xa)
         res <- {
           val msg = Notification.UpdatedPage(pageInfo)
@@ -64,6 +68,7 @@ object PageApi {
       for {
         op <- req.decodeJson[Operation.DeletePage]
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         _ <- PageDAO.delete(op.id).transact(xa)
         res <- Ok()
       } yield {
@@ -74,6 +79,7 @@ object PageApi {
 
       for {
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         _ <- PageDAO.addTag(pageId, tagName).transact(xa)
         res <- Ok()
       } yield {
@@ -84,6 +90,7 @@ object PageApi {
 
       for {
         user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
         _ <- PageDAO.removeTag(pageId, tagName).transact(xa)
         res <- Ok()
       } yield {
