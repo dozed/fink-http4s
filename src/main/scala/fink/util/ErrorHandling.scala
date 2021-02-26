@@ -6,7 +6,7 @@ import cats.syntax.applicativeError._
 import org.http4s.{Http, Response}
 
 object ErrorHandling {
-  def apply[F[_], G[_]](errorHandler: PartialFunction[Throwable, F[Response[G]]])(http: Http[F, G])
+  def apply[F[_], G[_]](http: Http[F, G], errorHandler: PartialFunction[Throwable, F[Response[G]]])
     (implicit F: ApplicativeThrow[F]): Http[F, G] =
     Kleisli { req =>
       http(req).handleErrorWith(e => errorHandler.applyOrElse(e, F.raiseError))

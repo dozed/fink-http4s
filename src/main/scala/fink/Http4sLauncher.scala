@@ -31,10 +31,10 @@ object Http4sLauncher extends App {
   ).orNotFound
 
   val httpAppWithErrorHandling =
-    ErrorHandling({
+    ErrorHandling(httpApp, {
       case ErrorCode.NotAuthenticated => Forbidden()
       case ErrorCode.InvalidRequest => BadRequest()
-    })(httpApp)
+    })
 
   val serverBuilder = BlazeServerBuilder.apply[IO](ExecutionContext.global)
     .bindHttp(World.config.port, World.config.host)
