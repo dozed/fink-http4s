@@ -55,18 +55,18 @@ object Authentication {
     for {
       cookie <- {
         req.cookies.find(_.name == World.config.authConfig.cookieName)
-          .toRight(ErrorCode.ParseError("Could not find the authcookie"))
+          .toRight(ErrorCode.CouldNotFindAuthCookie)
       }
       token <- {
         JwtCirce.decodeJson(
           cookie.content,
           World.config.authConfig.key,
           List(World.config.authConfig.algo)
-        ).toEither.leftMap(_ => ErrorCode.ParseError("Could not read JWT"))
+        ).toEither.leftMap(_ => ErrorCode.CouldNotReadJwtFromAuthCookie)
       }
       userClaims <- {
         token.as[UserClaims]
-          .leftMap(_ => ErrorCode.ParseError("Could not read user claims from JWT"))
+          .leftMap(_ => ErrorCode.CouldNotReadUserClaimsFromAuthCookie)
       }
     } yield {
       userClaims
