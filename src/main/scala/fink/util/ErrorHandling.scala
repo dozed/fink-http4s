@@ -12,4 +12,3 @@ object ErrorHandling {
       http(req).recoverWith(errorHandler)
     }
 }
-
