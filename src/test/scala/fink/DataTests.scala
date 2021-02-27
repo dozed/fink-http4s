@@ -67,7 +67,7 @@ class DataTests extends Specification {
     post1 should_== post
 
     val xs1 = PostDAO.findAll.transact(xa).unsafeRunSync()
-    // xs1.size should_== 1
+    xs1 should contain(post1)
 
     val post2 = PostDAO.findPostInfoById(post.id).transact(xa).unsafeRunSync().get
     post2.post should_== post
