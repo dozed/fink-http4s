@@ -2,12 +2,12 @@ package fink
 
 import cats.effect.IO
 import doobie.Transactor
-import org.specs2.mutable._
 import doobie.implicits._
-import org.mindrot.jbcrypt.BCrypt
+import fink.World.{config, cs, xa}
 import fink.data._
 import fink.db.{DbSetup, PostDAO, TagDAO, UserDAO}
-import fink.World.{config, cs, xa}
+import org.mindrot.jbcrypt.BCrypt
+import org.specs2.mutable._
 
 class DataTests extends Specification {
 
