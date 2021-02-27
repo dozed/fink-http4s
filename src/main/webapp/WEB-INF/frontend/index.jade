@@ -1,8 +1,0 @@
--import fink.support.TemplateHelper._
--import fink.support.DateHelper._
-
--attributes("classes") = "archive date layout-2cr"
-
--for (post <- postRepository.findAll)
-  -attributes("post") = post
-  =include("snippet.post.jade")
