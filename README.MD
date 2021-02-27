@@ -9,6 +9,15 @@ At the moment the following content elements are supported:
   * Pages for static content
   * Galleries
 
+
+## Built with
+
+  * Web framework [http4s](https://http4s.org/)
+  * Database access [Doobie](https://tpolecat.github.io/doobie/)
+  * JSON data interchange format using [circe](https://circe.github.io/circe/)
+  * UI library [React](https://reactjs.org/)
+  * The theme for the demo is: [Foghorn](http://wptheming.com/foghorn).
+
 ## Frontend
 
 <img src="fink-demo.png" />
@@ -52,13 +61,4 @@ $ npm run start
 The frontend is running on: [http://localhost:3010/](http://localhost:3010/)
 
 The content editor is reachable under: [http://localhost:3000/](http://localhost:3000/)
-
-
-# Built with
-
-  * Web framework [http4s](https://http4s.org/)
-  * Database access [Doobie](https://tpolecat.github.io/doobie/)
-  * JSON data interchange format using [circe](https://circe.github.io/circe/)
-  * UI library [React](https://reactjs.org/)
-  * The theme for the demo is: [Foghorn](http://wptheming.com/foghorn).
 
