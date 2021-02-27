@@ -3,17 +3,19 @@ package fink
 import java.time.Instant
 
 import cats.effect.IO
+import fink.auth.Authentication
 import fink.data.JsonInstances._
 import fink.data.{AppConfig, UserClaims}
-import fink.auth.Authentication
 import io.circe.parser
 import io.circe.syntax._
 import org.http4s._
 import org.specs2.matcher.ThrownMessages
 import org.specs2.mutable.Specification
-import pdi.jwt.{JwtAlgorithm, JwtCirce, JwtClaim}
+import pdi.jwt.{JwtCirce, JwtClaim}
 
 class AuthTests extends Specification with ThrownMessages {
+
+  World.config = AppConfig.load()
 
   "Should encode/decode user claims" in {
     val value = UserClaims(42)
@@ -26,8 +28,8 @@ class AuthTests extends Specification with ThrownMessages {
   "Should decode JWT" in {
 
     val claims = UserClaims(42)
-    val key = "secretK3y"
-    val algo = JwtAlgorithm.HS256
+    val key = World.config.authConfig.key
+    val algo = World.config.authConfig.algo
     val now = Instant.now.getEpochSecond
 
     val claim = JwtClaim(
@@ -49,11 +51,9 @@ class AuthTests extends Specification with ThrownMessages {
 
   "Should read user claims from Request" in {
 
-    World.config = AppConfig.load()
-
     val claims = UserClaims(42)
     val key = World.config.authConfig.key
-    val algo = JwtAlgorithm.HS256
+    val algo = World.config.authConfig.algo
     val now = Instant.now.getEpochSecond
 
     val claim = JwtClaim(
@@ -65,7 +65,7 @@ class AuthTests extends Specification with ThrownMessages {
 
     val req = Request[IO](Method.GET)
       .putHeaders(
-        headers.Cookie(RequestCookie("ui", token))
+        headers.Cookie(RequestCookie(World.config.authConfig.cookieName, token))
       )
 
     val res = Authentication.readUserClaims(req)
