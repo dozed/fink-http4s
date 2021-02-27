@@ -18,7 +18,7 @@ import org.specs2.matcher.ThrownMessages
 import org.specs2.mutable.Specification
 import pdi.jwt.{JwtCirce, JwtClaim}
 
-class AuthTests extends Specification with ThrownMessages {
+class AuthenticationTests extends Specification with ThrownMessages {
 
   World.config = AppConfig.load()
 
