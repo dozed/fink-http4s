@@ -1,7 +1,6 @@
 package fink.web
 
 import cats.effect._
-import cats.implicits.{catsSyntaxApplicativeId, catsSyntaxMonadErrorRethrow}
 import doobie.implicits._
 import fink.EntityEncoders._
 import fink.World._
