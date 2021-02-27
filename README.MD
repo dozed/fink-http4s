@@ -16,7 +16,7 @@ At the moment the following content elements are supported:
   * Database access [Doobie](https://tpolecat.github.io/doobie/)
   * JSON data interchange format using [circe](https://circe.github.io/circe/)
   * UI library [React](https://reactjs.org/)
-  * The theme for the demo is: [Foghorn](http://wptheming.com/foghorn).
+  * The theme for the demo is: [Foghorn](http://wptheming.com/foghorn)
 
 ## Frontend
 
