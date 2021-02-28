@@ -22,7 +22,7 @@ export default class Galleries extends Component {
   };
 
   componentDidMount() {
-    getGalleries().then(xs => this.setState({ galleries: xs }));
+    getGalleries().then(res => this.setState({ galleries: res.body }));
   }
 
   render() {

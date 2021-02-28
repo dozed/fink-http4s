@@ -22,7 +22,7 @@ export default class Posts extends Component {
   };
 
   componentDidMount() {
-    getPosts().then(xs => this.setState({ posts: xs }));
+    getPosts().then(res => this.setState({ posts: res.body }));
   }
 
   render() {

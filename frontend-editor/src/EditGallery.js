@@ -78,7 +78,10 @@ export default class EditGallery extends Component {
 
   loadGallery(galleryId) {
     getGallery(this.props.match.params.galleryId)
-      .then(g => this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images }));
+      .then(res => {
+        const g = res.body;
+        this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images })
+      });
   }
 
   render() {
@@ -151,7 +154,7 @@ export default class EditGallery extends Component {
   onUploadedImageToGallery() {
 
     getGallery(this.props.match.params.galleryId)
-      .then(g => {
+      .then(res => {
         this.loadGallery(this.props.match.params.galleryId);
         // this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text })
       });

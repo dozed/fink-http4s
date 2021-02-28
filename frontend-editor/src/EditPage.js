@@ -21,7 +21,10 @@ export default class EditPage extends Component {
 
   loadPage(galleryId) {
     getPage(this.props.match.params.pageId)
-      .then(g => this.setState({ pageId: g.page.id, title: g.page.title, text: g.page.text }));
+      .then(res => {
+        var p = res.body;
+        this.setState({ pageId: p.page.id, title: p.page.title, text: p.page.text })
+      });
   }
 
   render() {

@@ -1,57 +1,45 @@
 
+import request from "superagent";
+
+export const fetchMe = () => {
+  return request.get("/api/auth/me");
+};
+
+export const login = (username, password) => {
+  return request.post("/api/auth/login")
+    .send({
+      username,
+      password
+    });
+};
+
+export const logout = () => request.post("/api/auth/logout");
+
 export const uploadImage = (title, imageData) => {
-
-  const data = {
-    title: title,
-    imageData: imageData
-  };
-
-  return fetch("/api/images", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
-
+  return request.post("/api/images")
+    .send({
+      title: title,
+      imageData: imageData
+    });
 };
 
 export const uploadImageToGallery = (galleryId, title, imageData) => {
-
   const data = {
     galleryId: galleryId,
     title: title,
     imageData: imageData
   };
 
-  return fetch(`/api/galleries/${galleryId}/images`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
-
+  return request.post(`/api/galleries/${galleryId}/images`)
+    .send(data);
 };
 
 export const getGalleries = () => {
-
-  return fetch("/api/galleries").then(
-    response => response.json()
-  );
-
+  return request.get("/api/galleries");
 };
 
 export const getGallery = (id) => {
-
-  return fetch(`/api/galleries/${id}`).then(
-    response => response.json()
-  );
-
+  return request.get(`/api/galleries/${id}`);
 };
 
 export const createGallery = (title, text, tags, shortlink) => {
@@ -63,15 +51,8 @@ export const createGallery = (title, text, tags, shortlink) => {
     shortlink: shortlink
   };
 
-  return fetch("/api/galleries", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
+  return request.post("/api/galleries")
+    .send(data);
 
 };
 
@@ -85,31 +66,20 @@ export const updateGallery = (id, title, text, tags, shortlink) => {
     shortlink: shortlink
   };
 
-  return fetch(`/api/galleries/${id}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
+  return request.post(`/api/galleries/${id}`)
+    .send(data);
 
 };
 
 export const getPosts = () => {
 
-  return fetch("/api/posts").then(
-    response => response.json()
-  );
+  return request.get("/api/posts");
 
 };
 
 export const getPost = (id) => {
 
-  return fetch(`/api/posts/${id}`).then(
-    response => response.json()
-  );
+  return request.get(`/api/posts/${id}`);
 
 };
 
@@ -122,15 +92,8 @@ export const createPost = (title, text, tags, shortlink) => {
     shortlink: shortlink
   };
 
-  return fetch("/api/posts", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
+  return request.post("/api/posts")
+    .send(data);
 
 };
 
@@ -144,31 +107,20 @@ export const updatePost = (id, title, text, tags, shortlink) => {
     shortlink: shortlink
   };
 
-  return fetch(`/api/posts/${id}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
+  return request.post(`/api/posts/${id}`)
+    .send(data);
 
 };
 
 export const getPages = () => {
 
-  return fetch("/api/pages").then(
-    response => response.json()
-  );
+  return request.get("/api/pages");
 
 };
 
 export const getPage = (id) => {
 
-  return fetch(`/api/pages/${id}`).then(
-    response => response.json()
-  );
+  return request.get(`/api/pages/${id}`);
 
 };
 
@@ -181,15 +133,8 @@ export const createPage = (title, text, tags, shortlink) => {
     shortlink: shortlink
   };
 
-  return fetch("/api/pages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
+  return request.post("/api/pages")
+    .send(data);
 
 };
 
@@ -203,50 +148,8 @@ export const updatePage = (id, title, text, tags, shortlink) => {
     shortlink: shortlink
   };
 
-  return fetch(`/api/pages/${id}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(
-    response => response.json()
-  );
-
-};
-
-export const fetchMe = () => {
-
-  return fetch(`/api/auth/me`, {
-    method: "GET",
-  }).then(
-    response => response.json()
-  );
-
-};
-
-export const login = (username, password) => {
-
-  const data = {
-    username,
-    password
-  };
-
-  return fetch(`/api/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  });
-
-};
-
-export const logout = () => {
-
-  return fetch(`/api/auth/logout`, {
-    method: "POST",
-  });
+  return request.post(`/api/pages/${id}`)
+    .send(data);
 
 };
 

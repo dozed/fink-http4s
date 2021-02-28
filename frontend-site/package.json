@@ -1,13 +1,13 @@
 {
   "name": "fink-frontend-site",
-  "version": "1.0.0",
+  "version": "2.0.0-SNAPSHOT",
   "description": "Fink Frontend Site",
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/plugin-proposal-class-properties": "^7.10.4",

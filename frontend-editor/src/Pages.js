@@ -22,7 +22,7 @@ export default class Pages extends Component {
   };
 
   componentDidMount() {
-    getPages().then(xs => this.setState({ pages: xs }));
+    getPages().then(res => this.setState({ pages: res.body }));
   }
 
   render() {

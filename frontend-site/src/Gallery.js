@@ -14,7 +14,8 @@ export default class Gallery extends Component {
 
     const galleryId = this.props.match.params.galleryId;
 
-    getGallery(galleryId).then(g => {
+    getGallery(galleryId).then(res => {
+      const g = res.body;
       this.setState({
         gallery: g.gallery,
         images: g.images

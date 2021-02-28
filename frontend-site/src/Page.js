@@ -12,8 +12,8 @@ export const Page = (props) => {
   const pageId = props.match.params.pageId;
 
   useEffect(() => {
-    getPage(pageId).then(p => {
-      setPage(p.page);
+    getPage(pageId).then(res => {
+      setPage(res.body.page);
     });
   }, []);
 

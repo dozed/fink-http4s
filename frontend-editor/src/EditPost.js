@@ -21,7 +21,10 @@ export default class EditPost extends Component {
 
   loadPost(galleryId) {
     getPost(this.props.match.params.postId)
-      .then(g => this.setState({ postId: g.post.id, title: g.post.title, text: g.post.text }));
+      .then(res => {
+        const p = res.body;
+        this.setState({ postId: p.post.id, title: p.post.title, text: p.post.text })
+      });
   }
 
   render() {

@@ -31,16 +31,16 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    getPosts().then((posts) => {
-      this.setState({ posts: posts });
+    getPosts().then((res) => {
+      this.setState({ posts: res.body });
     });
 
     getPages().then(res => {
-      this.setState({ pages: res });
+      this.setState({ pages: res.body });
     });
 
     getGalleries().then(res => {
-      this.setState({ galleries: res });
+      this.setState({ galleries: res.body });
     });
   }
 }

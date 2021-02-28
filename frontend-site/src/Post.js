@@ -18,8 +18,8 @@ export default class Post extends React.Component {
     const postId = this.props.match.params.postId;
 
     if (prevProps.match.params.postId !== postId) {
-      getPost(postId).then((data) => {
-        this.setState(data);
+      getPost(postId).then((res) => {
+        this.setState(res.body);
       });
     }
   }
@@ -29,8 +29,8 @@ export default class Post extends React.Component {
 
     const postId = this.props.match.params.postId;
 
-    getPost(postId).then((data) => {
-      this.setState(data);
+    getPost(postId).then((res) => {
+      this.setState(res.body);
     });
   }
 

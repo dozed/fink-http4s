@@ -9,7 +9,8 @@ import "editor.scss";
 export default class EditorApp extends Component {
   state = {
     user: null,
-    loading: true
+    loading: true,
+    errorMessage: null
   };
 
   constructor(props) {
@@ -22,15 +23,15 @@ export default class EditorApp extends Component {
     return (
       <div>
         {!this.state.loading && this.state.user && <EditorIndex onLogout={this.logout} />}
-        {!this.state.loading && !this.state.user && <EditorLogin onLogin={this.login} />}
+        {!this.state.loading && !this.state.user && <EditorLogin onLogin={this.login} errorMessage={this.state.errorMessage} />}
       </div>
     );
   }
 
   loadUser() {
-    fetchMe().then(user => {
+    fetchMe().then(res => {
       this.setState({
-        user,
+        user: res.body,
         loading: false
       });
     }, error => {
@@ -44,10 +45,14 @@ export default class EditorApp extends Component {
   login = (username, password) => {
     if (username !== "" && password !== "") {
       login(username, password).then(
-        r => {
-          this.loadUser();
+        res => this.loadUser()
+      ).catch(err => {
+        if (err.status === 403) {
+          this.setState({ errorMessage: err.response.body.message });
+        } else {
+          this.setState({ errorMessage: "There was an error while logging in." });
         }
-      );
+      });
     }
   }
 

@@ -18,7 +18,7 @@ export default class Home extends React.Component {
 
   componentDidMount() {
     getPosts().then((res) => {
-      this.setState({ posts: res });
+      this.setState({ posts: res.body });
     });
   }
 
