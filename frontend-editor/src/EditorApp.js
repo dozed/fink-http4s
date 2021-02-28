@@ -1,10 +1,13 @@
 import React, {Component} from "react";
+import { createBrowserHistory } from "history";
 
 import EditorIndex from "EditorIndex";
 import EditorLogin from "EditorLogin";
 import {fetchMe, login, logout} from "../../frontend-shared/api";
 
 import "editor.scss";
+
+const history = createBrowserHistory();
 
 export default class EditorApp extends Component {
   state = {
@@ -59,6 +62,7 @@ export default class EditorApp extends Component {
 
   logout = () => {
     logout().then(() => {
+      history.push("/");
       this.loadUser();
     });
   }
