@@ -43,20 +43,18 @@ export default class EditorApp extends Component {
   }
 
   login = (username, password) => {
-    if (username !== "" && password !== "") {
-      login(username, password).then(
-        res => {
-          this.setState({ loginErrorMessage: null });
-          this.loadUser();
-        }
-      ).catch(err => {
-        if (err.status === 403) {
-          this.setState({ loginErrorMessage: err.response.body.message });
-        } else {
-          this.setState({ loginErrorMessage: "There was an error while logging in." });
-        }
-      });
-    }
+    login(username, password).then(
+      res => {
+        this.setState({ loginErrorMessage: null });
+        this.loadUser();
+      }
+    ).catch(err => {
+      if (err.status === 403) {
+        this.setState({ loginErrorMessage: err.response.body.message });
+      } else {
+        this.setState({ loginErrorMessage: "There was an error while logging in." });
+      }
+    });
   }
 
   logout = () => {
