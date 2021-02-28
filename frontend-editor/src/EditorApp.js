@@ -10,7 +10,7 @@ export default class EditorApp extends Component {
   state = {
     user: null,
     loading: true,
-    errorMessage: null
+    loginErrorMessage: null
   };
 
   constructor(props) {
@@ -23,7 +23,7 @@ export default class EditorApp extends Component {
     return (
       <div>
         {!this.state.loading && this.state.user && <EditorIndex onLogout={this.logout} />}
-        {!this.state.loading && !this.state.user && <EditorLogin onLogin={this.login} errorMessage={this.state.errorMessage} />}
+        {!this.state.loading && !this.state.user && <EditorLogin onLogin={this.login} errorMessage={this.state.loginErrorMessage} />}
       </div>
     );
   }
@@ -45,12 +45,15 @@ export default class EditorApp extends Component {
   login = (username, password) => {
     if (username !== "" && password !== "") {
       login(username, password).then(
-        res => this.loadUser()
+        res => {
+          this.setState({ loginErrorMessage: null });
+          this.loadUser();
+        }
       ).catch(err => {
         if (err.status === 403) {
-          this.setState({ errorMessage: err.response.body.message });
+          this.setState({ loginErrorMessage: err.response.body.message });
         } else {
-          this.setState({ errorMessage: "There was an error while logging in." });
+          this.setState({ loginErrorMessage: "There was an error while logging in." });
         }
       });
     }
