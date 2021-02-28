@@ -1,6 +1,6 @@
 package fink.util
 
-import cats.{ApplicativeError, ApplicativeThrow, Apply}
+import cats.ApplicativeThrow
 import cats.data.Kleisli
 import cats.syntax.applicativeError._
 import org.http4s.{Http, Response}
