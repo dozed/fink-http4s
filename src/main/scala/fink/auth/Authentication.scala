@@ -11,8 +11,10 @@ import fink.World._
 import fink.data.JsonInstances._
 import fink.data._
 import fink.db.UserDAO
+import io.circe.Json
 import io.circe.syntax._
 import org.http4s._
+import org.http4s.circe._
 import org.http4s.dsl.io._
 import org.mindrot.jbcrypt.BCrypt
 import pdi.jwt.JwtCirce
@@ -80,14 +82,30 @@ object Authentication {
           val res = mkUserLoginResponse(user)
           IO.pure(res)
         } else {
-          Forbidden()
+          mkWrongPasswordResponse()
         }
-      case None => Forbidden()
+      case None => mkWrongUserResponse()
     }
   }
 
   def logout(): IO[Response[IO]] = {
     IO.pure(mkUserLogoutResponse())
+  }
+
+  def mkWrongUserResponse(): IO[Response[IO]] = {
+    val data = Json.obj(
+      "message" -> Json.fromString("Invalid user")
+    )
+
+    Forbidden(data)
+  }
+
+  def mkWrongPasswordResponse(): IO[Response[IO]] = {
+    val data = Json.obj(
+      "message" -> Json.fromString("Invalid password")
+    )
+
+    Forbidden(data)
   }
 
   def mkUserLoginResponse(user: User): Response[IO] = {
