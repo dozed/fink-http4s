@@ -9,6 +9,8 @@ val circeVersion = "0.13.0"
 val http4sVersion = "0.21.19"
 val specs2Version = "4.10.6"
 
+parallelExecution in Test := false
+
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
