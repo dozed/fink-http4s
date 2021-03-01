@@ -33,6 +33,7 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-scalacheck" % specs2Version % "test",
   "io.circe" %% "circe-testing" % circeVersion % "test",
   "org.typelevel" %% "discipline-specs2" % "1.1.4" % "test",
+  "com.h2database" % "h2" % "1.4.200" % "test",
 )
 
 lazy val root = project.in(file("."))
