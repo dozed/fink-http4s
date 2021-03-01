@@ -47,9 +47,9 @@ class DataTests extends Specification {
     BCrypt.checkpw("password", user.password) should beTrue
 
     UserDAO.findAll.transact(xa).unsafeRunSync must have size (2)
+
     val user1 = UserDAO.findById(2).transact(xa).unsafeRunSync
-    user1 should beSome
-    user1.get should_== user
+    user1 should_== Some(user)
 
   }
 
