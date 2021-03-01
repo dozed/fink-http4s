@@ -1,6 +1,8 @@
 
 
-INSERT INTO users (name, password) VALUES ('foo', '$2a$10$sUXJkDdYXnzfBB16Phpytu7y0LGE7lBdd53SKpfIF7bRnAhp1eNoy');
+INSERT INTO users (id, name, password) VALUES (1, 'foo', '$2a$10$sUXJkDdYXnzfBB16Phpytu7y0LGE7lBdd53SKpfIF7bRnAhp1eNoy');
+
+INSERT INTO users_roles (userId, roleName) VALUES (1, 'CanEdit');
 
 INSERT INTO tags (value) VALUES ('Music');
 INSERT INTO tags (value) VALUES ('Programming');
