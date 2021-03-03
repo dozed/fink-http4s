@@ -18,11 +18,11 @@ At the moment the following content elements are supported:
   * UI library [React](https://reactjs.org/)
   * The theme for the demo is: [Foghorn](http://wptheming.com/foghorn)
 
-## Frontend
+## Site
 
-<img src="fink-demo.png" />
+<img src="fink-site.png" />
 
-## Backend
+## Editor
 
 <img src="fink-editor.png" />
 
@@ -42,7 +42,7 @@ $ sbt
 > run
 ```
 
-Run the frontend
+Run the site
 
 ```
 $ cd frontend-site
