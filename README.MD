@@ -42,6 +42,13 @@ $ sbt
 > run
 ```
 
+Install shared dependencies
+
+```
+$ cd frontend-shared
+$ npm install
+```
+
 Run the site
 
 ```
