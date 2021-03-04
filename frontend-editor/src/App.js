@@ -2,14 +2,14 @@ import React, {Component} from "react";
 import { createBrowserHistory } from "history";
 
 import EditorIndex from "EditorIndex";
-import EditorLogin from "EditorLogin";
+import Login from "Login";
 import {fetchMe, login, logout} from "../../frontend-shared/api";
 
 import "editor.scss";
 
 const history = createBrowserHistory();
 
-export default class EditorApp extends Component {
+export default class App extends Component {
   state = {
     user: null,
     loading: true,
@@ -26,7 +26,7 @@ export default class EditorApp extends Component {
     return (
       <div>
         {!this.state.loading && this.state.user && <EditorIndex onLogout={this.logout} />}
-        {!this.state.loading && !this.state.user && <EditorLogin onLogin={this.login} errorMessage={this.state.loginErrorMessage} />}
+        {!this.state.loading && !this.state.user && <Login onLogin={this.login} errorMessage={this.state.loginErrorMessage} />}
       </div>
     );
   }
