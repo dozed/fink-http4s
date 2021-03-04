@@ -49,15 +49,33 @@ export default class EditorIndex extends Component {
           <Container fluid={true}>
             <Switch>
               {/*<Route path="/" exact component={Home} />*/}
-              <Route path="/galleries" exact component={Galleries} />
-              <Route path="/galleries/create" exact component={CreateGallery} />
-              <Route path="/galleries/:galleryId" component={EditGallery} />
-              <Route path="/posts" exact component={Posts} />
-              <Route path="/posts/create" exact component={CreatePost} />
-              <Route path="/posts/:postId" component={EditPost} />
-              <Route path="/pages" exact component={Pages} />
-              <Route path="/pages/create" exact component={CreatePage} />
-              <Route path="/pages/:pageId" component={EditPage} />
+              <Route path="/galleries" exact>
+                <Galleries />
+              </Route>
+              <Route path="/galleries/create" exact>
+                <CreateGallery />
+              </Route>
+              <Route path="/galleries/:galleryId">
+                <EditGallery />
+              </Route>
+              <Route path="/posts" exact>
+                <Posts />
+              </Route>
+              <Route path="/posts/create" exact>
+                <CreatePost />
+              </Route>
+              <Route path="/posts/:postId">
+                <EditPost />
+              </Route>
+              <Route path="/pages" exact>
+                <Pages />
+              </Route>
+              <Route path="/pages/create" exact>
+                <CreatePage />
+              </Route>
+              <Route path="/pages/:pageId">
+                <EditPage />
+              </Route>
             </Switch>
           </Container>
         </Router>
