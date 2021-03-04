@@ -34,8 +34,8 @@ export default class Pages extends Component {
             <thead>
               <tr>
                 <th>Title</th>
-                <th>Date Created</th>
-                <th>Actions</th>
+                <th width="200px">Date Created</th>
+                <th width="200px">Actions</th>
               </tr>
             </thead>
             <tbody>
