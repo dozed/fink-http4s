@@ -61,10 +61,9 @@ object PostApi {
     case req@DELETE -> Root / "posts" / LongVar(postId) =>
 
       for {
-        op <- req.decodeJson[Operation.DeletePost]
         user <- req.authenticateUser
         _ <- Authorization.authorizeEdit(user)
-        _ <- PostDAO.delete(op.id).transact(xa)
+        _ <- PostDAO.delete(postId).transact(xa)
         res <- Ok()
       } yield {
         res

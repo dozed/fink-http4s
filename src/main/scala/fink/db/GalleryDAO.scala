@@ -30,7 +30,7 @@ object GalleryDAO {
   }
 
   def delete(galleryId: Long): ConnectionIO[Int] = {
-    sql"DELETE galleries WHERE id = $galleryId".update.run
+    sql"DELETE FROM galleries WHERE id = $galleryId".update.run
   }
 
   def findImagesByGalleryId(galleryId: Long): ConnectionIO[List[Image]] = {

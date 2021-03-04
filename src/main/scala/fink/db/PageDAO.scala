@@ -29,7 +29,7 @@ object PageDAO {
   }
 
   def delete(pageId: Long): ConnectionIO[Int] = {
-    sql"DELETE pages WHERE id = $pageId".update.run
+    sql"DELETE FROM pages WHERE id = $pageId".update.run
   }
 
   def addTag(pageId: Long, tagId: Long): ConnectionIO[Int] = {

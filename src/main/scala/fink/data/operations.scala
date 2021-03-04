@@ -19,10 +19,6 @@ object Operation {
     tags: List[String]
   ) extends Operation
 
-  case class DeletePost(
-    id: Long,
-  ) extends Operation
-
   case class CreatePage(
     title: String,
     text: String,
@@ -38,10 +34,6 @@ object Operation {
     tags: List[String]
   ) extends Operation
 
-  case class DeletePage(
-    id: Long,
-  ) extends Operation
-
   case class CreateGallery(
     title: String,
     text: String,
@@ -55,10 +47,6 @@ object Operation {
     text: String,
     shortlink: String,
     tags: List[String]
-  ) extends Operation
-
-  case class DeleteGallery(
-    id: Long,
   ) extends Operation
 
   case class UploadImageToGallery(

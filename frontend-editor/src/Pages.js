@@ -1,4 +1,4 @@
-import { getPages } from "../../frontend-shared/api";
+import {deletePage, getPages} from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
@@ -6,12 +6,14 @@ import Table from "react-bootstrap/Table";
 import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
-const PageLine = ({info, onEdit}) => (
+const PageLine = ({info, onEdit, onDelete}) => (
   <tr>
     <td>{info.title}</td>
     <td>{moment(info.date).format("MMM Do YY")}</td>
     <td>
       <Button onClick={() => onEdit(info)}>Edit</Button>
+      {" "}
+      <Button onClick={() => onDelete(info)}>Delete</Button>
     </td>
   </tr>
 );
@@ -20,10 +22,6 @@ export default class Pages extends Component {
   state = {
     pages: [],
   };
-
-  componentDidMount() {
-    getPages().then(res => this.setState({ pages: res.body }));
-  }
 
   render() {
     return (
@@ -41,20 +39,18 @@ export default class Pages extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.pages.map(x => <PageLine key={`page-${x.id}`} info={x} onEdit={(x) => this.editPage(x)}/>)}
+            {this.state.pages.map(x =>
+              <PageLine key={`page-${x.id}`}
+                        info={x}
+                        onEdit={(x) => this.editPage(x)}
+                        onDelete={(x) => this.deletePage(x)}
+              />
+            )}
             </tbody>
           </Table>
         </div>
       </div>
     );
-  }
-
-  editPage(x) {
-    this.props.history.push(`/pages/${x.id}`);
-  }
-
-  createPage() {
-    this.props.history.push(`/pages/create`);
   }
 
   onChangeTitle(e) {
@@ -67,6 +63,26 @@ export default class Pages extends Component {
     this.setState({
       text: e.target.value
     });
+  }
+
+  editPage(page) {
+    this.props.history.push(`/pages/${page.id}`);
+  }
+
+  createPage() {
+    this.props.history.push(`/pages/create`);
+  }
+
+  deletePage(page) {
+    deletePage(page.id).then(() => this.loadPages());
+  }
+
+  loadPages() {
+    getPages().then(res => this.setState({ pages: res.body }));
+  }
+
+  componentDidMount() {
+    this.loadPages();
   }
 
 }

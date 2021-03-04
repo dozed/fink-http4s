@@ -1,4 +1,4 @@
-import { getPosts } from "../../frontend-shared/api";
+import {deletePost, getPosts} from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
@@ -6,12 +6,14 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
-const PostLine = ({info, onEdit}) => (
+const PostLine = ({info, onEdit, onDelete}) => (
   <tr>
     <td>{info.title}</td>
     <td>{moment(info.date).format("MMM Do YY")}</td>
     <td>
       <Button onClick={() => onEdit(info)}>Edit</Button>
+      {" "}
+      <Button onClick={() => onDelete(info)}>Delete</Button>
     </td>
   </tr>
 );
@@ -20,10 +22,6 @@ export default class Posts extends Component {
   state = {
     posts: [],
   };
-
-  componentDidMount() {
-    getPosts().then(res => this.setState({ posts: res.body }));
-  }
 
   render() {
     return (
@@ -41,20 +39,14 @@ export default class Posts extends Component {
               </tr>
             </thead>
             <tbody>
-            {this.state.posts.map(x => <PostLine key={`post-${x.id}`} info={x} onEdit={(g) => this.editPost(g)}/>)}
+            {this.state.posts.map(x =>
+              <PostLine key={`post-${x.id}`} info={x} onEdit={(p) => this.editPost(p)} onDelete={(p) => this.deletePost(p)} />
+            )}
             </tbody>
           </Table>
         </div>
       </div>
     );
-  }
-
-  editPost(x) {
-    this.props.history.push(`/posts/${x.id}`);
-  }
-
-  createPost(x) {
-    this.props.history.push(`/posts/create`);
   }
 
   onChangeTitle(e) {
@@ -67,6 +59,26 @@ export default class Posts extends Component {
     this.setState({
       text: e.target.value
     });
+  }
+
+  editPost(post) {
+    this.props.history.push(`/posts/${post.id}`);
+  }
+
+  createPost() {
+    this.props.history.push(`/posts/create`);
+  }
+
+  deletePost(post) {
+    deletePost(post.id).then(() => this.loadPosts());
+  }
+
+  loadPosts() {
+    getPosts().then(res => this.setState({ posts: res.body }));
+  }
+
+  componentDidMount() {
+    this.loadPosts();
   }
 
 }

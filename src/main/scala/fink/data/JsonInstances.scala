@@ -30,9 +30,6 @@ object JsonInstances {
       }
     }
 
-  implicit def deletePostOperationDecoder: Decoder[Operation.DeletePost] =
-    Decoder.forProduct1[Operation.DeletePost, Long]("id")(id => Operation.DeletePost(id))
-
   implicit def createdPostNotificationEncoder: Encoder[Notification.CreatedPost] =
     Encoder.instance[Notification.CreatedPost] { msg =>
 
@@ -130,9 +127,6 @@ object JsonInstances {
       (id, title, text, tags, shortlink) => Operation.UpdatePage(id, title, text, shortlink, tags)
     )
 
-  implicit def deletePageOperationDecoder: Decoder[Operation.DeletePage] =
-    Decoder.forProduct1[Operation.DeletePage, Long]("id")(id => Operation.DeletePage(id))
-
   implicit def createdPageNotificationEncoder: Encoder[Notification.CreatedPage] =
     Encoder.instance[Notification.CreatedPage] { msg =>
 
@@ -226,9 +220,6 @@ object JsonInstances {
     Decoder.forProduct5[Operation.UpdateGallery, Long, String, String, List[String], String]("id", "title", "text", "tags", "shortlink")(
       (id, title, text, tags, shortlink) => Operation.UpdateGallery(id, title, text, shortlink, tags)
     )
-
-  implicit def deleteGalleryOperationDecoder: Decoder[Operation.DeleteGallery] =
-    Decoder.forProduct1[Operation.DeleteGallery, Long]("id")(id => Operation.DeleteGallery(id))
 
   implicit def createdGalleryNotificationEncoder: Encoder[Notification.CreatedGallery] =
     Encoder.instance[Notification.CreatedGallery] { msg =>

@@ -65,10 +65,9 @@ object PageApi {
     case req@DELETE -> Root / "pages" / LongVar(pageId) =>
 
       for {
-        op <- req.decodeJson[Operation.DeletePage]
         user <- req.authenticateUser
         _ <- Authorization.authorizeEdit(user)
-        _ <- PageDAO.delete(op.id).transact(xa)
+        _ <- PageDAO.delete(pageId).transact(xa)
         res <- Ok()
       } yield {
         res

@@ -71,6 +71,8 @@ export const updateGallery = (id, title, text, tags, shortlink) => {
 
 };
 
+export const deleteGallery = (id) => request.delete(`/api/galleries/${id}`);
+
 export const getPosts = () => {
 
   return request.get("/api/posts");
@@ -112,6 +114,8 @@ export const updatePost = (id, title, text, tags, shortlink) => {
 
 };
 
+export const deletePost = (id) => request.delete(`/api/posts/${id}`);
+
 export const getPages = () => {
 
   return request.get("/api/pages");
@@ -152,4 +156,8 @@ export const updatePage = (id, title, text, tags, shortlink) => {
     .send(data);
 
 };
+
+export const deletePage = (id) =>
+  request.delete(`/api/pages/${id}`);
+
 

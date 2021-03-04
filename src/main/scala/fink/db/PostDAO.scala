@@ -29,7 +29,7 @@ object PostDAO {
   }
 
   def delete(postId: Long): ConnectionIO[Int] = {
-    sql"DELETE posts WHERE id = $postId".update.run
+    sql"DELETE FROM posts WHERE id = $postId".update.run
   }
 
   def addTag(postId: Long, tagId: Long): ConnectionIO[Int] = {

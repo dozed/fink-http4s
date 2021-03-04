@@ -63,10 +63,9 @@ object GalleryApi {
     case req@DELETE -> Root / "galleries" / LongVar(galleryId) =>
 
       for {
-        op <- req.decodeJson[Operation.DeleteGallery]
         user <- req.authenticateUser
         _ <- Authorization.authorizeEdit(user)
-        _ <- GalleryDAO.delete(op.id).transact(xa)
+        _ <- GalleryDAO.delete(galleryId).transact(xa)
         res <- Ok()
       } yield {
         res
