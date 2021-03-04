@@ -317,9 +317,6 @@ object JsonInstances {
       (id, title) => Operation.UpdateImage(id, title)
     )
 
-  implicit def deleteImageOperationDecoder: Decoder[Operation.DeleteImage] =
-    Decoder.forProduct1[Operation.DeleteImage, Long]("id")(id => Operation.DeleteImage(id))
-
   implicit def createdImageNotificationEncoder: Encoder[Notification.CreatedImage] =
     Encoder.instance[Notification.CreatedImage] { msg =>
 

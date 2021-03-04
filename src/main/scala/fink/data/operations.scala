@@ -70,10 +70,6 @@ object Operation {
     title: String,
   ) extends Operation
 
-  case class DeleteImage(
-    id: Long,
-  ) extends Operation
-
   case class Login(
     username: String,
     password: String

@@ -65,10 +65,9 @@ object ImageApi {
     case req@DELETE -> Root / "images" / LongVar(imageId) =>
 
       for {
-        op <- req.decodeJson[Operation.DeleteImage]
         user <- req.authenticateUser
         _ <- Authorization.authorizeEdit(user)
-        _ <- ImageDAO.delete(op.id).transact(xa)
+        _ <- ImageDAO.delete(imageId).transact(xa)
         res <- Ok()
       } yield {
         res
