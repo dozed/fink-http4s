@@ -51,3 +51,10 @@
   padding: 10px;
   font-size: 16px;
 }
+
+.toast-container {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  z-index: 100;
+}

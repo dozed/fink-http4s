@@ -16,6 +16,7 @@ import Pages from "Pages";
 import CreatePage from "CreatePage";
 import EditPage from "EditPage";
 import Login from "Login";
+import {ToastContainer} from "ToastContainer";
 import {fetchMe, login, logout} from "../../frontend-shared/api";
 
 import "editor.scss";
@@ -79,6 +80,7 @@ export default class App extends Component {
             </Container>
           </Router>
         }
+        <ToastContainer />
       </div>
     );
   }

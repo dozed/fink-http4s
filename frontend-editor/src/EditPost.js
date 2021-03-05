@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
+import {addToast} from "ToastContainer";
 
 export default class EditPost extends Component {
   state = {
@@ -65,6 +66,8 @@ export default class EditPost extends Component {
     updatePost(this.state.postId, this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
         this.props.history.goBack();
+      }, (err) => {
+        addToast("Error", "There was an error updating your post.");
       });
   }
 
