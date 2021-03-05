@@ -70,20 +70,6 @@ export default class EditGallery extends Component {
     images: [],
   };
 
-  componentDidMount() {
-
-    this.loadGallery(this.props.match.params.galleryId);
-
-  }
-
-  loadGallery(galleryId) {
-    getGallery(this.props.match.params.galleryId)
-      .then(res => {
-        const g = res.body;
-        this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images })
-      });
-  }
-
   render() {
     // const { username } = this.state;
     return (
@@ -152,14 +138,25 @@ export default class EditGallery extends Component {
   }
 
   onUploadedImageToGallery() {
-
     getGallery(this.props.match.params.galleryId)
       .then(res => {
         this.loadGallery(this.props.match.params.galleryId);
         // this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text })
       });
-
   }
 
+  loadGallery() {
+    getGallery(this.props.match.params.galleryId)
+      .then(res => {
+        const g = res.body;
+        this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images })
+      });
+  }
+
+  componentDidMount() {
+
+    this.loadGallery();
+
+  }
 
 }

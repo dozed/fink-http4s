@@ -13,20 +13,6 @@ export default class EditPost extends Component {
     text: "",
   };
 
-  componentDidMount() {
-
-    this.loadPost(this.props.match.params.postId);
-
-  }
-
-  loadPost(galleryId) {
-    getPost(this.props.match.params.postId)
-      .then(res => {
-        const p = res.body;
-        this.setState({ postId: p.post.id, title: p.post.title, text: p.post.text })
-      });
-  }
-
   render() {
     return (
       <div className="post-edit">
@@ -80,6 +66,18 @@ export default class EditPost extends Component {
       .then((res) => {
         this.props.history.goBack();
       });
+  }
+
+  loadPost() {
+    getPost(this.props.match.params.postId)
+      .then(res => {
+        const p = res.body;
+        this.setState({ postId: p.post.id, title: p.post.title, text: p.post.text })
+      });
+  }
+
+  componentDidMount() {
+    this.loadPost();
   }
 
 }

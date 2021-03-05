@@ -13,20 +13,6 @@ export default class EditPage extends Component {
     text: "",
   };
 
-  componentDidMount() {
-
-    this.loadPage(this.props.match.params.pageId);
-
-  }
-
-  loadPage(galleryId) {
-    getPage(this.props.match.params.pageId)
-      .then(res => {
-        var p = res.body;
-        this.setState({ pageId: p.page.id, title: p.page.title, text: p.page.text })
-      });
-  }
-
   render() {
     return (
       <div className="post-edit">
@@ -80,6 +66,20 @@ export default class EditPage extends Component {
       .then((res) => {
         this.props.history.goBack();
       });
+  }
+
+  loadPage() {
+    getPage(this.props.match.params.pageId)
+      .then(res => {
+        const p = res.body;
+        this.setState({ pageId: p.page.id, title: p.page.title, text: p.page.text })
+      });
+  }
+
+  componentDidMount() {
+
+    this.loadPage();
+
   }
 
 }
