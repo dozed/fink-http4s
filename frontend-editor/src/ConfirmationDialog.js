@@ -30,27 +30,25 @@ export const ConfirmationDialog = () => {
 
   const onCancel = () => {
     setDialogInfo();
-    dialogInfo.onCancel();
+    if (dialogInfo.onCancel) dialogInfo.onCancel();
   };
 
   const onConfirm = () => {
     setDialogInfo();
-    dialogInfo.onConfirm();
+    if (dialogInfo.onConfirm) dialogInfo.onConfirm();
   };
 
   return (
-    <div className="confirmation-dialog-container">
-      <Modal show={!!dialogInfo} onHide={onCancel}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{dialogInfo && dialogInfo.message}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onCancel}>Cancel</Button>
-          <Button variant="primary" onClick={onConfirm}>Ok</Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+    <Modal show={!!dialogInfo} onHide={onCancel}>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{dialogInfo && dialogInfo.message}</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onCancel}>Cancel</Button>
+        <Button variant="primary" onClick={onConfirm}>Ok</Button>
+      </Modal.Footer>
+    </Modal>
   );
 
 };
