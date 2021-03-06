@@ -76,6 +76,8 @@ export default class EditPost extends Component {
       .then(res => {
         const p = res.body;
         this.setState({ postId: p.post.id, title: p.post.title, text: p.post.text })
+      }, (err) => {
+        addToast("Error", "There was an error loading your post.");
       });
   }
 

@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import {addToast} from "./ToastContainer";
 
 const PageLine = ({info, onEdit, onDelete}) => (
   <tr>
@@ -78,7 +79,12 @@ export default class Pages extends Component {
   }
 
   loadPages() {
-    getPages().then(res => this.setState({ pages: res.body }));
+    getPages().then(
+      res => this.setState({ pages: res.body }),
+      err => {
+        addToast("Error", "There was an error loading pages.");
+      }
+    );
   }
 
   componentDidMount() {

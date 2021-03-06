@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import {addToast} from "./ToastContainer";
 
 const GalleryLine = ({info, onEdit, onDelete}) => (
   <tr>
@@ -63,7 +64,10 @@ export default class Galleries extends Component {
   }
 
   loadGalleries() {
-    getGalleries().then(res => this.setState({ galleries: res.body }));
+    getGalleries().then(
+      res => this.setState({ galleries: res.body }),
+      err => addToast("Error", "There was an error loading posts.")
+    );
   }
 
   componentDidMount() {

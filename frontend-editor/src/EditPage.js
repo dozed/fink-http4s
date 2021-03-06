@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
+import {addToast} from "./ToastContainer";
 
 export default class EditPage extends Component {
   state = {
@@ -65,6 +66,8 @@ export default class EditPage extends Component {
     updatePage(this.state.pageId, this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
         this.props.history.goBack();
+      }, (err) => {
+        addToast("Error", "There was an error updating your page.");
       });
   }
 
@@ -73,6 +76,8 @@ export default class EditPage extends Component {
       .then(res => {
         const p = res.body;
         this.setState({ pageId: p.page.id, title: p.page.title, text: p.page.text })
+      }, (err) => {
+        addToast("Error", "There was an error loading your page.");
       });
   }
 

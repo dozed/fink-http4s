@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
+import {addToast} from "./ToastContainer";
 
 const PostLine = ({info, onEdit, onDelete}) => (
   <tr>
@@ -74,7 +75,12 @@ export default class Posts extends Component {
   }
 
   loadPosts() {
-    getPosts().then(res => this.setState({ posts: res.body }));
+    getPosts().then(
+      res => this.setState({ posts: res.body }),
+      err => {
+        addToast("Error", "There was an error loading posts.");
+      }
+    );
   }
 
   componentDidMount() {

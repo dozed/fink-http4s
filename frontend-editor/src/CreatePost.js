@@ -6,6 +6,7 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
+import {addToast} from "./ToastContainer";
 
 export default class CreatePost extends Component {
   state = {
@@ -65,9 +66,10 @@ export default class CreatePost extends Component {
 
   createPost() {
     createPost(this.state.title, this.state.text, [], this.state.title)
-      .then((res) => {
-        this.props.history.goBack();
-      });
+      .then(
+        res => this.props.history.goBack(),
+        err => addToast("Error", "There was an error creating your post.")
+      );
   }
 
 

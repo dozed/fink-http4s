@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
+import {addToast} from "./ToastContainer";
 
 class UploadImage extends Component {
   state = {
@@ -37,7 +38,11 @@ class UploadImage extends Component {
 
   uploadImage() {
     uploadImageToGallery(this.props.galleryId, this.state.title, this.state.imageData)
-      .then(() => this.props.onUploadedImageToGallery());
+      .then(
+        () => this.props.onUploadedImageToGallery(),
+        (err) => {
+          addToast("Error", "There was an error uploading your image.");
+        });
   }
 
   onChangeTitle(e) {
@@ -106,7 +111,7 @@ export default class EditGallery extends Component {
 
         <hr/>
 
-        <UploadImage galleryId={this.state.galleryId} onUploadedImageToGallery={() => this.onUploadedImageToGallery()}/>
+        <UploadImage galleryId={this.state.galleryId} onUploadedImageToGallery={() => this.loadGallery()}/>
 
         <hr/>
 
@@ -134,14 +139,8 @@ export default class EditGallery extends Component {
     updateGallery(this.state.galleryId, this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
         this.loadGallery(this.props.match.params.galleryId);
-      });
-  }
-
-  onUploadedImageToGallery() {
-    getGallery(this.props.match.params.galleryId)
-      .then(res => {
-        this.loadGallery(this.props.match.params.galleryId);
-        // this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text })
+      }, (err) => {
+        addToast("Error", "There was an error updating your gallery.");
       });
   }
 
@@ -150,6 +149,8 @@ export default class EditGallery extends Component {
       .then(res => {
         const g = res.body;
         this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images })
+      }, (err) => {
+        addToast("Error", "There was an error loading your gallery.");
       });
   }
 
