@@ -6,6 +6,7 @@ import Table from "react-bootstrap/Table";
 import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import {addToast} from "./ToastContainer";
+import {showConfirmation} from "./ConfirmationDialog";
 
 const GalleryLine = ({info, onEdit, onDelete}) => (
   <tr>
@@ -14,7 +15,7 @@ const GalleryLine = ({info, onEdit, onDelete}) => (
     <td>
       <Button onClick={() => onEdit(info)}>Edit</Button>
       {" "}
-      <Button onClick={() => onDelete(info)}>Delete</Button>
+      <Button variant="secondary" onClick={() => onDelete(info)}>Delete</Button>
     </td>
   </tr>
 );
@@ -60,7 +61,10 @@ export default class Galleries extends Component {
   }
 
   deleteGallery(g) {
-    deleteGallery(g.id).then(() => this.loadGalleries());
+    showConfirmation(
+      "Do you really want to delete this gallery?",
+      () => deleteGallery(g.id).then(() => this.loadGalleries())
+    );
   }
 
   loadGalleries() {

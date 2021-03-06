@@ -17,6 +17,7 @@ import CreatePage from "CreatePage";
 import EditPage from "EditPage";
 import Login from "Login";
 import {ToastContainer} from "ToastContainer";
+import {ConfirmationDialog} from "ConfirmationDialog";
 import {fetchMe, login, logout} from "../../frontend-shared/api";
 
 import "editor.scss";
@@ -81,6 +82,7 @@ export default class App extends Component {
           </Router>
         }
         <ToastContainer />
+        <ConfirmationDialog />
       </div>
     );
   }

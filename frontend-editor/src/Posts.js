@@ -5,7 +5,8 @@ import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
-import {addToast} from "./ToastContainer";
+import {addToast} from "ToastContainer";
+import {showConfirmation} from "ConfirmationDialog";
 
 const PostLine = ({info, onEdit, onDelete}) => (
   <tr>
@@ -14,7 +15,7 @@ const PostLine = ({info, onEdit, onDelete}) => (
     <td>
       <Button onClick={() => onEdit(info)}>Edit</Button>
       {" "}
-      <Button onClick={() => onDelete(info)}>Delete</Button>
+      <Button variant="secondary" onClick={() => onDelete(info)}>Delete</Button>
     </td>
   </tr>
 );
@@ -71,7 +72,10 @@ export default class Posts extends Component {
   }
 
   deletePost(post) {
-    deletePost(post.id).then(() => this.loadPosts());
+    showConfirmation(
+      "Do you really want to delete this post?",
+      () => deletePost(post.id).then(() => this.loadPosts())
+    );
   }
 
   loadPosts() {

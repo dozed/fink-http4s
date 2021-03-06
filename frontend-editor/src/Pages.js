@@ -5,7 +5,8 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import {addToast} from "./ToastContainer";
+import {addToast} from "ToastContainer";
+import {showConfirmation} from "ConfirmationDialog";
 
 const PageLine = ({info, onEdit, onDelete}) => (
   <tr>
@@ -14,7 +15,7 @@ const PageLine = ({info, onEdit, onDelete}) => (
     <td>
       <Button onClick={() => onEdit(info)}>Edit</Button>
       {" "}
-      <Button onClick={() => onDelete(info)}>Delete</Button>
+      <Button variant="secondary" onClick={() => onDelete(info)}>Delete</Button>
     </td>
   </tr>
 );
@@ -75,7 +76,10 @@ export default class Pages extends Component {
   }
 
   deletePage(page) {
-    deletePage(page.id).then(() => this.loadPages());
+    showConfirmation(
+      "Do you really want to delete this page?",
+      () => deletePage(page.id).then(() => this.loadPages())
+    );
   }
 
   loadPages() {
