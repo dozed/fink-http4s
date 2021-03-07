@@ -2,23 +2,11 @@ import {deletePage, getPages} from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import BootstrapTable from "react-bootstrap-table-next";
+import moment from "moment";
 import {addToast} from "ToastContainer";
 import {showConfirmation} from "ConfirmationDialog";
-
-const PageLine = ({info, onEdit, onDelete}) => (
-  <tr>
-    <td>{info.title}</td>
-    <td>{moment(info.date).format("MMM Do YY")}</td>
-    <td>
-      <Button onClick={() => onEdit(info)}>Edit</Button>
-      {" "}
-      <Button variant="secondary" onClick={() => onDelete(info)}>Delete</Button>
-    </td>
-  </tr>
-);
 
 export default class Pages extends Component {
   state = {
@@ -26,31 +14,43 @@ export default class Pages extends Component {
   };
 
   render() {
+    const columns = [{
+      dataField: "title",
+      text: "Title",
+      sort: true
+    }, {
+      dataField: "date",
+      text: "Date Created",
+      formatter: (rowContent, row) => {
+        return moment(row.date).format("MMM Do YY");
+      },
+      headerStyle: (column, colIndex) => {
+        return { width: "200px" };
+      },
+      sort: true
+    }, {
+      dataField: "actions",
+      text: "Actions",
+      formatter: (rowContent, row) => {
+        return (
+          <div>
+            <Button onClick={() => this.editPage(row)}>Edit</Button>
+            {" "}
+            <Button variant="secondary" onClick={() => this.deletePage(row)}>Delete</Button>
+          </div>
+        )
+      },
+      headerStyle: (column, colIndex) => {
+        return { width: "200px" };
+      }
+    }];
+
     return (
       <div className="items-list">
         <ButtonToolbar>
           <Button onClick={() => this.createPage()}>Create Page</Button>
         </ButtonToolbar>
-        <div>
-          <Table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th width="200px">Date Created</th>
-                <th width="200px">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-            {this.state.pages.map(x =>
-              <PageLine key={`page-${x.id}`}
-                        info={x}
-                        onEdit={(x) => this.editPage(x)}
-                        onDelete={(x) => this.deletePage(x)}
-              />
-            )}
-            </tbody>
-          </Table>
-        </div>
+        <BootstrapTable keyField={"id"} data={this.state.pages} columns={columns} bordered={false} bootstrap4={true} />
       </div>
     );
   }

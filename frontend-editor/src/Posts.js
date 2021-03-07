@@ -3,22 +3,11 @@ import {deletePost, getPosts} from "../../frontend-shared/api";
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import Table from "react-bootstrap/Table";
+import BootstrapTable from "react-bootstrap-table-next";
 import moment from "moment";
 import {addToast} from "ToastContainer";
 import {showConfirmation} from "ConfirmationDialog";
 
-const PostLine = ({info, onEdit, onDelete}) => (
-  <tr>
-    <td>{info.title}</td>
-    <td>{moment(info.date).format("MMM Do YY")}</td>
-    <td>
-      <Button onClick={() => onEdit(info)}>Edit</Button>
-      {" "}
-      <Button variant="secondary" onClick={() => onDelete(info)}>Delete</Button>
-    </td>
-  </tr>
-);
 
 export default class Posts extends Component {
   state = {
@@ -26,27 +15,43 @@ export default class Posts extends Component {
   };
 
   render() {
+    const columns = [{
+      dataField: "title",
+      text: "Title",
+      sort: true
+    }, {
+      dataField: "date",
+      text: "Date Created",
+      formatter: (rowContent, row) => {
+        return moment(row.date).format("MMM Do YY");
+      },
+      headerStyle: (column, colIndex) => {
+        return { width: "200px" };
+      },
+      sort: true
+    }, {
+      dataField: "actions",
+      text: "Actions",
+      formatter: (rowContent, row) => {
+        return (
+          <div>
+            <Button onClick={() => this.editPost(row)}>Edit</Button>
+            {" "}
+            <Button variant="secondary" onClick={() => this.deletePost(row)}>Delete</Button>
+          </div>
+        )
+      },
+      headerStyle: (column, colIndex) => {
+        return { width: "200px" };
+      }
+    }];
+
     return (
       <div className="items-list">
         <ButtonToolbar>
           <Button onClick={() => this.createPost()}>Create Post</Button>
         </ButtonToolbar>
-        <div>
-          <Table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th width="200px">Date Created</th>
-                <th width="200px">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-            {this.state.posts.map(x =>
-              <PostLine key={`post-${x.id}`} info={x} onEdit={(p) => this.editPost(p)} onDelete={(p) => this.deletePost(p)} />
-            )}
-            </tbody>
-          </Table>
-        </div>
+        <BootstrapTable keyField={"id"} data={this.state.posts} columns={columns} bordered={false} bootstrap4={true} />
       </div>
     );
   }

@@ -2,23 +2,12 @@ import {deleteGallery, getGalleries} from "../../frontend-shared/api";
 
 import React, {Component} from "react";
 import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import moment from "moment";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import {addToast} from "./ToastContainer";
-import {showConfirmation} from "./ConfirmationDialog";
+import BootstrapTable from "react-bootstrap-table-next";
+import moment from "moment";
+import {addToast} from "ToastContainer";
+import {showConfirmation} from "ConfirmationDialog";
 
-const GalleryLine = ({info, onEdit, onDelete}) => (
-  <tr>
-    <td>{info.title}</td>
-    <td>{moment(info.date).format("MMM Do YY")}</td>
-    <td>
-      <Button onClick={() => onEdit(info)}>Edit</Button>
-      {" "}
-      <Button variant="secondary" onClick={() => onDelete(info)}>Delete</Button>
-    </td>
-  </tr>
-);
 
 export default class Galleries extends Component {
   state = {
@@ -26,28 +15,43 @@ export default class Galleries extends Component {
   };
 
   render() {
-    // const { username } = this.state;
+    const columns = [{
+      dataField: "title",
+      text: "Title",
+      sort: true
+    }, {
+      dataField: "date",
+      text: "Date Created",
+      formatter: (rowContent, row) => {
+        return moment(row.date).format("MMM Do YY");
+      },
+      headerStyle: (column, colIndex) => {
+        return { width: "200px" };
+      },
+      sort: true
+    }, {
+      dataField: "actions",
+      text: "Actions",
+      formatter: (rowContent, row) => {
+        return (
+          <div>
+            <Button onClick={() => this.editGallery(row)}>Edit</Button>
+            {" "}
+            <Button variant="secondary" onClick={() => this.deleteGallery(row)}>Delete</Button>
+          </div>
+        )
+      },
+      headerStyle: (column, colIndex) => {
+        return { width: "200px" };
+      }
+    }];
+
     return (
       <div className="galleries-list items-list">
         <ButtonToolbar>
           <Button onClick={() => this.createGallery()}>Create Gallery</Button>
         </ButtonToolbar>
-        <div>
-          <Table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th width="200px">Date Created</th>
-                <th width="200px">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-            {this.state.galleries.map(x =>
-              <GalleryLine key={`gallery-${x.id}`} info={x} onEdit={(g) => this.editGallery(g)} onDelete={(g) => this.deleteGallery(g) }/>
-            )}
-            </tbody>
-          </Table>
-        </div>
+        <BootstrapTable keyField={"id"} data={this.state.galleries} columns={columns} bordered={false} bootstrap4={true} />
       </div>
     );
   }
