@@ -1,12 +1,13 @@
-import { getGallery, updateGallery, uploadImageToGallery } from "../../frontend-shared/api";
+import {deleteImage, getGallery, updateGallery, uploadImageToGallery} from "../../frontend-shared/api";
 
-import React, {Component} from "react";
+import React, {Component, useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import { BsTrash } from "react-icons/bs";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
-import {addToast} from "./ToastContainer";
+import {addToast} from "ToastContainer";
 
 class UploadImage extends Component {
   state = {
@@ -68,6 +69,24 @@ class UploadImage extends Component {
   }
 }
 
+const Image = ({ id, fileName, onDelete }) => {
+
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  return (
+    <div className={"image"} onMouseEnter={() => setShowOverlay(true)} onMouseLeave={() => setShowOverlay(false)}>
+      <img src={"/" + fileName} alt=""/>
+      {showOverlay &&
+        <div className={"image-overlay"}>
+          <div className={"delete-image"} onClick={() => onDelete(id)}>
+            <BsTrash />
+          </div>
+        </div>
+      }
+    </div>
+  );
+};
+
 export default class EditGallery extends Component {
   state = {
     title: "",
@@ -111,13 +130,15 @@ export default class EditGallery extends Component {
 
         <hr/>
 
-        <UploadImage galleryId={this.state.galleryId} onUploadedImageToGallery={() => this.loadGallery()}/>
+        <UploadImage galleryId={this.state.galleryId} onUploadedImageToGallery={() => this.loadGallery()} />
 
         <hr/>
 
         <h2>Images</h2>
         <div className="images">
-          {this.state.images.map(i => <img key={`img-${i.id}`} src={"/" + i.fileName} alt=""/>)}
+          {this.state.images.map(i =>
+            <Image key={`img-${i.id}`} id={i.id} fileName={i.fileName} onDelete={id => this.deleteImage(id)} />
+          )}
         </div>
       </div>
     );
@@ -152,6 +173,10 @@ export default class EditGallery extends Component {
       }, (err) => {
         addToast("Error", "There was an error loading your gallery.");
       });
+  }
+
+  deleteImage(imageId) {
+    deleteImage(imageId).then(() => this.loadGallery());
   }
 
   componentDidMount() {

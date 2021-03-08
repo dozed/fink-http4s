@@ -10,11 +10,30 @@
 
 .gallery-edit {
   .images {
-    img {
+    .image {
       float: left;
-      max-width: 250px;
-      max-height: 250px;
-      height: auto;
+      position: relative;
+
+      img {
+        max-width: 250px;
+        max-height: 250px;
+        height: auto;
+      }
+
+      .image-overlay {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background-color: #ffffff;
+
+        .delete-image {
+          padding: 2px;
+        }
+
+        .delete-image:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 

@@ -15,6 +15,8 @@ export const login = (username, password) => {
 
 export const logout = () => request.post("/api/auth/logout");
 
+export const deleteImage = (imageId) => request.delete(`/api/images/${imageId}`);
+
 export const uploadImage = (title, imageData) => {
   return request.post("/api/images")
     .send({

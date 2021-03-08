@@ -28,7 +28,7 @@ object ImageDAO {
   }
 
   def delete(imageId: Long): ConnectionIO[Int] = {
-    sql"DELETE images WHERE id = $imageId".update.run
+    sql"DELETE FROM images WHERE id = $imageId".update.run
   }
 
 
