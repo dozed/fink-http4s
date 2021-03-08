@@ -31,7 +31,7 @@ class UploadImage extends Component {
           </label>
         </div>
         <div>
-          <Button onClick={this.uploadImage.bind(this)}>Add</Button>
+          <Button onClick={() => this.uploadImage()}>Add</Button>
         </div>
       </Form>
     );
@@ -79,7 +79,7 @@ const Image = ({ id, fileName, onDelete }) => {
       {showOverlay &&
         <div className={"image-overlay"}>
           <div className={"delete-image"} onClick={() => onDelete(id)}>
-            <BsTrash />
+            <BsTrash title={"Delete image"} />
           </div>
         </div>
       }
@@ -95,7 +95,6 @@ export default class EditGallery extends Component {
   };
 
   render() {
-    // const { username } = this.state;
     return (
       <div className="gallery-edit">
         <h2>Edit Gallery Infos</h2>
@@ -159,7 +158,7 @@ export default class EditGallery extends Component {
   updateGallery() {
     updateGallery(this.state.galleryId, this.state.title, this.state.text, [], this.state.title)
       .then((res) => {
-        this.loadGallery(this.props.match.params.galleryId);
+        this.loadGallery();
       }, (err) => {
         addToast("Error", "There was an error updating your gallery.");
       });
@@ -169,7 +168,7 @@ export default class EditGallery extends Component {
     getGallery(this.props.match.params.galleryId)
       .then(res => {
         const g = res.body;
-        this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images })
+        this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images });
       }, (err) => {
         addToast("Error", "There was an error loading your gallery.");
       });
