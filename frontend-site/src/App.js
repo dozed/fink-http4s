@@ -1,6 +1,6 @@
 import Home from "Home";
 import Post from "Post";
-import Gallery from "Gallery";
+import { Gallery } from "Gallery";
 import Layout from "Layout";
 import { Page } from "Page";
 import {getGalleries, getPages, getPosts} from "api";

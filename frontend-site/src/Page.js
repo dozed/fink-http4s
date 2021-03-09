@@ -15,7 +15,7 @@ export const Page = (props) => {
     getPage(pageId).then(res => {
       setPage(res.body.page);
     });
-  }, []);
+  }, [pageId]);
 
   useEffect(() => {
     document.body.classList.add("page");
