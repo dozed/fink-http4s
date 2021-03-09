@@ -7,13 +7,16 @@
 
 target
 
-src/main/resources/fink.properties
-src/main/webapp/uploads
-
-/.cache
-
-dist
+/frontend-editor/dist
+/frontend-site/dist
 
 data/uploads/*
 !data/uploads/.gitkeep
+
+/app/data/logs/*
+/app/backend.jar
+/app/site/*
+!/app/site/.gitkeep
+/app/editor/*
+!/app/editor/.gitkeep
 

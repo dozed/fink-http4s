@@ -38,5 +38,19 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.4.200" % "test",
 )
 
+assemblyJarName in assembly := "backend.jar"
+
+mainClass in assembly := Some("fink.Http4sLauncher")
+
+test in assembly := {}
+
+assemblyMergeStrategy in assembly := {
+  case "application.conf" => MergeStrategy.discard
+  case "logback.xml" => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}
+
 lazy val root = project.in(file("."))
 
