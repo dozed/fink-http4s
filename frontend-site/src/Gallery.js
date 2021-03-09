@@ -14,7 +14,6 @@ export const Gallery = ({ match }) => {
   useEffect(() => {
     getGallery(galleryId).then(res => {
       const g = res.body;
-      console.log(g);
       setGallery(g.gallery);
       setImages(g.images);
     });
