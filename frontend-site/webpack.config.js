@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 const outputDirectory = "dist";
@@ -9,7 +8,8 @@ module.exports = {
   output: {
     path: path.join(__dirname, outputDirectory),
     publicPath: "/",
-    filename: "bundle.js"
+    filename: "bundle.js",
+    clean: true
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
@@ -43,7 +43,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       favicon: "./public/favicon.ico",

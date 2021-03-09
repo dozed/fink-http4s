@@ -1,5 +1,4 @@
 const path = require("path");
-const { resolve } = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
@@ -54,7 +53,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
-      favicon: "./public/favicon.ico"
+      favicon: "./public/favicon.ico",
+      filename: "./index.html"
     }),
     new CopyPlugin({
       patterns: [
