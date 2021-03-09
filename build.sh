@@ -16,4 +16,4 @@ rm -rf app/site/*
 mkdir -p app
 cp -R frontend-editor/dist app/editor
 cp -R frontend-site/dist app/site
-cp target/scala-2.13/fink-assembly-*.jar app/backend.jar
+cp target/scala-2.13/backend.jar app/backend.jar
