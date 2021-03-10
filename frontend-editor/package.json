@@ -3,8 +3,8 @@
   "version": "2.0.0-SNAPSHOT",
   "description": "Fink Frontend Editor",
   "scripts": {
-    "build": "webpack --mode production",
-    "start": "webpack serve --mode development --config webpack.config.js"
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack serve --config webpack.dev.js"
   },
   "author": "",
   "license": "MIT",
@@ -24,10 +24,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
+    "@babel/eslint-parser": "^7.13.10",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
-    "@babel/eslint-parser": "^7.13.10",
     "babel-loader": "^8.2.2",
     "concurrently": "^6.0.0",
     "copy-webpack-plugin": "^8.0.0",
@@ -46,6 +46,7 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.24.4",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
   }
 }
