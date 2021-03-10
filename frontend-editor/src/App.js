@@ -118,7 +118,7 @@ export default class App extends Component {
 
   logout = () => {
     logout().then(() => {
-      history.push("/");
+      history.push(__CONFIG__.publicPath);
       this.loadUser();
     });
   }
