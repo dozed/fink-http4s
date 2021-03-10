@@ -17,7 +17,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Router>
+      <Router basename={__CONFIG__.publicPath}>
         <Layout posts={this.state.posts} pages={this.state.pages} galleries={this.state.galleries}>
           <Switch>
             <Route path="/" exact component={Home} />
