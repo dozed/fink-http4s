@@ -19,4 +19,6 @@ data/uploads/*
 !/app/site/.gitkeep
 /app/editor/*
 !/app/editor/.gitkeep
+/app/data/uploads/*
+!/app/data/uploads/.gitkeep
 
