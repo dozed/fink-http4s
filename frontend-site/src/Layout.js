@@ -77,7 +77,7 @@ export default class Layout extends React.Component {
 
         <footer id="colophon" role="contentinfo">
           <div id="site-generator">
-            Powered by <a href="https://github.com/dozed/fink" rel="generator" title="Publishing Platform">Fink</a> and <a href="http://wptheming.com/foghorn/" rel="generator" title="Download the Foghorn Theme">Foghorn</a>
+            Powered by <a href="https://github.com/dozed/fink-http4s" rel="generator" title="Publishing Platform">Fink</a> and <a href="http://wptheming.com/foghorn/" rel="generator" title="Download the Foghorn Theme">Foghorn</a>
           </div>
         </footer>
       </div>
