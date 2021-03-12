@@ -1,6 +1,7 @@
 import {deleteGallery, getGalleries} from "../../frontend-shared/api";
 
 import React, {Component} from "react";
+import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -18,7 +19,10 @@ export default class Galleries extends Component {
     const columns = [{
       dataField: "title",
       text: "Title",
-      sort: true
+      sort: true,
+      formatter: (rowContent, row) => {
+        return <Link to={`/galleries/${row.id}`}>{row.title}</Link>;
+      }
     }, {
       dataField: "date",
       text: "Date Created",
