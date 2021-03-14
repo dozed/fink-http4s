@@ -92,7 +92,7 @@ object ImageService {
             for {
               _ <- processImage(spec, name, uploadedImage, publicImage)
               resOpt <- StaticFile.fromFile(publicImage, blocker, Some(req)).value
-              res <- resOpt.map(res => IO.delay[Response[IO]](res)).getOrElse(InternalServerError())
+              res <- resOpt.map(res => IO.delay(res)).getOrElse(InternalServerError())
             } yield {
               res
             }
