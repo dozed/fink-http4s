@@ -6,7 +6,7 @@ scalaVersion := "2.13.3"
 
 val doobieVersion = "0.10.0"
 val circeVersion = "0.13.0"
-val http4sVersion = "0.21.19"
+val http4sVersion = "0.21.20"
 val specs2Version = "4.10.6"
 
 parallelExecution in Test := false
