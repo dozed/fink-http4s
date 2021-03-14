@@ -13,6 +13,9 @@ target
 data/uploads/*
 !data/uploads/.gitkeep
 
+data/public/*
+!data/public/.gitkeep
+
 /app/data/logs/*
 /app/backend.jar
 /app/site/*

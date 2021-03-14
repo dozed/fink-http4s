@@ -28,6 +28,8 @@ libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.3.1",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "org.apache.tika" % "tika-core" % "1.12",
+  "com.sksamuel.scrimage" % "scrimage-core" % "4.0.17",
+  "com.sksamuel.scrimage" %% "scrimage-scala" % "4.0.17",
   "joda-time" % "joda-time" % "2.4",
 
   "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime",
