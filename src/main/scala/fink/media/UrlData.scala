@@ -16,7 +16,7 @@ object UrlData {
 
   val logger = getLogger("UrlData")
 
-  def parts(str: String): Option[(MediaType, String)] = {
+  def parseParts(str: String): Option[(MediaType, String)] = {
 
     val i = str.indexOf(";base64,")
     if (i == -1 || !str.startsWith("data:")) None
@@ -30,12 +30,12 @@ object UrlData {
 
   }
 
-  def decodeFile(str: String): IO[Item] = {
+  def parseItem(str: String): IO[Item] = {
 
     logger.info(s"decoding url data ${str.size}")
 
     for {
-      x <- IO.fromEither(parts(str).toRight(ErrorCode.InvalidRequest))
+      x <- IO.fromEither(parseParts(str).toRight(ErrorCode.InvalidRequest))
       (contentType, data) = x
       bytes <- {
         IO.delay(java.util.Base64.getDecoder.decode(data))

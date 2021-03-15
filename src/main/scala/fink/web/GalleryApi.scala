@@ -78,11 +78,11 @@ object GalleryApi {
         user <- req.authenticateUser
         _ <- Authorization.authorizeEdit(user)
 
-        image <- UrlData.decodeFile(op.imageData)
+        image <- UrlData.parseItem(op.imageData)
         hash = Hashes.md5(s"${System.currentTimeMillis()}-${Thread.currentThread().getId}")
         uploadFile <- Uploads.store(config, image, hash)
         imageInfo <- {
-          ImageDAO.create(op.title, hash, image.contentType.show, uploadFile.getPath, user)
+          ImageDAO.create(op.title, hash, image.contentType.show, uploadFile.getName, user)
             .flatMap(imageInfo => GalleryDAO.addImage(op.galleryId, imageInfo.image.id).map(_ => imageInfo))
             .transact(xa)
         }

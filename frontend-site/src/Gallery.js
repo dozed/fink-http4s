@@ -30,7 +30,7 @@ export const Gallery = ({ match }) => {
             <ReactMarkdown source={gallery.text} plugins={[remarkBreaks]}/>
           </div>
           <div className="images">
-            {images.map(i => <img key={`img-${i.id}`} src={"/" + i.fileName} alt=""/>)}
+            {images.map(i => <img key={`img-${i.id}`} src={"/data/uploads/" + i.fileName} alt=""/>)}
           </div>
         </article>
       </div>

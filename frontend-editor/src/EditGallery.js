@@ -75,7 +75,7 @@ const Image = ({ id, fileName, onDelete }) => {
 
   return (
     <div className={"image"} onMouseEnter={() => setShowOverlay(true)} onMouseLeave={() => setShowOverlay(false)}>
-      <img src={"/" + fileName} alt=""/>
+      <img src={"/data/uploads/" + fileName} alt=""/>
       {showOverlay &&
         <div className={"image-overlay"}>
           <div className={"delete-image"} onClick={() => onDelete(id)}>
