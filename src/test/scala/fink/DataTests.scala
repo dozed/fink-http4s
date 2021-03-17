@@ -5,7 +5,8 @@ import doobie.Transactor
 import doobie.implicits._
 import fink.World.{config, cs, xa}
 import fink.data._
-import fink.db.{DbSetup, PostDAO, TagDAO, UserDAO}
+import fink.db.{DbSetup, ImageDAO, PostDAO, TagDAO, UserDAO}
+import org.http4s.MediaType
 import org.mindrot.jbcrypt.BCrypt
 import org.specs2.mutable._
 
@@ -75,14 +76,18 @@ class DataTests extends Specification {
 
   }
 
-//  "should create images" in {
-//    imageRepository.create(0, "foo", "author", "hash")
-//    imageRepository.create(0, "foo", "author", "hash")
-//
-//    imageRepository.findAll must have size (2)
-//    imageRepository.byId(1) must beSome.which(_.hash.equals("hash"))
-//    imageRepository.byId(2) must beSome.which(_.id == 2)
-//    imageRepository.byId(4) must beNone
-//  }
+  "should create and retrieve images" in {
+
+    val imgInfo = ImageDAO.create("title", "hash", "ext", MediaType.image.png, "fileName", author).transact(xa).unsafeRunSync
+
+    val img = ImageDAO.findById(imgInfo.image.id).transact(xa).unsafeRunSync
+
+    img should_== Some(imgInfo.image)
+
+    val imgs = ImageDAO.findAll.transact(xa).unsafeRunSync
+
+    imgs should contain(imgInfo.image)
+
+  }
 
 }
