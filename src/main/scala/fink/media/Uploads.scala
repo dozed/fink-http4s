@@ -1,45 +1,48 @@
 package fink.media
 
 import fink.data.{AppConfig, ErrorCode}
-import java.io.File
 import java.nio.file.Files
 
-import org.slf4j.LoggerFactory
 import cats.syntax.all._
 import cats.effect._
-import org.log4s.getLogger
+import org.http4s.MediaType
+import org.log4s.{Logger, getLogger}
 
 object Uploads {
 
-  val logger = getLogger("Uploads")
+  case class Upload(hash: String, extension: String, fileName: String, contentType: MediaType)
 
-  def detectExtension(config: AppConfig, item: UrlData.Item): String = {
-    ContentTypes.contentTypeExtensions.get(item.contentType).fold(
-      throw ErrorCode.InvalidRequest)(
-      ext => ext
-    )
+  val logger: Logger = getLogger("Uploads")
+
+  def detectExtension(contentType: MediaType): IO[String] = {
+    ContentTypes.contentTypeExtensions.get(contentType) match {
+      case Some(ext) => IO.pure(ext)
+      case None =>
+        IO.delay(logger.error(ErrorCode.InvalidRequest)(s"Content type not supported: ${contentType.show}")) >>
+          IO.raiseError(ErrorCode.InvalidRequest)
+    }
   }
 
-  def mkAbsoluteFileForUpload(config: AppConfig, item: UrlData.Item, hash: String): File = {
-    val ext = detectExtension(config, item)
-    val filename = s"$hash.$ext"
-    StaticFiles.mkUploadFile(config, filename)
-  }
-
-  // stores an item
-  def store(config: AppConfig, item: UrlData.Item, hash: String): IO[File] = {
-
-    val uploadFile = mkAbsoluteFileForUpload(config, item, hash)
-    logger.info(s"uploading file to ${uploadFile.getPath} with content type ${item.contentType.toString} size ${item.bytes.size}")
-
-    Either.catchNonFatal(Files.write(uploadFile.toPath, item.bytes)).fold(
-      err => {
-        logger.error(err)(err.getMessage)
-        IO.raiseError(ErrorCode.InvalidRequest)
-      },
-      res => IO.pure(uploadFile)
-    )
-
+  def storeUrlDataItem(config: AppConfig, item: UrlData.Item): IO[Upload] = {
+    for {
+      _ <- IO.unit
+      hash = Hashes.md5(s"${System.currentTimeMillis()}-${Thread.currentThread().getId}")
+      ext <- detectExtension(item.contentType)
+      filename = s"$hash.$ext"
+      uploadFile = StaticFiles.mkUploadFile(config, filename)
+      _ <- {
+        IO.delay(logger.info(s"uploading file to ${uploadFile.getPath} with content type ${item.contentType.show} size ${item.bytes.length}"))
+      }
+      _ <- {
+        IO.delay(Files.write(uploadFile.toPath, item.bytes))
+          .recoverWith { err =>
+            logger.error(err)("Error writing file")
+            IO.raiseError(ErrorCode.InvalidRequest)
+          }
+      }
+    } yield {
+      Upload(hash, ext, filename, item.contentType)
+    }
   }
 
   def deleteIfExists(config: AppConfig, uploadName: String): Unit = {

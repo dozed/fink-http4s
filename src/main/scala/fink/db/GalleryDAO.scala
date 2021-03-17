@@ -34,7 +34,7 @@ object GalleryDAO {
   }
 
   def findImagesByGalleryId(galleryId: Long): ConnectionIO[List[Image]] = {
-    sql"SELECT * FROM images i, galleries_images gi WHERE gi.imageId = i.id AND gi.galleryId = $galleryId".query[Image].to[List]
+    sql"SELECT i.id, i.date, i.title, i.authorId, i.hash, i.extension, i.contentType, i.filename FROM images i, galleries_images gi WHERE gi.imageId = i.id AND gi.galleryId = $galleryId".query[Image].to[List]
   }
 
   def addImage(galleryId: Long, imageId: Long): ConnectionIO[Int] = {

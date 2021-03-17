@@ -34,8 +34,9 @@ CREATE TABLE IF NOT EXISTS images (
   title text NOT NULL,
   authorId bigint REFERENCES users(id) ON DELETE CASCADE,
   hash text NOT NULL,
-  contentType text NOT NULL,
-  fileName text NOT NULL
+  extension text NOT NULL,
+  fileName text NOT NULL,
+  contentType text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS galleries (

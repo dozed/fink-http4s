@@ -2,8 +2,8 @@ package fink.data
 
 import cats.{Eq, Show}
 import cats.syntax.show._
-import doobie.{Get, Meta, Read}
-import doobie.util.Put
+import doobie.{Meta, Read}
+import org.http4s.MediaType
 
 case class User(
   id: Long,
@@ -89,7 +89,8 @@ case class Image(
   title: String,
   authorId: Long,
   hash: String,
-  contentType: String,
+  extension: String,
+  contentType: MediaType,
   filename: String
 )
 

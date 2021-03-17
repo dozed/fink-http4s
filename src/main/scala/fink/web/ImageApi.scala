@@ -31,10 +31,9 @@ object ImageApi {
         user <- req.authenticateUser
         _ <- Authorization.authorizeEdit(user)
 
-        image <- UrlData.parseItem(op.imageData)
-        hash = Hashes.md5(s"${System.currentTimeMillis()}-${Thread.currentThread().getId}")
-        uploadFile <- Uploads.store(config, image, hash)
-        imageInfo <- ImageDAO.create(op.title, hash, image.contentType.show, uploadFile.getName, user).transact(xa)
+        imageData <- UrlData.parseItem(op.imageData)
+        uploadedImage <- Uploads.storeUrlDataItem(config, imageData)
+        imageInfo <- ImageDAO.create(op.title, uploadedImage.hash, uploadedImage.extension, uploadedImage.contentType, uploadedImage.fileName, user).transact(xa)
 
         res <- Ok(imageInfo)
 

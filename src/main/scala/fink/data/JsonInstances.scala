@@ -1,7 +1,9 @@
 package fink.data
 
+import cats.syntax.show._
 import io.circe._
 import io.circe.syntax._
+import org.http4s.MediaType
 
 object JsonInstances {
 
@@ -322,14 +324,7 @@ object JsonInstances {
 
       Json.obj(
         "type" -> Json.fromString("CreatedImage"),
-        "image" -> Json.obj(
-          "id" -> Json.fromLong(msg.imageInfo.image.id),
-          "title" -> Json.fromString(msg.imageInfo.image.title),
-          "hash" -> Json.fromString(msg.imageInfo.image.hash),
-          "contentType" -> Json.fromString(msg.imageInfo.image.contentType),
-          "fileName" -> Json.fromString(msg.imageInfo.image.filename),
-          "date" -> Json.fromLong(msg.imageInfo.image.date),
-        ),
+        "image" -> msg.imageInfo.image.asJson,
         "author" -> Json.obj(
           "id" -> Json.fromLong(msg.imageInfo.author.id),
           "name" -> Json.fromString(msg.imageInfo.author.name)
@@ -343,14 +338,7 @@ object JsonInstances {
 
       Json.obj(
         "type" -> Json.fromString("UpdatedImage"),
-        "page" -> Json.obj(
-          "id" -> Json.fromLong(msg.imageInfo.image.id),
-          "title" -> Json.fromString(msg.imageInfo.image.title),
-          "hash" -> Json.fromString(msg.imageInfo.image.hash),
-          "contentType" -> Json.fromString(msg.imageInfo.image.contentType),
-          "fileName" -> Json.fromString(msg.imageInfo.image.filename),
-          "date" -> Json.fromLong(msg.imageInfo.image.date),
-        ),
+        "image" -> msg.imageInfo.image.asJson,
         "author" -> Json.obj(
           "id" -> Json.fromLong(msg.imageInfo.author.id),
           "name" -> Json.fromString(msg.imageInfo.author.name)
@@ -363,14 +351,7 @@ object JsonInstances {
     Encoder.instance[ImageInfo] { info =>
 
       Json.obj(
-        "image" -> Json.obj(
-          "id" -> Json.fromLong(info.image.id),
-          "title" -> Json.fromString(info.image.title),
-          "hash" -> Json.fromString(info.image.hash),
-          "contentType" -> Json.fromString(info.image.contentType),
-          "fileName" -> Json.fromString(info.image.filename),
-          "date" -> Json.fromLong(info.image.date),
-        ),
+        "image" -> info.image.asJson,
         "author" -> Json.obj(
           "id" -> Json.fromLong(info.author.id),
           "name" -> Json.fromString(info.author.name)
@@ -386,7 +367,8 @@ object JsonInstances {
         "id" -> Json.fromLong(image.id),
         "title" -> Json.fromString(image.title),
         "hash" -> Json.fromString(image.hash),
-        "contentType" -> Json.fromString(image.contentType),
+        "extension" -> Json.fromString(image.extension),
+        "contentType" -> image.contentType.asJson,
         "fileName" -> Json.fromString(image.filename),
         "date" -> Json.fromLong(image.date),
       )
@@ -403,5 +385,6 @@ object JsonInstances {
   implicit val userClaimsDecoder: Decoder[UserClaims] =
     Decoder.forProduct1[UserClaims, Long]("userId")(UserClaims)
 
+  implicit def mediaTypeEncoder: Encoder[MediaType] = Encoder[String].contramap(_.show)
 
 }
