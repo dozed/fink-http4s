@@ -17,11 +17,11 @@ object GalleryDAO {
   }
 
   def findAll: ConnectionIO[List[Gallery]] = {
-    sql"SELECT * FROM galleries".query[Gallery].to[List]
+    sql"SELECT id, coverId, date, title, authorId, shortlink, description FROM galleries".query[Gallery].to[List]
   }
 
   def findById(galleryId: Long): ConnectionIO[Option[Gallery]] = {
-    sql"SELECT * FROM galleries WHERE id = $galleryId".query[Gallery].option
+    sql"SELECT id, coverId, date, title, authorId, shortlink, description FROM galleries WHERE id = $galleryId".query[Gallery].option
   }
 
   def update(galleryId: Long, coverId: Long, title: String, shortlink: String, description: String): ConnectionIO[Int] = {

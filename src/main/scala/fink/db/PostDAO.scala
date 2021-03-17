@@ -17,11 +17,11 @@ object PostDAO {
   }
 
   def findAll: ConnectionIO[List[Post]] = {
-    sql"SELECT * FROM posts".query[Post].to[List]
+    sql"SELECT id, date, title, authorId, shortlink, value FROM posts".query[Post].to[List]
   }
 
   def findById(postId: Long): ConnectionIO[Option[Post]] = {
-    sql"SELECT * FROM posts WHERE id = $postId".query[Post].option
+    sql"SELECT id, date, title, authorId, shortlink, value FROM posts WHERE id = $postId".query[Post].option
   }
 
   def update(postId: Long, title: String, shortlink: String, text: String): ConnectionIO[Int] = {

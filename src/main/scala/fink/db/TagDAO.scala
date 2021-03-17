@@ -13,15 +13,15 @@ object TagDAO {
   }
 
   def findAll: ConnectionIO[List[Tag]] = {
-    sql"SELECT * FROM tags".query[Tag].to[List]
+    sql"SELECT id, value FROM tags".query[Tag].to[List]
   }
 
   def findById(tagId: Long): ConnectionIO[Option[Tag]] = {
-    sql"SELECT * FROM tags WHERE id = $tagId".query[Tag].option
+    sql"SELECT id, value FROM tags WHERE id = $tagId".query[Tag].option
   }
 
   def findByValue(value: String): ConnectionIO[Option[Tag]] = {
-    sql"SELECT * FROM tags WHERE value = $value".query[Tag].option
+    sql"SELECT id, value FROM tags WHERE value = $value".query[Tag].option
   }
 
 

@@ -17,11 +17,11 @@ object PageDAO {
   }
 
   def findAll: ConnectionIO[List[Page]] = {
-    sql"SELECT * FROM pages".query[Page].to[List]
+    sql"SELECT id, date, title, authorId, shortlink, value FROM pages".query[Page].to[List]
   }
 
   def findById(pageId: Long): ConnectionIO[Option[Page]] = {
-    sql"SELECT * FROM pages WHERE id = $pageId".query[Page].option
+    sql"SELECT id, date, title, authorId, shortlink, value FROM pages WHERE id = $pageId".query[Page].option
   }
 
   def update(pageId: Long, title: String, shortlink: String, text: String): ConnectionIO[Int] = {

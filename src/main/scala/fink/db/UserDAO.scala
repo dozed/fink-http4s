@@ -32,7 +32,7 @@ object UserDAO {
 
   def findAll: ConnectionIO[List[User]] = {
     for {
-      users <- sql"SELECT * FROM users".query[User].to[List]
+      users <- sql"SELECT id, name, password FROM users".query[User].to[List]
       users <- {
         users.traverse(u => {
           findUserRoles(u.id).map(roles => u.copy(roles = roles.toSet))
@@ -45,7 +45,7 @@ object UserDAO {
 
   def findById(userId: Long): ConnectionIO[Option[User]] = {
     for {
-      userOpt <- sql"SELECT * FROM users WHERE id = $userId".query[User].option
+      userOpt <- sql"SELECT id, name, password FROM users WHERE id = $userId".query[User].option
       userOpt <- {
         userOpt.traverse { user =>
           findUserRoles(user.id).map(roles => user.copy(roles = roles.toSet))
@@ -58,7 +58,7 @@ object UserDAO {
 
   def findByName(name: String): ConnectionIO[Option[User]] = {
     for {
-      userOpt <- sql"SELECT * FROM users WHERE name = $name".query[User].option
+      userOpt <- sql"SELECT id, name, password FROM users WHERE name = $name".query[User].option
       userOpt <- {
         userOpt.traverse { user =>
           findUserRoles(user.id).map(roles => user.copy(roles = roles.toSet))
