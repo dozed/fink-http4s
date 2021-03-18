@@ -1,4 +1,5 @@
 import {deleteImage, getGallery, updateGallery, uploadImageToGallery} from "../../frontend-shared/api";
+import {mkImageUrlFull} from "../../frontend-shared/urls";
 
 import React, {Component, useState} from "react";
 import Form from "react-bootstrap/Form";
@@ -69,13 +70,13 @@ class UploadImage extends Component {
   }
 }
 
-const Image = ({ id, fileName, onDelete }) => {
+const Image = ({ id, hash, extension, onDelete }) => {
 
   const [showOverlay, setShowOverlay] = useState(false);
 
   return (
     <div className={"image"} onMouseEnter={() => setShowOverlay(true)} onMouseLeave={() => setShowOverlay(false)}>
-      <img src={"/data/uploads/" + fileName} alt=""/>
+      <img src={mkImageUrlFull(hash, extension)} alt=""/>
       {showOverlay &&
         <div className={"image-overlay"}>
           <div className={"delete-image"} onClick={() => onDelete(id)}>
@@ -136,7 +137,7 @@ export default class EditGallery extends Component {
         <h2>Images</h2>
         <div className="images">
           {this.state.images.map(i =>
-            <Image key={`img-${i.id}`} id={i.id} fileName={i.fileName} onDelete={id => this.deleteImage(id)} />
+            <Image key={`img-${i.id}`} id={i.id} hash={i.hash} extension={i.extension} onDelete={id => this.deleteImage(id)} />
           )}
         </div>
       </div>

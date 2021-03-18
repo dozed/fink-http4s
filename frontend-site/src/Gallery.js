@@ -1,4 +1,5 @@
-import {getGallery} from "api";
+import {getGallery} from "../../frontend-shared/api";
+import {mkImageUrlKeepRatio} from "../../frontend-shared/urls";
 
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
@@ -30,7 +31,7 @@ export const Gallery = ({ match }) => {
             <ReactMarkdown source={gallery.text} plugins={[remarkBreaks]}/>
           </div>
           <div className="images">
-            {images.map(i => <img key={`img-${i.id}`} src={"/data/uploads/" + i.fileName} alt=""/>)}
+            {images.map(i => <img key={`img-${i.id}`} src={mkImageUrlKeepRatio(i.hash, i.extension, 300)} alt=""/>)}
           </div>
         </article>
       </div>
