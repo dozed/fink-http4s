@@ -26,8 +26,8 @@ object UserDAO {
     sql"INSERT INTO users_roles (userId, roleName) VALUES ($userId, $role)".update.run
   }
 
-  def findUserRoles(userId: Long): ConnectionIO[List[UserRole]] = {
-    sql"SELECT roleName FROM users_roles WHERE userId=$userId".query[UserRole].to[List]
+  def findUserRoles(userId: Long): ConnectionIO[Set[UserRole]] = {
+    sql"SELECT roleName FROM users_roles WHERE userId=$userId".query[UserRole].to[Set]
   }
 
   def findAll: ConnectionIO[List[User]] = {
@@ -35,7 +35,7 @@ object UserDAO {
       users <- sql"SELECT id, name, password FROM users".query[User].to[List]
       users <- {
         users.traverse(u => {
-          findUserRoles(u.id).map(roles => u.copy(roles = roles.toSet))
+          findUserRoles(u.id).map(roles => u.copy(roles = roles))
         })
       }
     } yield {
@@ -48,7 +48,7 @@ object UserDAO {
       userOpt <- sql"SELECT id, name, password FROM users WHERE id = $userId".query[User].option
       userOpt <- {
         userOpt.traverse { user =>
-          findUserRoles(user.id).map(roles => user.copy(roles = roles.toSet))
+          findUserRoles(user.id).map(roles => user.copy(roles = roles))
         }
       }
     } yield {
@@ -61,7 +61,7 @@ object UserDAO {
       userOpt <- sql"SELECT id, name, password FROM users WHERE name = $name".query[User].option
       userOpt <- {
         userOpt.traverse { user =>
-          findUserRoles(user.id).map(roles => user.copy(roles = roles.toSet))
+          findUserRoles(user.id).map(roles => user.copy(roles = roles))
         }
       }
     } yield {
