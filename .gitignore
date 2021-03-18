@@ -10,18 +10,21 @@ target
 /frontend-editor/dist
 /frontend-site/dist
 
-data/uploads/*
-!data/uploads/.gitkeep
+/data/uploads/*
+!/data/uploads/.gitkeep
 
-data/public/*
-!data/public/.gitkeep
+/data/public/*
+!/data/public/.gitkeep
 
 /app/data/logs/*
+!/app/data/logs/.gitkeep
+/app/data/uploads/*
+!/app/data/uploads/.gitkeep
+/app/data/public/images/
+!/app/data/public/images/.gitkeep
 /app/backend.jar
 /app/site/*
 !/app/site/.gitkeep
 /app/editor/*
 !/app/editor/.gitkeep
-/app/data/uploads/*
-!/app/data/uploads/.gitkeep
 
