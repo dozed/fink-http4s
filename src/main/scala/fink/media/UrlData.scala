@@ -3,7 +3,7 @@ package fink.media
 import cats.effect.IO
 import fink.data.ErrorCode
 import org.http4s.MediaType
-import org.log4s.getLogger
+import org.log4s.{Logger, getLogger}
 import org.slf4j.LoggerFactory
 
 import scala.util.Try
@@ -14,7 +14,7 @@ object UrlData {
 
   case class Item(contentType: MediaType, bytes: Array[Byte])
 
-  val logger = getLogger("UrlData")
+  val logger: Logger = getLogger("UrlData")
 
   def parseParts(str: String): Option[(MediaType, String)] = {
 
