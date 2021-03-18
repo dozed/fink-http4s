@@ -84,7 +84,7 @@ object ImageService {
       parseImageSpecAndName(imageStr) match {
         case Some((spec, name)) =>
           val uploadedImage = StaticFiles.mkUploadFile(World.config, s"${name.hash}.${name.ext}")
-          val publicImage = StaticFiles.mkPublicFile(World.config, imageStr)
+          val publicImage = StaticFiles.mkPublicImageFile(World.config, imageStr)
 
           if (!uploadedImage.exists) {
             NotFound()

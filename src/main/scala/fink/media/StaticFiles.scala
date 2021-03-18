@@ -10,6 +10,10 @@ object StaticFiles {
     new File(s"${appConfig.publicDirectory}/$fileName")
   }
 
+  def mkPublicImageFile(appConfig: AppConfig, fileName: String): File = {
+    new File(s"${appConfig.publicDirectory}/images/$fileName")
+  }
+
   def mkUploadFile(appConfig: AppConfig, fileName: String): File = {
     new File(s"${appConfig.uploadDirectory}/$fileName")
   }
