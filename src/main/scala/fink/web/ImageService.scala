@@ -1,6 +1,7 @@
 package fink.web
 
 import java.io.{File, FileInputStream, FileOutputStream}
+import java.nio.file.Files
 
 import cats.effect.{Blocker, IO}
 import com.sksamuel.scrimage.ImmutableImage
@@ -56,23 +57,32 @@ object ImageService {
       case ImageSpec.KeepRatio(size) =>
         val image = ImmutableImage.loader().fromFile(uploadedFile)
 
-        val scaledImage =
-          if (image.width > image.height) {
-            image.scaleToWidth(size)
-          } else {
-            image.scaleToHeight(size)
-          }
+        if (image.width <= size && image.height <= size) {
+          IOUtils.copy(new FileInputStream(uploadedFile), new FileOutputStream(targetFile))
+        } else {
+          val scaledImage =
+            if (image.width > image.height) {
+              image.scaleToWidth(size)
+            } else {
+              image.scaleToHeight(size)
+            }
 
-        val writer = getWriterFromExt(imageName.ext)
+          val writer = getWriterFromExt(imageName.ext)
 
-        scaledImage.output(writer, targetFile)
+          scaledImage.output(writer, targetFile)
+        }
 
       case ImageSpec.Square(size) =>
         val image = ImmutableImage.loader().fromFile(uploadedFile)
-        val scaledImage = image.scaleTo(size, size)
-        val writer = getWriterFromExt(imageName.ext)
 
-        scaledImage.output(writer, targetFile)
+        if (image.width <= size && image.height <= size) {
+          IOUtils.copy(new FileInputStream(uploadedFile), new FileOutputStream(targetFile))
+        } else {
+          val scaledImage = image.scaleTo(size, size)
+          val writer = getWriterFromExt(imageName.ext)
+
+          scaledImage.output(writer, targetFile)
+        }
 
     }
   }
