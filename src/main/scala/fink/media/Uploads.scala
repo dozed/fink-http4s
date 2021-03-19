@@ -1,10 +1,11 @@
 package fink.media
 
-import fink.data.{AppConfig, ErrorCode}
 import java.nio.file.Files
 
-import cats.syntax.all._
 import cats.effect._
+import cats.syntax.all._
+import fink.data.{AppConfig, ErrorCode}
+import fink.util.Hashes
 import org.http4s.MediaType
 import org.log4s.{Logger, getLogger}
 
