@@ -5,13 +5,13 @@ import java.security.MessageDigest
 object Hashes {
 
   def sha256(s: String): String = {
-    val digest = MessageDigest.getInstance("MD5")
+    val digest = MessageDigest.getInstance("SHA-256")
     val bytes = digest.digest(s.getBytes)
     hex(bytes)
   }
 
   def md5(s: String): String = {
-    val digest = MessageDigest.getInstance("SHA-256")
+    val digest = MessageDigest.getInstance("MD5")
     val bytes = digest.digest(s.getBytes)
     hex(bytes)
   }
