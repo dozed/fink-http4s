@@ -11,7 +11,7 @@ import org.specs2.ScalaCheck
 import org.specs2.mutable._
 import org.typelevel.discipline.specs2.mutable.Discipline
 
- class JsonTests extends Specification with ScalaCheck with Discipline {
+ class JsonSpec extends Specification with ScalaCheck with Discipline {
 
  	"Should write/read posts" in {
  		val value = Post(1, 2L, "title", 42, "shortlink", "text")

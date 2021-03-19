@@ -5,7 +5,7 @@ import fink.data.{ErrorCode, User, UserRole}
 import org.specs2.matcher.ThrownMessages
 import org.specs2.mutable.Specification
 
-class AuthorizationTests extends Specification with ThrownMessages {
+class AuthorizationSpec extends Specification with ThrownMessages {
 
   val testUserWithEditRole = User(2, "foo", "bar", Set(UserRole.CanEdit))
   val testUserWithoutRoles = User(2, "foo", "bar", Set.empty)

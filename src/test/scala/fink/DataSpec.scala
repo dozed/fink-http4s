@@ -10,7 +10,7 @@ import org.http4s.MediaType
 import org.mindrot.jbcrypt.BCrypt
 import org.specs2.mutable._
 
-class DataTests extends Specification {
+class DataSpec extends Specification {
 
   sequential
 
