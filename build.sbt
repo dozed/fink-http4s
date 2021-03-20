@@ -40,6 +40,8 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.4.200" % "test",
 )
 
+scalacOptions += "-deprecation"
+
 assemblyJarName in assembly := "backend.jar"
 
 mainClass in assembly := Some("fink.Http4sLauncher")

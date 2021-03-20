@@ -44,6 +44,6 @@ object DbSetupApp extends App {
 
   implicit val cs = IO.contextShift(ExecutionContext.global)
 
-  setupDb.transact(xa).unsafeRunSync
+  setupDb.transact(xa).unsafeRunSync()
 
 }

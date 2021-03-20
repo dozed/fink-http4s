@@ -78,7 +78,7 @@ object GalleryDAO {
   }
 
   def create(title: String, description: String, author: User, tags: List[String]): ConnectionIO[GalleryInfo] = {
-    val shortlink = title.toLowerCase.replaceAllLiterally(" ", "-")
+    val shortlink = title.toLowerCase.replace(" ", "-")
 
     for {
       gallery <- GalleryDAO.create(0, mkTime, title, author.id, shortlink, description)

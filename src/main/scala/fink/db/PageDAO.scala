@@ -65,7 +65,7 @@ object PageDAO {
   }
 
   def create(title: String, text: String, author: User, tags: List[String]): ConnectionIO[PageInfo] = {
-    val shortlink = title.toLowerCase.replaceAllLiterally(" ", "-")
+    val shortlink = title.toLowerCase.replace(" ", "-")
 
     for {
       page <- PageDAO.create(mkTime, title, author.id, shortlink, text)

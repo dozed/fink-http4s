@@ -26,9 +26,9 @@ class AuthenticationSpec extends Specification with ThrownMessages {
     config.dbConfig.driver, config.dbConfig.db, config.dbConfig.user, config.dbConfig.password
   )
 
-  DbSetup.setupDb.transact(xa).unsafeRunSync
+  DbSetup.setupDb.transact(xa).unsafeRunSync()
 
-  val testUser = UserDAO.findById(1).transact(World.xa).unsafeRunSync.get
+  val testUser = UserDAO.findById(1).transact(World.xa).unsafeRunSync().get
 
   def mkAuthedTestRequest(userId: Long): Request[IO] = {
     val claims = UserClaims(userId)

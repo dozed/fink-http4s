@@ -65,7 +65,7 @@ object PostDAO {
   }
 
   def create(title: String, text: String, author: User, tags: List[String]): ConnectionIO[PostInfo] = {
-    val shortlink = title.toLowerCase.replaceAllLiterally(" ", "-")
+    val shortlink = title.toLowerCase.replace(" ", "-")
 
     for {
       post <- PostDAO.create(mkTime, title, author.id, shortlink, text)
