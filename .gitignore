@@ -13,8 +13,8 @@ target
 /data/uploads/*
 !/data/uploads/.gitkeep
 
-/data/public/*
-!/data/public/.gitkeep
+/data/public/images/*
+!/data/public/images/.gitkeep
 
 /app/data/logs/*
 !/app/data/logs/.gitkeep
