@@ -32,7 +32,7 @@ object Uploads {
       filename = s"$hash.$ext"
       uploadFile = StaticFiles.mkUploadFile(config, filename)
       _ <- {
-        IO.delay(logger.info(s"uploading file to ${uploadFile.getPath} with content type ${item.contentType.show} size ${item.bytes.length}"))
+        IO.delay(logger.info(s"Uploading file to ${uploadFile.getPath} with content type ${item.contentType.show} size ${item.bytes.length}"))
       }
       _ <- {
         IO.delay(Files.write(uploadFile.toPath, item.bytes))

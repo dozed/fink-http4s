@@ -32,7 +32,7 @@ object UrlData {
 
   def parseItem(str: String): IO[Item] = {
 
-    logger.info(s"decoding url data ${str.size}")
+    logger.info(s"Decoding url data ${str.size}")
 
     for {
       x <- IO.fromEither(parseParts(str).toRight(ErrorCode.InvalidRequest))
@@ -40,7 +40,7 @@ object UrlData {
       bytes <- {
         IO.delay(java.util.Base64.getDecoder.decode(data))
           .handleErrorWith(err => {
-            logger.error(err)("error decoding url data")
+            logger.error(err)("Error decoding url data")
             IO.raiseError(ErrorCode.InvalidRequest)
           })
       }
