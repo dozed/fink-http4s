@@ -5,7 +5,8 @@ const common = require("./webpack.common.js");
 const CopyPlugin = require("copy-webpack-plugin");
 
 const config = {
-  publicPath: "/"
+  publicPath: "/",
+  editorUrl: "http://localhost:3000/",
 };
 
 module.exports = merge(common, {

@@ -68,7 +68,7 @@ export default class Layout extends React.Component {
               <h1 className="widget-title">Meta</h1>
               <ul>
                 <li>
-                  <a href="http://localhost:3000/">Log in</a>
+                  <a href={__CONFIG__.editorUrl}>Log in</a>
                 </li>
               </ul>
             </aside>

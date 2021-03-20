@@ -4,7 +4,8 @@ const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
 
 const config = {
-  publicPath: "/"
+  publicPath: "/",
+  editorUrl: "/editor",
 };
 
 module.exports = merge(common, {
