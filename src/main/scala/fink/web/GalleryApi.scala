@@ -8,7 +8,7 @@ import fink.World._
 import fink.data.JsonInstances._
 import fink.data._
 import fink.db.{GalleryDAO, ImageDAO}
-import fink.media.{Hashes, Uploads, UrlData}
+import fink.media.{Uploads, UrlData}
 import fink.auth.Authorization
 import fink.syntax._
 import org.http4s._
