@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import {Config} from "config";
 
 export default class Layout extends React.Component {
 
@@ -68,7 +69,7 @@ export default class Layout extends React.Component {
               <h1 className="widget-title">Meta</h1>
               <ul>
                 <li>
-                  <a href={__CONFIG__.editorUrl}>Log in</a>
+                  <a href={Config.getEditorUrl()}>Log in</a>
                 </li>
               </ul>
             </aside>

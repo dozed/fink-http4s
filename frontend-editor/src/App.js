@@ -19,6 +19,7 @@ import Login from "Login";
 import {ToastContainer} from "ToastContainer";
 import {ConfirmationDialog} from "ConfirmationDialog";
 import {fetchMe, login, logout} from "../../frontend-shared/api";
+import {Config} from "config";
 
 import "editor.scss";
 
@@ -42,7 +43,7 @@ export default class App extends Component {
       <div>
         {!this.state.loading && !this.state.user && <Login onLogin={this.login} errorMessage={this.state.loginErrorMessage} />}
         {!this.state.loading && this.state.user &&
-          <Router basename={__CONFIG__.publicPath}>
+          <Router basename={Config.getPublicPath()}>
             <Navbar bg="light" expand="lg">
               <LinkContainer to="/">
                 <Navbar.Brand>fink</Navbar.Brand>
@@ -118,7 +119,7 @@ export default class App extends Component {
 
   logout = () => {
     logout().then(() => {
-      history.push(__CONFIG__.publicPath);
+      history.push(Config.getPublicPath());
       this.loadUser();
     });
   }
