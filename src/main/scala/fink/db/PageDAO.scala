@@ -69,9 +69,7 @@ object PageDAO {
 
     for {
       page <- PageDAO.create(mkTime, title, author.id, shortlink, text)
-      tags <- {
-        tags.map(t => PageDAO.addTag(page.id, t)).sequence
-      }
+      tags <- tags.traverse(t => PageDAO.addTag(page.id, t))
     } yield {
       PageInfo(page, tags, author)
     }
@@ -87,8 +85,8 @@ object PageDAO {
       currentTags <- PageDAO.findTags(pageId)
       tagsToDelete = currentTags.filter(t => !tags.contains(t))
       tagsToAdd = tags.filter(t => !currentTags.contains(t))
-      _ <- tagsToDelete.map(t => PageDAO.removeTag(page.id, t.id)).sequence
-      _ <- tagsToAdd.map(t => PageDAO.addTag(page.id, t)).sequence
+      _ <- tagsToDelete.traverse(t => PageDAO.removeTag(page.id, t.id))
+      _ <- tagsToAdd.traverse(t => PageDAO.addTag(page.id, t))
       tags <- PageDAO.findTags(pageId)
     } yield {
       val page1 = page.copy(title = title, shortlink = shortlink, text = text)

@@ -82,9 +82,7 @@ object GalleryDAO {
 
     for {
       gallery <- GalleryDAO.create(0, mkTime, title, author.id, shortlink, description)
-      tags <- {
-        tags.map(t => GalleryDAO.addTag(gallery.id, t)).sequence
-      }
+      tags <- tags.traverse(t => GalleryDAO.addTag(gallery.id, t))
     } yield {
       GalleryInfo(gallery, tags, author, List(), None)
     }
@@ -100,8 +98,8 @@ object GalleryDAO {
       currentTags <- GalleryDAO.findTags(galleryId)
       tagsToDelete = currentTags.filter(t => !tags.contains(t))
       tagsToAdd = tags.filter(t => !currentTags.contains(t))
-      _ <- tagsToDelete.map(t => GalleryDAO.removeTag(gallery.id, t.id)).sequence
-      _ <- tagsToAdd.map(t => GalleryDAO.addTag(gallery.id, t)).sequence
+      _ <- tagsToDelete.traverse(t => GalleryDAO.removeTag(gallery.id, t.id))
+      _ <- tagsToAdd.traverse(t => GalleryDAO.addTag(gallery.id, t))
       tags <- GalleryDAO.findTags(galleryId)
     } yield {
       val gallery1 = gallery.copy(title = title, shortlink = shortlink, text = description)

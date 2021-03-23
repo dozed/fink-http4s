@@ -69,9 +69,7 @@ object PostDAO {
 
     for {
       post <- PostDAO.create(mkTime, title, author.id, shortlink, text)
-      tags <- {
-        tags.map(t => PostDAO.addTag(post.id, t)).sequence
-      }
+      tags <- tags.traverse(t => PostDAO.addTag(post.id, t))
     } yield {
       PostInfo(post, tags, author)
     }
@@ -87,8 +85,8 @@ object PostDAO {
       currentTags <- PostDAO.findTags(postId)
       tagsToDelete = currentTags.filter(t => !tags.contains(t))
       tagsToAdd = tags.filter(t => !currentTags.contains(t))
-      _ <- tagsToDelete.map(t => PostDAO.removeTag(post.id, t.id)).sequence
-      _ <- tagsToAdd.map(t => PostDAO.addTag(post.id, t)).sequence
+      _ <- tagsToDelete.traverse(t => PostDAO.removeTag(post.id, t.id))
+      _ <- tagsToAdd.traverse(t => PostDAO.addTag(post.id, t))
       tags <- PostDAO.findTags(postId)
     } yield {
       val post1 = post.copy(title = title, shortlink = shortlink, text = text)
