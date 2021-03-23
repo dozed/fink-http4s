@@ -43,7 +43,7 @@ export default class EditPost extends Component {
 
           <ButtonToolbar>
             <Button variant="secondary" onClick={() => this.props.history.goBack()}>Cancel</Button>
-            <Button variant="primary" onClick={() => this.updatePost()}>Submit</Button>
+            <Button variant="primary" onClick={() => this.updatePost()}>Save</Button>
           </ButtonToolbar>
         </Form>
       </div>

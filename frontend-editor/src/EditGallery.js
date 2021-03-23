@@ -124,7 +124,7 @@ export default class EditGallery extends Component {
 
           <ButtonToolbar>
             <Button variant="secondary" onClick={() => this.props.history.goBack()}>Cancel</Button>
-            <Button variant="primary" onClick={() => this.updateGallery()}>Submit</Button>
+            <Button variant="primary" onClick={() => this.updateGallery()}>Save</Button>
           </ButtonToolbar>
         </Form>
 

@@ -41,7 +41,7 @@ export default class CreatePage extends Component {
 
         <ButtonToolbar>
           <Button variant="secondary" onClick={() => this.cancel()}>Cancel</Button>
-          <Button variant="primary" onClick={() => this.createPage()}>Submit</Button>
+          <Button variant="primary" onClick={() => this.createPage()}>Save</Button>
         </ButtonToolbar>
       </Form>
     );

@@ -41,7 +41,7 @@ export default class CreateGallery extends Component {
 
         <ButtonToolbar>
           <Button variant="secondary" onClick={() => this.cancel()}>Cancel</Button>
-          <Button variant="primary" onClick={() => this.createGallery()}>Submit</Button>
+          <Button variant="primary" onClick={() => this.createGallery()}>Save</Button>
         </ButtonToolbar>
       </Form>
     );

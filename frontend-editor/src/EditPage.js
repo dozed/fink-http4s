@@ -43,7 +43,7 @@ export default class EditPage extends Component {
 
           <ButtonToolbar>
             <Button variant="secondary" onClick={() => this.props.history.goBack()}>Cancel</Button>
-            <Button variant="primary" onClick={() => this.updatePage()}>Submit</Button>
+            <Button variant="primary" onClick={() => this.updatePage()}>Save</Button>
           </ButtonToolbar>
         </Form>
       </div>

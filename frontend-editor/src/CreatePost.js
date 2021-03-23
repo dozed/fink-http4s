@@ -41,7 +41,7 @@ export default class CreatePost extends Component {
 
         <ButtonToolbar>
           <Button variant="secondary" onClick={() => this.cancel()}>Cancel</Button>
-          <Button variant="primary" onClick={() => this.createPost()}>Submit</Button>
+          <Button variant="primary" onClick={() => this.createPost()}>Save</Button>
         </ButtonToolbar>
       </Form>
     );
