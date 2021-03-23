@@ -6,12 +6,14 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Form from "react-bootstrap/Form";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
-import {addToast} from "./ToastContainer";
+import TagsInput from "react-tagsinput";
+import {addToast} from "ToastContainer";
 
 export default class CreateGallery extends Component {
   state = {
     title: "",
-    text: ""
+    text: "",
+    tags: [],
   };
 
   render() {
@@ -20,6 +22,11 @@ export default class CreateGallery extends Component {
         <Form.Group controlId="formTitle">
           <Form.Label>Title</Form.Label>
           <Form.Control type="text" placeholder="Enter title" onChange={(e) => this.onChangeTitle(e)} />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Tags</Form.Label>
+          <TagsInput value={this.state.tags} onChange={(tags) => this.setState({ tags })} />
         </Form.Group>
 
         <Form.Group controlId="formText">
@@ -64,7 +71,7 @@ export default class CreateGallery extends Component {
   }
 
   createGallery() {
-    createGallery(this.state.title, this.state.text, [], this.state.title)
+    createGallery(this.state.title, this.state.text, this.state.tags, this.state.title)
       .then(
         res => this.props.history.goBack(),
         err => addToast("Error", "There was an error creating your gallery.")

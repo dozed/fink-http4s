@@ -6,12 +6,14 @@ import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
-import {addToast} from "./ToastContainer";
+import TagsInput from "react-tagsinput";
+import {addToast} from "ToastContainer";
 
 export default class EditPage extends Component {
   state = {
     title: "",
     text: "",
+    tags: [],
   };
 
   render() {
@@ -22,6 +24,11 @@ export default class EditPage extends Component {
           <Form.Group controlId="formTitle">
             <Form.Label>Title</Form.Label>
             <Form.Control type="text" placeholder="Enter title" onChange={(e) => this.onChangeTitle(e)} value={this.state.title} />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Tags</Form.Label>
+            <TagsInput value={this.state.tags} onChange={(tags) => this.setState({ tags })} />
           </Form.Group>
 
           <Form.Group controlId="formText">
@@ -63,7 +70,7 @@ export default class EditPage extends Component {
   }
 
   updatePage() {
-    updatePage(this.state.pageId, this.state.title, this.state.text, [], this.state.title)
+    updatePage(this.state.pageId, this.state.title, this.state.text, this.state.tags, this.state.title)
       .then((res) => {
         this.props.history.goBack();
       }, (err) => {
@@ -75,7 +82,7 @@ export default class EditPage extends Component {
     getPage(this.props.match.params.pageId)
       .then(res => {
         const p = res.body;
-        this.setState({ pageId: p.page.id, title: p.page.title, text: p.page.text })
+        this.setState({ pageId: p.page.id, title: p.page.title, text: p.page.text, tags: p.tags })
       }, (err) => {
         addToast("Error", "There was an error loading your page.");
       });

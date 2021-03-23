@@ -3,6 +3,7 @@
 @import "~codemirror/lib/codemirror.css";
 @import "~codemirror/theme/neat.css";
 @import "~react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
+@import "~react-tagsinput/react-tagsinput.css";
 
 .btn-toolbar>*+* {
   margin-left: .5em;
@@ -77,4 +78,18 @@
   top: 20px;
   right: 10px;
   z-index: 100;
+}
+
+.react-tagsinput {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  line-height: 22px;
+  cursor: text;
+}
+
+.react-tagsinput-tag {
+  background-color: #5bc0de;
+  border-radius: 2px;
+  border: none;
+  color: #ffffff;
 }

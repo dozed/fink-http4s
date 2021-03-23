@@ -8,13 +8,14 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { BsTrash } from "react-icons/bs";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
+import TagsInput from "react-tagsinput";
 import {addToast} from "ToastContainer";
 
 class UploadImage extends Component {
   state = {
     title: "",
     imageData: null,
-    uploading: false
+    uploading: false,
   };
 
   render() {
@@ -93,6 +94,7 @@ export default class EditGallery extends Component {
     title: "",
     text: "",
     images: [],
+    tags: [],
   };
 
   render() {
@@ -103,6 +105,11 @@ export default class EditGallery extends Component {
           <Form.Group controlId="formTitle">
             <Form.Label>Title</Form.Label>
             <Form.Control type="text" placeholder="Enter title" onChange={(e) => this.onChangeTitle(e)} value={this.state.title} />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Tags</Form.Label>
+            <TagsInput value={this.state.tags} onChange={(tags) => this.setState({ tags })} />
           </Form.Group>
 
           <Form.Group controlId="formText">
@@ -157,9 +164,9 @@ export default class EditGallery extends Component {
   }
 
   updateGallery() {
-    updateGallery(this.state.galleryId, this.state.title, this.state.text, [], this.state.title)
+    updateGallery(this.state.galleryId, this.state.title, this.state.text, this.state.tags, this.state.title)
       .then((res) => {
-        this.loadGallery();
+        this.props.history.goBack();
       }, (err) => {
         addToast("Error", "There was an error updating your gallery.");
       });
@@ -169,7 +176,7 @@ export default class EditGallery extends Component {
     getGallery(this.props.match.params.galleryId)
       .then(res => {
         const g = res.body;
-        this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images });
+        this.setState({ galleryId: g.gallery.id, title: g.gallery.title, text: g.gallery.text, images: g.images, tags: g.tags });
       }, (err) => {
         addToast("Error", "There was an error loading your gallery.");
       });
