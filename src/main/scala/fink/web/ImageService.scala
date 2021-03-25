@@ -1,7 +1,6 @@
 package fink.web
 
 import java.io.{File, FileInputStream, FileOutputStream}
-import java.nio.file.Files
 
 import cats.effect.{Blocker, IO}
 import com.sksamuel.scrimage.ImmutableImage
@@ -10,8 +9,8 @@ import fink.World
 import fink.World.cs
 import fink.media.StaticFiles
 import org.apache.commons.io.IOUtils
-import org.http4s.{HttpRoutes, Response, StaticFile}
 import org.http4s.dsl.io._
+import org.http4s.{HttpRoutes, StaticFile}
 
 import scala.util.matching.Regex
 
