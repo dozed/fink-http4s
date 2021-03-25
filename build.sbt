@@ -30,7 +30,6 @@ libraryDependencies ++= Seq(
   "org.apache.tika" % "tika-core" % "1.12",
   "com.sksamuel.scrimage" % "scrimage-core" % "4.0.17",
   "com.sksamuel.scrimage" %% "scrimage-scala" % "4.0.17",
-  "joda-time" % "joda-time" % "2.4",
 
   "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime",
   "org.specs2" %% "specs2-core" % specs2Version % "test",
