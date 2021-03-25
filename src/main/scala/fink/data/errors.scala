@@ -2,14 +2,14 @@ package fink.data
 
 
 sealed trait ErrorCode extends Throwable {
-  override def getMessage() = this.getClass.getSimpleName.replace("$", "")
+  override def getMessage(): String = this.getClass.getSimpleName.replace("$", "")
 }
 
 object ErrorCode {
 
   trait ErrorCodeMsg extends ErrorCode {
     def msg: String
-    override def getMessage: String = msg
+    override def getMessage(): String = msg
   }
 
   case object NotAuthenticated extends ErrorCode
