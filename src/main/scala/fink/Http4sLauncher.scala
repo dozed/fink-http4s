@@ -6,6 +6,7 @@ import fink.World._
 import fink.data._
 import fink.util.ErrorHandling
 import fink.web._
+import org.http4s.Request
 import org.http4s.dsl.io._
 import org.http4s.implicits._
 import org.http4s.server.{Router, Server}
@@ -36,7 +37,7 @@ object Http4sLauncher extends App {
         ).orNotFound
 
         val httpAppWithErrorHandling =
-          ErrorHandling(httpApp, {
+          ErrorHandling(httpApp, (req: Request[IO]) => {
             case ErrorCode.NotAuthenticated => Forbidden()
             case ErrorCode.NotAuthorized => Forbidden()
             case ErrorCode.InvalidRequest => BadRequest()
