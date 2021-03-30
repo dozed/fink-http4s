@@ -4,7 +4,7 @@ name := "fink"
 version := "2.0.0-SNAPSHOT"
 scalaVersion := "2.13.3"
 
-val doobieVersion = "0.10.0"
+val doobieVersion = "0.12.1"
 val circeVersion = "0.13.0"
 val http4sVersion = "0.21.20"
 val specs2Version = "4.10.6"
