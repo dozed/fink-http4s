@@ -376,6 +376,9 @@ object JsonInstances {
     }
 
 
+  implicit val sortImageDecoder: Decoder[Operation.SortImage] =
+    Decoder.forProduct3[Operation.SortImage, Long, Int, Int]("galleryId", "from", "to")(Operation.SortImage)
+
   implicit val loginDecoder: Decoder[Operation.Login] =
     Decoder.forProduct2[Operation.Login, String, String]("username", "password")(Operation.Login)
 

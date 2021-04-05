@@ -1,4 +1,4 @@
-import {deleteImage, getGallery, updateGallery, uploadImageToGallery} from "../../frontend-shared/api";
+import {deleteImage, getGallery, sortImage, updateGallery, uploadImageToGallery} from "../../frontend-shared/api";
 import {mkImageUrlFull} from "../../frontend-shared/urls";
 
 import React, {Component, useState, forwardRef} from "react";
@@ -126,6 +126,7 @@ export const ImageItem = forwardRef(({id, hash, extension}, ref) => {
 
 export default class EditGallery extends Component {
   state = {
+    galleryId: null,
     title: "",
     text: "",
     images: [],
@@ -227,6 +228,9 @@ export default class EditGallery extends Component {
       this.setState({
         images: newItems
       });
+
+      sortImage(this.state.galleryId, oldIndex, newIndex)
+        .then(() => {});
     }
   }
 

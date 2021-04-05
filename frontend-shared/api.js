@@ -36,6 +36,15 @@ export const uploadImageToGallery = (galleryId, title, imageData) => {
     .send(data);
 };
 
+export const sortImage = (galleryId, from, to) => {
+  return request.post(`/api/galleries/${galleryId}/sorting`)
+    .send({
+      galleryId,
+      from,
+      to,
+    });
+};
+
 export const getGalleries = () => {
   return request.get("/api/galleries");
 };

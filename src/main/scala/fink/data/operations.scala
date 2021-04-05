@@ -60,6 +60,12 @@ object Operation {
     imageId: Long,
   ) extends Operation
 
+  case class SortImage(
+    galleryId: Long,
+    from: Int,
+    to: Int
+  ) extends Operation
+
   case class CreateImage(
     title: String,
     imageData: String,

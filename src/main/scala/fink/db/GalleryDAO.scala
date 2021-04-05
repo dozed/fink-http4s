@@ -34,7 +34,7 @@ object GalleryDAO {
   }
 
   def findImagesByGalleryId(galleryId: Long): ConnectionIO[List[Image]] = {
-    sql"SELECT i.id, i.date, i.title, i.authorId, i.hash, i.extension, i.contentType, i.filename FROM images i, galleries_images gi WHERE gi.imageId = i.id AND gi.galleryId = $galleryId".query[Image].to[List]
+    sql"SELECT i.id, i.date, i.title, i.authorId, i.hash, i.extension, i.contentType, i.filename FROM images i, galleries_images gi WHERE gi.imageId = i.id AND gi.galleryId = $galleryId ORDER BY gi.sort".query[Image].to[List]
   }
 
   def addImage(galleryId: Long, imageId: Long): ConnectionIO[Int] = {
@@ -123,6 +123,20 @@ object GalleryDAO {
       }
     } yield {
       (galleryMaybe, authorMaybe).mapN((page, author) => GalleryInfo(page, tags, author, images, None))
+    }
+  }
+
+  def setSort(galleryId: Long, sort: Int, newSort: Int): ConnectionIO[Unit] = {
+    sql"UPDATE galleries_images SET sort = $newSort WHERE galleryId = $galleryId AND sort = $sort".update.run.void
+  }
+
+  def sortImage(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
+    for {
+      _ <- setSort(galleryId, to, -1)
+      _ <- setSort(galleryId, from, to)
+      _ <- setSort(galleryId, -1, from)
+    } yield {
+      ()
     }
   }
 

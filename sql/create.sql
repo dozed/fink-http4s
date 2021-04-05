@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS posts_tags (
 
 CREATE TABLE IF NOT EXISTS galleries_images (
   galleryId bigint REFERENCES galleries(id) ON DELETE CASCADE,
-  imageId bigint REFERENCES images(id) ON DELETE CASCADE
+  imageId bigint REFERENCES images(id) ON DELETE CASCADE,
+  sort int
 );
 
 CREATE TABLE IF NOT EXISTS galleries_tags (

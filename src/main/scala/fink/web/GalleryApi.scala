@@ -92,6 +92,18 @@ object GalleryApi {
         res
       }
 
+    case req@POST -> Root / "galleries" / LongVar(galleryId) / "sorting" =>
+
+      for {
+        op <- req.decodeJson[Operation.SortImage]
+        user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
+        _ <- GalleryDAO.sortImage(op.galleryId, op.from, op.to).transact(xa)
+        res <- Ok()
+      } yield {
+        res
+      }
+
     case req@POST -> Root / "galleries" / LongVar(galleryId) / "tags" / tagName =>
 
       for {
