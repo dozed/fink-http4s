@@ -1,7 +1,7 @@
 import {deleteImage, getGallery, updateGallery, uploadImageToGallery} from "../../frontend-shared/api";
 import {mkImageUrlFull} from "../../frontend-shared/urls";
 
-import React, {Component, useState} from "react";
+import React, {Component, useState, forwardRef} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -9,6 +9,17 @@ import { BsTrash } from "react-icons/bs";
 import {Controlled as CodeMirror} from "react-codemirror2";
 import "codemirror/mode/markdown/markdown";
 import TagsInput from "react-tagsinput";
+import {
+  DndContext,
+  DragOverlay,
+  closestCenter,
+} from "@dnd-kit/core";
+import {
+  useSortable,
+  arrayMove,
+  SortableContext,
+} from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities";
 import {addToast} from "ToastContainer";
 
 class UploadImage extends Component {
@@ -75,8 +86,23 @@ const Image = ({ id, hash, extension, onDelete }) => {
 
   const [showOverlay, setShowOverlay] = useState(false);
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({id: id});
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   return (
-    <div className={"image"} onMouseEnter={() => setShowOverlay(true)} onMouseLeave={() => setShowOverlay(false)}>
+    <div className={"image"}
+         onMouseEnter={() => setShowOverlay(true)} onMouseLeave={() => setShowOverlay(false)}
+         ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <img src={mkImageUrlFull(hash, extension)} alt=""/>
       {showOverlay &&
         <div className={"image-overlay"}>
@@ -89,12 +115,22 @@ const Image = ({ id, hash, extension, onDelete }) => {
   );
 };
 
+
+export const ImageItem = forwardRef(({id, hash, extension}, ref) => {
+  return (
+    <div className={"image"} ref={ref}>
+      <img src={mkImageUrlFull(hash, extension)} alt=""/>
+    </div>
+  )
+});
+
 export default class EditGallery extends Component {
   state = {
     title: "",
     text: "",
     images: [],
     tags: [],
+    activeImage: null,
   };
 
   render() {
@@ -143,12 +179,55 @@ export default class EditGallery extends Component {
 
         <h2>Images</h2>
         <div className="images">
-          {this.state.images.map(i =>
-            <Image key={`img-${i.id}`} id={i.id} hash={i.hash} extension={i.extension} onDelete={id => this.deleteImage(id)} />
-          )}
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragStart={(e) => this.handleDragStart(e)}
+            onDragEnd={(e) => this.handleDragEnd(e)}
+          >
+            <SortableContext
+              items={this.state.images.map(i => i.id)}
+            >
+              {this.state.images.map(i =>
+                <Image key={`img-${i.id}`} id={i.id} hash={i.hash} extension={i.extension} onDelete={id => this.deleteImage(id)} />
+              )}
+            </SortableContext>
+
+            <DragOverlay>
+              {this.state.activeImage &&
+                <ImageItem id={this.state.activeImage.id} hash={this.state.activeImage.hash} extension={this.state.activeImage.extension} />
+              }
+            </DragOverlay>
+          </DndContext>
         </div>
       </div>
     );
+  }
+
+  handleDragStart(event) {
+    const image = this.state.images.find(i => i.id === event.active.id);
+
+    this.setState({
+      activeImage: image
+    });
+  }
+
+  handleDragEnd(event) {
+    const {active, over} = event;
+
+    this.setState({
+      activeImage: null
+    });
+
+    if (active.id !== over.id) {
+      const oldIndex = this.state.images.map(i => i.id).indexOf(active.id);
+      const newIndex = this.state.images.map(i => i.id).indexOf(over.id);
+
+      const newItems = arrayMove(this.state.images, oldIndex, newIndex);
+
+      this.setState({
+        images: newItems
+      });
+    }
   }
 
   onChangeTitle(e) {
