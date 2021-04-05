@@ -82,7 +82,7 @@ object GalleryApi {
         uploadImage <- Uploads.storeUrlDataItem(config, imageData)
         imageInfo <- {
           ImageDAO.create(op.title, uploadImage.hash, uploadImage.extension, uploadImage.contentType, uploadImage.fileName, user)
-            .flatMap(imageInfo => GalleryDAO.addImage(op.galleryId, imageInfo.image.id).map(_ => imageInfo))
+            .flatMap(imageInfo => GalleryDAO.appendImage(op.galleryId, imageInfo.image.id).map(_ => imageInfo))
             .transact(xa)
         }
 

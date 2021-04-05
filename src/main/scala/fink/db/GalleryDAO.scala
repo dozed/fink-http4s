@@ -37,12 +37,34 @@ object GalleryDAO {
     sql"SELECT i.id, i.date, i.title, i.authorId, i.hash, i.extension, i.contentType, i.filename FROM images i, galleries_images gi WHERE gi.imageId = i.id AND gi.galleryId = $galleryId ORDER BY gi.sort".query[Image].to[List]
   }
 
-  def addImage(galleryId: Long, imageId: Long): ConnectionIO[Int] = {
-    sql"INSERT INTO galleries_images (galleryId, imageId) VALUES ($galleryId, $imageId)".update.run
+  def appendImage(galleryId: Long, imageId: Long): ConnectionIO[Unit] = {
+    for {
+      sort <- sql"SELECT max(sort) FROM galleries_images WHERE galleryId = $galleryId".query[Int].unique
+      _ <- sql"INSERT INTO galleries_images (galleryId, imageId, sort) VALUES ($galleryId, $imageId, $sort)".update.run
+    } yield {
+      ()
+    }
   }
 
-  def removeImage(galleryId: Long, imageId: Long): ConnectionIO[Int] = {
-    sql"DELETE FROM galleries_images WHERE galleryId = $galleryId AND imageId = $imageId".update.run
+  def removeImage(galleryId: Long, imageId: Long): ConnectionIO[Unit] = {
+    for {
+      sortOpt <- sql"SELECT sort FROM galleries_images WHERE galleryId = $galleryId AND imageId = $imageId".query[Int].option
+      _ <- {
+        sortOpt match {
+          case Some(sort) =>
+            for {
+              _ <- sql"DELETE FROM galleries_images WHERE galleryId = $galleryId AND imageId = $imageId".update.run
+              _ <- sql"UPDATE galleries_images SET sort = sort - 1 WHERE galleryId = $galleryId AND sort > $sort".update.run
+            } yield {
+              ()
+            }
+
+          case None => ().pure[ConnectionIO]
+        }
+      }
+    } yield {
+      ()
+    }
   }
 
   def addTag(galleryId: Long, tagId: Long): ConnectionIO[Int] = {
