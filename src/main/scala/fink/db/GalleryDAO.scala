@@ -40,7 +40,7 @@ object GalleryDAO {
   def appendImage(galleryId: Long, imageId: Long): ConnectionIO[Unit] = {
     for {
       sort <- sql"SELECT max(sort) FROM galleries_images WHERE galleryId = $galleryId".query[Int].unique
-      _ <- sql"INSERT INTO galleries_images (galleryId, imageId, sort) VALUES ($galleryId, $imageId, $sort)".update.run
+      _ <- sql"INSERT INTO galleries_images (galleryId, imageId, sort) VALUES ($galleryId, $imageId, ${sort+1})".update.run
     } yield {
       ()
     }
