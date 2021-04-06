@@ -35,7 +35,7 @@ class UploadImage extends Component {
         <h2>Upload New Image</h2>
         <Form.Group controlId="formImageTitle">
           <Form.Label>Title</Form.Label>
-          <Form.Control type="text" placeholder="Enter title" onChange={(e) => this.onChangeTitle(e)} value={this.state.title} />
+          <Form.Control type="text" placeholder="Enter title" autocomplete="off" onChange={(e) => this.onChangeTitle(e)} value={this.state.title} />
         </Form.Group>
         <div>
           <label className="upload-label btn btn-space btn-default">
