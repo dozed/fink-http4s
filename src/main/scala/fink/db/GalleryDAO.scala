@@ -39,7 +39,7 @@ object GalleryDAO {
 
   def appendImage(galleryId: Long, imageId: Long): ConnectionIO[Unit] = {
     for {
-      sort <- sql"SELECT coalesce(max(sort), 0) FROM galleries_images WHERE galleryId = $galleryId".query[Int].unique
+      sort <- sql"SELECT coalesce(max(sort), -1) FROM galleries_images WHERE galleryId = $galleryId".query[Int].unique
       _ <- sql"INSERT INTO galleries_images (galleryId, imageId, sort) VALUES ($galleryId, $imageId, ${sort+1})".update.run
     } yield {
       ()
@@ -62,6 +62,24 @@ object GalleryDAO {
           case None => ().pure[ConnectionIO]
         }
       }
+    } yield {
+      ()
+    }
+  }
+
+  def setSort(galleryId: Long, sort: Int, newSort: Int): ConnectionIO[Unit] = {
+    sql"UPDATE galleries_images SET sort = $newSort WHERE galleryId = $galleryId AND sort = $sort".update.run.void
+  }
+
+  def shiftSort(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
+    sql"UPDATE galleries_images SET sort = sort - 1 WHERE galleryId = $galleryId AND sort > $from AND sort <= $to".update.run.void
+  }
+
+  def sortImage(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
+    for {
+      _ <- setSort(galleryId, from, -1)
+      _ <- shiftSort(galleryId, from, to)
+      _ <- setSort(galleryId, -1, to)
     } yield {
       ()
     }
@@ -145,20 +163,6 @@ object GalleryDAO {
       }
     } yield {
       (galleryMaybe, authorMaybe).mapN((page, author) => GalleryInfo(page, tags, author, images, None))
-    }
-  }
-
-  def setSort(galleryId: Long, sort: Int, newSort: Int): ConnectionIO[Unit] = {
-    sql"UPDATE galleries_images SET sort = $newSort WHERE galleryId = $galleryId AND sort = $sort".update.run.void
-  }
-
-  def sortImage(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
-    for {
-      _ <- setSort(galleryId, to, -1)
-      _ <- setSort(galleryId, from, to)
-      _ <- setSort(galleryId, -1, from)
-    } yield {
-      ()
     }
   }
 
