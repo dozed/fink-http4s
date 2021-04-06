@@ -106,8 +106,11 @@ const Image = ({ id, hash, extension, onDelete }) => {
       <img src={mkImageUrlFull(hash, extension)} alt=""/>
       {showOverlay &&
         <div className={"image-overlay"}>
-          <div className={"delete-image"} onClick={() => onDelete(id)}>
-            <BsTrash title={"Delete image"} />
+          <div className={"delete-image"}
+               onClick={(e) => onDelete(id)}
+               onPointerDown={(e) => e.stopPropagation()}
+          >
+            <BsTrash title={"Delete image"}/>
           </div>
         </div>
       }
