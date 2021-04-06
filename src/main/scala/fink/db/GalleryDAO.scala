@@ -71,14 +71,22 @@ object GalleryDAO {
     sql"UPDATE galleries_images SET sort = $newSort WHERE galleryId = $galleryId AND sort = $sort".update.run.void
   }
 
-  def shiftSort(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
+  def shiftSortLeft(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
     sql"UPDATE galleries_images SET sort = sort - 1 WHERE galleryId = $galleryId AND sort > $from AND sort <= $to".update.run.void
+  }
+
+  def shiftSortRight(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
+    sql"UPDATE galleries_images SET sort = sort + 1 WHERE galleryId = $galleryId AND sort >= $from AND sort < $to".update.run.void
   }
 
   def sortImage(galleryId: Long, from: Int, to: Int): ConnectionIO[Unit] = {
     for {
       _ <- setSort(galleryId, from, -1)
-      _ <- shiftSort(galleryId, from, to)
+      _ <- {
+        if (from < to) shiftSortLeft(galleryId, from, to)
+        else if (from > to) shiftSortRight(galleryId, to, from)
+        else ().pure[ConnectionIO]
+      }
       _ <- setSort(galleryId, -1, to)
     } yield {
       ()
