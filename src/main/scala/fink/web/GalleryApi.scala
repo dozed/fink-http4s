@@ -92,6 +92,17 @@ object GalleryApi {
         res
       }
 
+    case req@DELETE -> Root / "galleries" / LongVar(galleryId) / "images" / LongVar(imageId) =>
+
+      for {
+        user <- req.authenticateUser
+        _ <- Authorization.authorizeEdit(user)
+        _ <- GalleryDAO.removeImage(galleryId, imageId).transact(xa)
+        res <- Ok()
+      } yield {
+        res
+      }
+
     case req@POST -> Root / "galleries" / LongVar(galleryId) / "sorting" =>
 
       for {

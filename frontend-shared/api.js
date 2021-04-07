@@ -36,6 +36,11 @@ export const uploadImageToGallery = (galleryId, title, imageData) => {
     .send(data);
 };
 
+export const removeImageFromGallery = (galleryId, imageId) => {
+  return request.delete(`/api/galleries/${galleryId}/images/${imageId}`)
+    .send();
+};
+
 export const sortImage = (galleryId, from, to) => {
   return request.post(`/api/galleries/${galleryId}/sorting`)
     .send({

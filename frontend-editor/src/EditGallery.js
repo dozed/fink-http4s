@@ -1,4 +1,4 @@
-import {deleteImage, getGallery, sortImage, updateGallery, uploadImageToGallery} from "../../frontend-shared/api";
+import {removeImageFromGallery, getGallery, sortImage, updateGallery, uploadImageToGallery} from "../../frontend-shared/api";
 import {mkImageUrlFull} from "../../frontend-shared/urls";
 
 import React, {Component, useState, forwardRef} from "react";
@@ -269,7 +269,8 @@ export default class EditGallery extends Component {
   }
 
   deleteImage(imageId) {
-    deleteImage(imageId).then(() => this.loadGallery());
+    removeImageFromGallery(this.props.match.params.galleryId, imageId)
+      .then(() => this.loadGallery());
   }
 
   componentDidMount() {
