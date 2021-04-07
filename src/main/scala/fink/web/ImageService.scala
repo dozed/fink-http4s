@@ -25,6 +25,14 @@ object ImageService {
 
   case class ImageName(hash: String, ext: String)
 
+  def mkImageFileName(name: ImageName, spec: ImageSpec): String = {
+    spec match {
+      case ImageSpec.Full => s"${name.hash}-full.${name.ext}"
+      case ImageSpec.KeepRatio(size) => s"${name.hash}-keep-ratio-$size.${name.ext}"
+      case ImageSpec.Square(size) => s"${name.hash}-square-$size.${name.ext}"
+    }
+  }
+
 
   val FullExpr: Regex = """([a-z0-9]+)-full\.([a-z]+)""".r
   val KeepRatioExpr: Regex = """([a-z0-9]+)-keep-ratio-([0-9]+)\.([a-z]+)""".r
@@ -93,10 +101,18 @@ object ImageService {
       parseImageSpecAndName(imageStr) match {
         case Some((spec, name)) =>
           val uploadedImage = StaticFiles.mkUploadFile(World.config, s"${name.hash}.${name.ext}")
-          val publicImage = StaticFiles.mkPublicImageFile(World.config, imageStr)
+          val publicImageFileName = mkImageFileName(name, spec)
+          val publicImage = StaticFiles.mkPublicImageFile(World.config, publicImageFileName)
 
           if (!uploadedImage.exists) {
             NotFound()
+          } else if (publicImage.exists) {
+            for {
+              resOpt <- StaticFile.fromFile(publicImage, blocker, Some(req)).value
+              res <- resOpt.map(res => IO.delay(res)).getOrElse(InternalServerError())
+            } yield {
+              res
+            }
           } else {
             for {
               _ <- processImage(spec, name, uploadedImage, publicImage)
